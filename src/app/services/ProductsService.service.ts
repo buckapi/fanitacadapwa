@@ -43,7 +43,7 @@ async createImage(file: File): Promise<any> {
 getImageRecordUrl(imageRecord: any): string | null {
   if (!imageRecord?.image) return null;
 
-  return this.pb.files.getUrl(imageRecord, imageRecord.image);
+  return this.pb.files.getURL(imageRecord, imageRecord.image);
 }
 async getProductById(id: string): Promise<Product> {
   return await this.pb.collection(this.collection).getOne<Product>(id, {
@@ -65,7 +65,7 @@ async getProductById(id: string): Promise<Product> {
   }
 
   getFileUrl(product: any, filename: string): string {
-    return this.pb.files.getUrl(product, filename);
+    return this.pb.files.getURL(product, filename);
   }
 
   generateSlug(value: string): string {
