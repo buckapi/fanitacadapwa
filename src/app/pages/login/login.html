@@ -1,0 +1,94 @@
+<main class="pt-12">
+
+
+
+  <section class="login-section pt-120 pb-120 px-xl-20 px-lg-10 px-sm-7">
+    <div class="container-fluid">
+      <div class="row g-6 justify-content-center">
+        <div class="col-xl-5 col-lg-7 col-md-9">
+
+          <div class="register-form p-xl-15 p-lg-10 p-md-8 p-6 radius-16 border border-n100-1 bg-n20">
+
+            <div class="register-logo mb-lg-12 mb-md-8 mb-6 mx-auto">
+              <img class="w-100" src="assets/images/logo.png" alt="Fanaticada.cl">
+            </div>
+
+            <div class="text-center mb-6">
+              <h2 class="text-n100 mb-2">Panel de Administración</h2>
+              <p class="text-n50">
+                Ingresa tus credenciales para gestionar productos, pedidos y usuarios.
+              </p>
+            </div>
+
+            <form
+              [formGroup]="loginForm"
+              (ngSubmit)="loginAdmin()"
+              class="d-grid gap-lg-6 gap-4"
+            >
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Correo electrónico
+                </label>
+
+                <input
+                  type="email"
+                  formControlName="email"
+                  class="py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2"
+                  placeholder="admin@fanaticada.cl"
+                >
+
+                <small class="text-danger" *ngIf="submitted && loginForm.get('email')?.invalid">
+                  Ingresa un correo válido.
+                </small>
+              </div>
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Contraseña
+                </label>
+
+                <div class="d-flex align-items-center py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    formControlName="password"
+                    class="w-100 border-0 bg-transparent"
+                    placeholder="Ingresa tu contraseña"
+                  >
+
+                  <button
+                    type="button"
+                    class="text-xl password-toggle"
+                    (click)="togglePassword()"
+                  >
+                    <i class="ph" [ngClass]="showPassword ? 'ph-eye' : 'ph-eye-slash'"></i>
+                  </button>
+                </div>
+
+                <small class="text-danger" *ngIf="submitted && loginForm.get('password')?.invalid">
+                  La contraseña es obligatoria.
+                </small>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-secondary py-lg-4 py-2 px-lg-6 px-4 radius-8 w-100"
+                [disabled]="loading"
+              >
+                {{ loading ? 'Ingresando...' : 'Ingresar al panel' }}
+              </button>
+
+              <p class="text-danger text-center mb-0" *ngIf="errorMessage">
+                {{ errorMessage }}
+              </p>
+
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

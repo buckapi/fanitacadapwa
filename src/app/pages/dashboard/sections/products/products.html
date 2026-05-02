@@ -1,0 +1,168 @@
+<section class="products-admin">
+
+    <div class="admin-header">
+        <div>
+            <span>Panel administrativo</span>
+            <h1>Gestión de productos</h1>
+            <p>Crea, edita y administra los productos de la tienda.</p>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="product-form">
+
+            <h2>{{ editing ? 'Editar producto' : 'Crear producto' }}</h2>
+
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" formControlName="name" placeholder="Nombre del producto">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Precio</label>
+                    <input type="number" formControlName="price">
+                </div>
+
+                <div class="form-group">
+                    <label>Stock</label>
+                    <input type="number" formControlName="stock">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Unidad</label>
+                    <input type="text" formControlName="unit" placeholder="unidad">
+                </div>
+
+                <div class="form-group">
+                    <label>Tiempo entrega</label>
+                    <input type="number" formControlName="timeToDeliver">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Editor / Marca</label>
+                <input type="text" formControlName="editor" placeholder="Marca o editor">
+            </div>
+
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea formControlName="description" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Imágenes del producto</label>
+
+                <input type="file" accept="image/*" multiple (change)="onImagesSelected($event)">
+
+                <div class="image-preview-grid" *ngIf="previewImages.length > 0">
+                    <div class="image-preview" *ngFor="let image of previewImages; let i = index">
+                        <img [src]="image" alt="Preview">
+                        <button type="button" (click)="removeNewImage(i)">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checks-grid">
+                <label>
+                    <input type="checkbox" formControlName="featured">
+                    Destacado
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="isPopular">
+                    Popular
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="isBestSelling">
+                    Más vendido
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="isRecent">
+                    Reciente
+                </label>
+
+                <label>
+                    <input type="checkbox" formControlName="isEssential">
+                    Esencial
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <select formControlName="status">
+                    <option value="active">Activo</option>
+                    <option value="inactive">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="saving">
+                    {{ saving ? 'Guardando...' : editing ? 'Actualizar producto' : 'Crear producto' }}
+                </button>
+
+                <button type="button" class="btn-cancel" *ngIf="editing" (click)="resetForm()">
+                    Cancelar
+                </button>
+            </div>
+
+        </form>
+
+        <div class="products-list">
+
+            <div class="list-header">
+                <h2>Productos</h2>
+                <span>{{ products.length }} registros</span>
+            </div>
+
+            <div *ngIf="loading" class="loading">
+                Cargando productos...
+            </div>
+
+            <div *ngIf="!loading && products.length === 0" class="empty">
+                No hay productos registrados.
+            </div>
+
+            <div class="product-card" *ngFor="let product of products">
+                <div class="product-thumb" *ngIf="product.images?.length">
+                    <img *ngIf="product.images && product.images.length > 0"
+                        [src]="getProductImageUrl(product, product.images[0]!)" [alt]="product.name">
+                        <div class="product-thumb" *ngIf="getFirstImage(product) as img">
+  <img [src]="img" [alt]="product.name">
+</div>
+                </div>
+                <div>
+
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description || 'Sin descripción' }}</p>
+
+                    <div class="product-meta">
+                        <span>${{ product.price }}</span>
+                        <span>Stock: {{ product.stock }}</span>
+                        <span>{{ product.status }}</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button type="button" (click)="editProduct(product)">
+                        Editar
+                    </button>
+
+                    <button type="button" class="danger" (click)="deleteProduct(product)">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

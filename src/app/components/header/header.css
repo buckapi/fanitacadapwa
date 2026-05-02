@@ -1,0 +1,30 @@
+.user-menu-wrapper {
+  z-index: 100;
+}
+
+.user-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  min-width: 230px;
+  top: 100%;
+  z-index: 999;
+}
+
+.dropdown-link {
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+}
+
+.dropdown-link:hover {
+  opacity: 0.85;
+}
+
+.logout-btn {
+  cursor: pointer;
+}
