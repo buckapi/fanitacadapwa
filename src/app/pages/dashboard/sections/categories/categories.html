@@ -1,1 +1,106 @@
-<p>categories works!</p>
+<section class="products-admin">
+
+    <div class="admin-header">
+        <div>
+            <span>Panel administrativo</span>
+            <h1>Gestión de categorías</h1>
+            <p>Crea, edita y administra las categorías de la tienda.</p>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+
+        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="product-form">
+
+            <h2>{{ editing ? 'Editar categoría' : 'Crear categoría' }}</h2>
+
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" formControlName="name" placeholder="Nombre de la categoría">
+            </div>
+            <div class="form-group">
+  <label>Imagen de categoría</label>
+
+  <input type="file" accept="image/*" (change)="onImageSelected($event)">
+
+  <div class="image-preview" *ngIf="previewImage">
+    <img [src]="previewImage" alt="Preview categoría">
+
+    <button type="button" (click)="removeImage()">
+      ×
+    </button>
+  </div>
+</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Orden</label>
+                    <input type="number" formControlName="order">
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select formControlName="active">
+                        <option [ngValue]="true">Activa</option>
+                        <option [ngValue]="false">Inactiva</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="saving">
+                    {{ saving ? 'Guardando...' : editing ? 'Actualizar categoría' : 'Crear categoría' }}
+                </button>
+
+                <button type="button" class="btn-cancel" *ngIf="editing" (click)="resetForm()">
+                    Cancelar
+                </button>
+            </div>
+
+        </form>
+
+        <div class="products-list">
+
+            <div class="list-header">
+                <h2>Categorías</h2>
+                <span>{{ categories.length }} registros</span>
+            </div>
+
+            <div *ngIf="loading" class="loading">
+                Cargando categorías...
+            </div>
+
+            <div *ngIf="!loading && categories.length === 0" class="empty">
+                No hay categorías registradas.
+            </div>
+
+            <div class="product-card" *ngFor="let cat of categories">
+
+                <div>
+                    <h3>{{ cat.name }}</h3>
+
+                    <div class="product-meta">
+                        <span>Orden: {{ cat.order || 0 }}</span>
+                        <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
+                            {{ cat.active ? 'Activa' : 'Inactiva' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button type="button" (click)="editCategory(cat)">
+                        Editar
+                    </button>
+
+                    <button type="button" class="danger" (click)="deleteCategory(cat)">
+                        Eliminar
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
