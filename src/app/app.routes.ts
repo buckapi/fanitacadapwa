@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
-import { ProductDetail } from './pages/product-detail/product-detail';
 import { Shop } from './pages/shop/shop';
 import { About } from './pages/about/about';
 import { Login } from './pages/login/login';
@@ -10,27 +9,30 @@ import { Products } from './pages/dashboard/sections/products/products';
 import { Categories } from './pages/dashboard/sections/categories/categories';
 import { Orders } from './pages/dashboard/sections/orders/orders';
 import { Users } from './pages/dashboard/sections/users/users';
+import { ProductDetail } from './pages/product-detail/product-detail';
+
 export const routes: Routes = [
-    {
-        path: '',
-        component: Home,
-    },
-    {
-        path: 'product-detail',
-        component: ProductDetail,
-    },
-    {
-        path: 'shop',
-        component: Shop,
-    },
-    {
-        path: 'about',
-        component: About,
-    },
-    { path: 'login',
-        component: Login,
-    },
-     {
+  {
+    path: '',
+    component: Home,
+  },
+  {
+    path: 'product-detail/:id',
+    component: ProductDetail,
+  },
+  {
+    path: 'shop',
+    component: Shop,
+  },
+  {
+    path: 'about',
+    component: About,
+  },
+  {
+    path: 'login',
+    component: Login,
+  },
+  {
     path: 'dashboard',
     component: Dashboard,
     children: [

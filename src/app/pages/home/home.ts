@@ -90,9 +90,17 @@ export class Home implements OnInit, OnDestroy {
   return url || 'assets/images/1.jpeg';
 }
 
-  goToProduct(product: Product): void {
-    if (!product.slug) return;
+goToProduct(product: Product): void {
+  console.log('Producto clickeado:', product);
+  console.log('ID producto:', product.id);
 
-    this.router.navigate(['/product-detail', product.slug]);
-  }
+  if (!product.id) return;
+
+  this.router.navigate(['/product-detail', product.id]).then(success => {
+    console.log('¿Navegó?', success);
+    console.log('URL actual:', this.router.url);
+  }).catch(error => {
+    console.error('Error navegando:', error);
+  });
+}
 }
