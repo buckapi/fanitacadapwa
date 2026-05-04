@@ -123,21 +123,69 @@ showQuestionPopup = false;
     });
   }
 
-  async loadRelatedProducts() {
-    try {
-      this.loadingRelated = true;
+ async loadRelatedProducts() {
+  try {
+    this.loadingRelated = true;
 
-      const products = await this.productsService.getProducts();
-
-      this.relatedProducts = products
-        .filter((item) => item.id !== this.product?.id)
-        .slice(0, 6);
-    } catch (error) {
-      console.error('Error cargando relacionados:', error);
-    } finally {
-      this.loadingRelated = false;
+    if (!this.product) {
+      this.relatedProducts = [];
+      return;
     }
+
+    const currentCategories = this.getProductCategoryIds(this.product);
+
+    if (currentCategories.length === 0) {
+      this.relatedProducts = [];
+      return;
+    }
+
+    const products = await this.productsService.getProducts();
+
+    this.relatedProducts = products
+      .filter((item) => {
+        if (item.id === this.product?.id) return false;
+
+        const itemCategories = this.getProductCategoryIds(item);
+
+        return itemCategories.some((categoryId) =>
+          currentCategories.includes(categoryId)
+        );
+      })
+      .slice(0, 6);
+
+  } catch (error) {
+    console.error('Error cargando relacionados:', error);
+    this.relatedProducts = [];
+  } finally {
+    this.loadingRelated = false;
+    this.cd.detectChanges();
   }
+}
+getProductCategoryIds(product: any): string[] {
+  if (!product) return [];
+
+  if (Array.isArray(product.categories)) {
+    return product.categories.filter(Boolean);
+  }
+
+  if (typeof product.categories === 'string') {
+    return [product.categories];
+  }
+
+  const expandedCategories = product.expand?.categories;
+
+  if (Array.isArray(expandedCategories)) {
+    return expandedCategories
+      .map((category: any) => category.id)
+      .filter(Boolean);
+  }
+
+  if (expandedCategories?.id) {
+    return [expandedCategories.id];
+  }
+
+  return [];
+}
 
   getProductImages(product?: Product): string[] {
     if (!product) return [];

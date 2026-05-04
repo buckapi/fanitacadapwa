@@ -15,39 +15,20 @@
                     <!-- here using tab option for demonstration purpose, remove tab option for production and use only filter btn -->
                     <ul class="tab-btn-area d-flex align-items-center gap-2 flex-wrap">
                         <li>
-                            <button
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1 active"
-                                data-tab="all">All</button>
-                        </li>
-                        <li>
-                            <button
+                            <button type="button"
                                 class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="city">City</button>
+                                [class.active]="selectedCategory === 'all'" (click)="filterByCategory('all')">
+                                Todos
+                            </button>
                         </li>
-                        <li>
-                            <button
+
+                        <li *ngFor="let category of categories">
+                            <button type="button"
                                 class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="electric">Electric</button>
-                        </li>
-                        <li>
-                            <button
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="gravel">Gravel</button>
-                        </li>
-                        <li>
-                            <button
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="kids">Kids</button>
-                        </li>
-                        <li>
-                            <button
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="mountain">Mountain</button>
-                        </li>
-                        <li>
-                            <button
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                data-tab="road">Road</button>
+                                [class.active]="selectedCategory === category.id"
+                                (click)="filterByCategory(category.id!)">
+                                {{ category.name }}
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -61,11 +42,11 @@
                         Cargando productos...
                     </div>
 
-                    <div *ngIf="!loadingProducts && products.length === 0" class="col-12 p-5">
-                        No hay productos disponibles.
+                    <div *ngIf="!loadingProducts && filteredProducts.length === 0" class="col-12 p-5">
+                        No hay productos disponibles para esta categoría.
                     </div>
 
-                    <div class="col-lg-4 col-xs-6" *ngFor="let product of products">
+                    <div class="col-lg-4 col-xs-6" *ngFor="let product of filteredProducts">
                         <div
                             class="product-card2 position-relative p-xl-10 p-lg-8 p-6 bg-n0 border border-n100-5 box-style box-n20 card-tilt animate-box">
 
