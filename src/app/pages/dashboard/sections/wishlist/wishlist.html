@@ -1,0 +1,158 @@
+<main class="pt-12">
+
+  <section class="cart-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
+    <div class="container-fluid">
+
+      <div *ngIf="wishlistItems.length === 0" class="text-center py-5 bg-n20">
+        <h3 class="text-n100 mb-3">No tienes productos favoritos</h3>
+
+        <p class="text-n50 mb-4">
+          Guarda tus productos preferidos tocando el corazón en la tienda.
+        </p>
+
+        <a
+          routerLink="/shop"
+          class="btn-secondary d-inline-flex align-items-center gap-2"
+        >
+          Ver productos
+          <span class="icon">
+            <i class="ph ph-arrow-up-right"></i>
+          </span>
+        </a>
+      </div>
+
+      <div class="row g-6" *ngIf="wishlistItems.length > 0">
+        <div class="col-xl-8">
+          <div class="d-flex justify-content-between align-items-center mb-lg-8 mb-6 flex-wrap gap-3">
+            <div>
+              <h3 class="text-n100 mb-2">Productos guardados</h3>
+              <p class="text-n50 mb-0">
+                Tienes {{ wishlistItems.length }} producto(s) en favoritos.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="text-base fw-medium py-2 px-4 border border-n100 bg-n0 hover-bg-n100 hover-text-n0"
+              (click)="clearWishlist()"
+            >
+              Vaciar favoritos
+            </button>
+          </div>
+
+          <div class="product-cart-table table-responsive mb-lg-8 mb-6">
+            <table class="table common-table">
+              <thead>
+                <tr>
+                  <th class="p-xxl-6 p-lg-4 p-2">Producto</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Precio</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Stock</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Acción</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of wishlistItems">
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <div class="cart-card d-flex align-items-center gap-lg-6 gap-4">
+                      <div class="product-thumb">
+                        <img
+                          [src]="item.image || 'assets/images/no-image.png'"
+                          [alt]="item.name"
+                          class="w-100"
+                        >
+                      </div>
+
+                      <div class="product-info">
+                        <span class="text-n100 text-base fw-medium d-block">
+                          {{ item.name }}
+                        </span>
+
+                        <span class="d-block text-n50 text-sm" *ngIf="item.category">
+                          {{ item.category }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <span class="text-secondary2 text-base fw-medium">
+                      ${{ item.price | number:'1.0-0' }}
+                    </span>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <span class="text-n50 text-sm">
+                      {{ item.stock !== undefined ? item.stock : 'Disponible' }}
+                    </span>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                      <button
+                        type="button"
+                        class="btn-secondary py-2 px-4"
+                        (click)="moveToCart(item)"
+                      >
+                        Agregar al carrito
+                      </button>
+
+                      <button
+                        type="button"
+                        class="text-xl text-danger"
+                        (click)="remove(item.id)"
+                      >
+                        <i class="ph ph-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="p-xxl-10 p-md-6 p-4 bg-n20 border border-n100-1 mb-lg-8 mb-6">
+            <h4 class="text-n100 mb-lg-4 mb-3">
+              Resumen de favoritos
+            </h4>
+
+            <div class="d-grid gap-3 mb-lg-6 mb-4">
+              <div class="d-flex justify-content-between">
+                <span class="text-n50">Productos guardados</span>
+                <span class="text-n100 fw-medium">
+                  {{ wishlistItems.length }}
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <span class="text-n50">Estado</span>
+                <span class="text-secondary2 fw-medium">
+                  Disponible para compra
+                </span>
+              </div>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2">
+              <a
+                routerLink="/cart"
+                class="d-block text-center text-base fw-medium py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0 text-n100 w-100 border border-n100 hover-bg-n100 hover-text-n0"
+              >
+                Ver carrito
+              </a>
+
+              <a
+                routerLink="/shop"
+                class="btn-secondary radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-center"
+              >
+                Seguir comprando
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>

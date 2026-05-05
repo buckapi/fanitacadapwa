@@ -13,6 +13,10 @@ import { ProductDetail } from './pages/product-detail/product-detail';
 import { Contact } from './pages/contact/contact';
 import { Cart} from './pages/cart/cart';
 import { Checkout } from './pages/checkout/checkout';
+import { Register } from './pages/register/register';
+import { Account } from './pages/dashboard/sections/account/account';
+import { Wishlist } from './pages/dashboard/sections/wishlist/wishlist';
+import { OrdersClient } from './pages/dashboard/sections/orders-client/orders-client';
 
 export const routes: Routes = [
   {
@@ -48,6 +52,10 @@ export const routes: Routes = [
     component: Checkout,
   },
   {
+    path: 'register',
+    component: Register,
+  },
+  {
     path: 'dashboard',
     component: Dashboard,
     children: [
@@ -70,6 +78,18 @@ export const routes: Routes = [
       {
         path: 'users',
         component: Users,
+      },
+      {
+        path: 'account',
+        component: Account,
+      },
+      {
+        path: 'wishlist',
+        component: Wishlist,
+      },
+      {
+        path: 'orders-client',
+        component: OrdersClient,
       },
     ],
   },

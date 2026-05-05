@@ -25,3 +25,11 @@
   object-position: center;
   display: block;
 }
+
+.single-wishlist-btn i {
+  transition: transform 0.2s ease;
+}
+
+.single-wishlist-btn:active i {
+  transform: scale(1.3);
+}

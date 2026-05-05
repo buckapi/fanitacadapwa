@@ -171,4 +171,21 @@ export class AuthPocketbaseService {
 
     await this.router.navigate(['/login']);
   }
+  registerUser(data: {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  type: 'client' | 'admin';
+}) {
+  return new Observable<any>((observer) => {
+    this.pb.collection('users').create(data).then(
+      (record) => {
+        observer.next(record);
+        observer.complete();
+      },
+      (error) => observer.error(error)
+    );
+  });
+}
 }

@@ -1,29 +1,82 @@
-<main class="dashboard-layout" style="padding-top: 130px;">
+<main class="dashboard-layout" style="padding-top: 193px;">
   <aside class="dashboard-sidebar">
-   <!--  <div class="dashboard-logo">
-      <img src="assets/images/logo.png" alt="Fanaticada.cl">
-    </div> -->
 
     <nav class="dashboard-nav">
-      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <i class="ph ph-house"></i>
-        Resumen
-      </a>
 
-      <a routerLink="/dashboard/products">
-        <i class="ph ph-package"></i>
-        Productos
-      </a>
+      <!-- MENÚ ADMIN -->
+      <ng-container *ngIf="user?.type === 'admin'">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <i class="ph ph-house"></i>
+          Resumen
+        </a>
 
-      <a routerLink="/dashboard/orders">
-        <i class="ph ph-shopping-cart"></i>
-        Pedidos
-      </a>
+        <a routerLink="/dashboard/products" routerLinkActive="active">
+          <i class="ph ph-package"></i>
+          Productos
+        </a>
 
-      <a routerLink="/dashboard/categories">
-        <i class="ph ph-tag"></i>
-        Categorías
-      </a>
+        <a routerLink="/dashboard/orders" routerLinkActive="active">
+          <i class="ph ph-shopping-cart"></i>
+          Pedidos
+        </a>
+
+        <a routerLink="/dashboard/categories" routerLinkActive="active">
+          <i class="ph ph-tag"></i>
+          Categorías
+        </a>
+
+        <a routerLink="/dashboard/users" routerLinkActive="active">
+          <i class="ph ph-users"></i>
+          Usuarios
+        </a>
+      </ng-container>
+
+      <!-- MENÚ CLIENTE -->
+      <ng-container *ngIf="user?.type === 'client'">
+        <a
+          routerLink="/dashboard/account"
+          routerLinkActive="active"
+        >
+          <i class="ph ph-user-circle"></i>
+          Mi cuenta
+        </a>
+
+        <a
+          routerLink="/dashboard/wishlist"
+          routerLinkActive="active"
+        >
+          <i class="ph ph-heart"></i>
+          Favoritos
+        </a>
+
+        <a routerLink="/cart" routerLinkActive="active">
+          <i class="ph ph-shopping-cart"></i>
+          Carrito
+        </a>
+        <a routerLink="/dashboard/orders-client" routerLinkActive="active">
+          <i class="ph ph-shopping-cart"></i>
+          Mis compras
+        </a>
+
+        <a routerLink="/shop" routerLinkActive="active">
+          <i class="ph ph-storefront"></i>
+          Seguir comprando
+        </a>
+      </ng-container>
+
+      <button
+        type="button"
+        class="logout-btn"
+        (click)="logout()"
+      >
+        <i class="ph ph-sign-out"></i>
+        Cerrar sesión
+      </button>
+
     </nav>
   </aside>
 

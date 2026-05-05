@@ -1,0 +1,159 @@
+<main class="pt-12">
+
+
+
+  <section class="register-section pt-120 pb-120 px-xl-20 px-lg-10 px-sm-7">
+    <div class="container-fluid">
+      <div class="row g-6 justify-content-center">
+        <div class="col-xl-5 col-lg-7 col-md-9">
+
+          <div class="register-form p-xl-15 p-lg-10 p-md-8 p-6 radius-16 border border-n100-1 bg-n20">
+
+            <div class="register-logo mb-lg-15 mb-md-10 mb-8 mx-auto">
+              <img class="w-100" src="assets/images/logo.png" alt="Fanaticada.cl">
+            </div>
+
+            <div class="text-center mb-6">
+              <h2 class="text-n100 mb-2">Crea tu cuenta</h2>
+              <p class="text-n50">
+                Guarda favoritos, revisa tus compras y compra más rápido.
+              </p>
+            </div>
+
+            <form
+              [formGroup]="registerForm"
+              (ngSubmit)="registerClient()"
+              class="d-grid gap-lg-6 gap-4 mb-lg-10 mb-md-8 mb-6"
+            >
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Nombre
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="name"
+                  class="py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2"
+                  placeholder="Ingresa tu nombre"
+                >
+
+                <small class="text-danger" *ngIf="submitted && registerForm.get('name')?.invalid">
+                  El nombre es obligatorio.
+                </small>
+              </div>
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Correo electrónico
+                </label>
+
+                <input
+                  type="email"
+                  formControlName="email"
+                  class="py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2"
+                  placeholder="Ingresa tu correo"
+                >
+
+                <small class="text-danger" *ngIf="submitted && registerForm.get('email')?.invalid">
+                  Ingresa un correo válido.
+                </small>
+              </div>
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Contraseña
+                </label>
+
+                <div class="d-flex align-items-center py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    formControlName="password"
+                    class="w-100 border-0 bg-transparent"
+                    placeholder="Mínimo 8 caracteres"
+                  >
+
+                  <button
+                    type="button"
+                    class="text-xl password-toggle"
+                    (click)="togglePassword()"
+                  >
+                    <i class="ph" [ngClass]="showPassword ? 'ph-eye' : 'ph-eye-slash'"></i>
+                  </button>
+                </div>
+
+                <small class="text-danger" *ngIf="submitted && registerForm.get('password')?.invalid">
+                  La contraseña debe tener mínimo 8 caracteres.
+                </small>
+              </div>
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <label class="text-n100 font-noto-sans text-base fw-normal">
+                  Confirmar contraseña
+                </label>
+
+                <div class="d-flex align-items-center py-lg-4 py-2 px-lg-6 px-4 w-100 bg-n0 text-n100 radius-8 border border-n100-1 focus-secondary2">
+                  <input
+                    [type]="showConfirmPassword ? 'text' : 'password'"
+                    formControlName="passwordConfirm"
+                    class="w-100 border-0 bg-transparent"
+                    placeholder="Confirma tu contraseña"
+                  >
+
+                  <button
+                    type="button"
+                    class="text-xl password-toggle"
+                    (click)="toggleConfirmPassword()"
+                  >
+                    <i class="ph" [ngClass]="showConfirmPassword ? 'ph-eye' : 'ph-eye-slash'"></i>
+                  </button>
+                </div>
+
+                <small class="text-danger" *ngIf="submitted && registerForm.hasError('passwordsMismatch')">
+                  Las contraseñas no coinciden.
+                </small>
+              </div>
+
+              <label class="input-checkbox">
+                <input type="checkbox" formControlName="terms" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">
+                  Acepto los
+                  <a routerLink="/terms" class="text-decoration-underline">
+                    términos y condiciones
+                  </a>
+                </span>
+              </label>
+
+              <small class="text-danger" *ngIf="submitted && registerForm.get('terms')?.invalid">
+                Debes aceptar los términos y condiciones.
+              </small>
+
+              <button
+                type="submit"
+                class="btn-secondary py-lg-4 py-2 px-lg-6 px-4 radius-8 w-100"
+                [disabled]="loading"
+              >
+                {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+              </button>
+
+              <p class="text-danger text-center mb-0" *ngIf="errorMessage">
+                {{ errorMessage }}
+              </p>
+            </form>
+
+            <div class="text-center mb-lg-4 mb-2">
+              <span class="text-n50">¿Ya tienes una cuenta?</span>
+              <a routerLink="/login" class="text-secondary2 fw-medium">
+                Iniciar sesión
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

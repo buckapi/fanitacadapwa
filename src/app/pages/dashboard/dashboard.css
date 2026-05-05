@@ -50,3 +50,19 @@
     position: relative;
   }
 }
+.logout-btn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: #d63031;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: rgba(214, 48, 49, 0.08);
+}

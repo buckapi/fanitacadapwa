@@ -158,9 +158,9 @@
                                     Panel administrativo
                                 </a>
 
-                                <a routerLink="/account"
+                                <a routerLink="/dashboard/account"
                                     class="dropdown-link d-block py-2 text-n100 hover-text-secondary2">
-                                    Mis compras
+                                    Mi cuenta
                                 </a>
 
                                 <button type="button" class="dropdown-link logout-btn w-100 text-start py-2 text-danger"
@@ -172,9 +172,14 @@
                         </div>
 
                         <!-- wishlist btn -->
-                        <a href="#" class="wishlist-btn icon-36px position-relative text-n100 hover-text-secondary2">
+                        <a routerLink="/dashboard/wishlist"
+                            class="wishlist-btn icon-36px position-relative text-n100 hover-text-secondary2"
+                            title="Mis favoritos">
                             <span
-                                class="badge radius-pill text-n0 text-sm fw-medium bg-secondary2 position-absolute top-50 start-100 translate-middle z-1 mt-n3">0</span>
+                                class="badge radius-pill text-n0 text-sm fw-medium bg-secondary2 position-absolute top-50 start-100 translate-middle z-1 mt-n3">
+                                {{ wishlistCount }}
+                            </span>
+
                             <span class="text-2xl">
                                 <i class="ph ph-heart"></i>
                             </span>
@@ -293,7 +298,7 @@
                     </div>
                 </div>
                 <div class="cart-box-form">
-                    
+
 
                     <span class="d-block border-bottom border-n100-1 mt-4"></span>
 

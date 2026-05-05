@@ -8,7 +8,7 @@ import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -36,7 +36,7 @@ export class Login {
     this.showPassword = !this.showPassword;
   }
 
-  loginAdmin(): void {
+/*   loginAdmin(): void {
   this.submitted = true;
   this.errorMessage = '';
 
@@ -63,6 +63,38 @@ if (user.type === 'admin') {
 await this.router.navigate(['/']);    },
     error: () => {
       this.errorMessage = 'Credenciales incorrectas o usuario no autorizado.';
+      this.loading = false;
+    }
+  });
+} */
+login(): void {
+  this.submitted = true;
+  this.errorMessage = '';
+
+  if (this.loginForm.invalid) return;
+
+  this.loading = true;
+
+  const { email, password } = this.loginForm.value;
+
+  this.auth.loginUser(email, password).subscribe({
+    next: async ({ user }) => {
+      this.loading = false;
+
+      if (user.type === 'admin') {
+        await this.router.navigate(['/dashboard']);
+        return;
+      }
+
+      if (user.type === 'client') {
+        await this.router.navigate(['/account']);
+        return;
+      }
+
+      await this.router.navigate(['/']);
+    },
+    error: () => {
+      this.errorMessage = 'Credenciales incorrectas.';
       this.loading = false;
     }
   });

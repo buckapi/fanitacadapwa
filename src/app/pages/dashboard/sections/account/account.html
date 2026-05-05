@@ -1,0 +1,74 @@
+<section class="home-dash">
+  <div class="dash-header">
+    <div>
+      <span class="dash-label">Mi cuenta</span>
+      <h1>Hola, {{ user?.name || user?.username || 'cliente' }}</h1>
+      <p>
+        Gestiona tus favoritos, compras, datos personales y productos guardados.
+      </p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">
+        <i class="ph ph-heart"></i>
+      </span>
+      <div>
+        <p>Favoritos</p>
+        <h3>{{ wishlistCount }}</h3>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-icon">
+        <i class="ph ph-shopping-cart"></i>
+      </span>
+      <div>
+        <p>Productos en carrito</p>
+        <h3>{{ cartCount }}</h3>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-icon">
+        <i class="ph ph-package"></i>
+      </span>
+      <div>
+        <p>Pedidos</p>
+        <h3>0</h3>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-icon">
+        <i class="ph ph-user-circle"></i>
+      </span>
+      <div>
+        <p>Tipo de cuenta</p>
+        <h3>{{ user?.type || 'client' }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-section">
+    <h2>Accesos rápidos</h2>
+
+    <div class="quick-actions">
+      <a routerLink="/wishlist" class="quick-card">
+        <i class="ph ph-heart"></i>
+        <span>Ver favoritos</span>
+      </a>
+
+      <a routerLink="/cart" class="quick-card">
+        <i class="ph ph-shopping-cart"></i>
+        <span>Ver carrito</span>
+      </a>
+
+      <a routerLink="/shop" class="quick-card">
+        <i class="ph ph-storefront"></i>
+        <span>Seguir comprando</span>
+      </a>
+    </div>
+  </div>
+</section>

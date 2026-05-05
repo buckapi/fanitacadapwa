@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ProductsService } from '../../services/ProductsService.service';
 import { CommonModule } from '@angular/common';
 import { CategoriesService } from '../../services/CategoriesService.service';
+import { WishlistService } from '../../services/wishlist.service';
+import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
 
 @Component({
   selector: 'app-shop',
@@ -23,7 +25,9 @@ export class Shop implements OnInit, OnDestroy {
     public router: Router,
     public productsService: ProductsService,
     private cd: ChangeDetectorRef,
-    public categoriesService: CategoriesService
+    public categoriesService: CategoriesService,
+    public auth: AuthPocketbaseService,
+    public wishlistService: WishlistService
   ) { }
 
   ngOnInit(): void {
@@ -166,5 +170,25 @@ getProductCategoryIds(product: any): string[] {
   }
 
   return [];
+}
+toggleWishlist(product: any): void {
+  const user = this.auth.getCurrentUser();
+
+  if (!user) {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
+    return;
+  }
+
+  const image = product.images?.length
+    ? this.getFirstProductImage(product)
+    : 'assets/images/no-image.png';
+
+  this.wishlistService.toggleItem(product, image);
+}
+
+isFavorite(productId: string): boolean {
+  return this.wishlistService.isFavorite(productId);
 }
 }

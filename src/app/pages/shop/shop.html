@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row g-6 mb-lg-8 mb-6">
                 <div class="col-12">
-                  <ul class="tab-btn-area d-flex align-items-center gap-2 flex-wrap">
+                    <ul class="tab-btn-area d-flex align-items-center gap-2 flex-wrap">
                         <li>
                             <button type="button"
                                 class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
@@ -54,10 +54,12 @@
                             </div>
 
                             <div class="product-thumb-wrapper position-relative">
-                                <button
+                                <button type="button"
                                     class="single-wishlist-btn text-secondary2 text-xl icon-52px bg-n0 position-absolute top-0 right-0 z-3 tooltip-btn tooltip-left"
-                                    data-tooltip="Add to wishlist">
-                                    <i class="ph ph-heart"></i>
+                                    [attr.data-tooltip]="isFavorite(product.id!) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                                    (click)="toggleWishlist(product); $event.stopPropagation()">
+                                    <i [class]="isFavorite(product.id!) ? 'ph-fill ph-heart text-danger'
+                                        : 'ph ph-heart'"></i>
                                 </button>
 
                                 <div class="product-thumb product-thumb-fixed hover-cursor"

@@ -6,6 +6,7 @@ import { Category } from '../../models/category.model';
 import { CategoriesService } from '../../services/CategoriesService.service';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../../services/cart.service';
+import { WishlistService, WishlistItem } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-header',
@@ -25,12 +26,14 @@ export class Header implements OnInit, OnDestroy {
   cartCount = 0;
   cartSubtotal = 0;
   showCart = false;
-
+  wishlistItems: WishlistItem[] = [];
+wishlistCount = 0;
   constructor(
     public router: Router,
     public auth: AuthPocketbaseService,
     public categoriesService: CategoriesService,
-    public cartService: CartService
+    public cartService: CartService,
+      public wishlistService: WishlistService
   ) { }
 
   ngOnInit(): void {
@@ -41,6 +44,10 @@ export class Header implements OnInit, OnDestroy {
     this.cartItems = items;
     this.cartCount = items.reduce((total, item) => total + item.quantity, 0);
     this.cartSubtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+  });
+  this.wishlistService.items$.subscribe(items => {
+    this.wishlistItems = items;
+    this.wishlistCount = items.length;
   });
 
     this.loadCategories();
