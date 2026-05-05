@@ -14,10 +14,11 @@ import { Navigation, Thumbs, Zoom, FreeMode } from 'swiper/modules';
 import { ProductsService } from '../../services/ProductsService.service';
 import { Product } from '../../models/product.model';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css',
 })
@@ -26,14 +27,15 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   private productsService = inject(ProductsService);
   private cd = inject(ChangeDetectorRef);
+  private cartService = inject(CartService);
 
   product?: Product;
   relatedProducts: Product[] = [];
 
   loadingProduct = false;
   loadingRelated = false;
-showSharePopup = false;
-showQuestionPopup = false;
+  showSharePopup = false;
+  showQuestionPopup = false;
   fallbackImage = 'assets/images/product-1.png';
 
   private productSwiper?: Swiper;
@@ -123,69 +125,69 @@ showQuestionPopup = false;
     });
   }
 
- async loadRelatedProducts() {
-  try {
-    this.loadingRelated = true;
+  async loadRelatedProducts() {
+    try {
+      this.loadingRelated = true;
 
-    if (!this.product) {
+      if (!this.product) {
+        this.relatedProducts = [];
+        return;
+      }
+
+      const currentCategories = this.getProductCategoryIds(this.product);
+
+      if (currentCategories.length === 0) {
+        this.relatedProducts = [];
+        return;
+      }
+
+      const products = await this.productsService.getProducts();
+
+      this.relatedProducts = products
+        .filter((item) => {
+          if (item.id === this.product?.id) return false;
+
+          const itemCategories = this.getProductCategoryIds(item);
+
+          return itemCategories.some((categoryId) =>
+            currentCategories.includes(categoryId)
+          );
+        })
+        .slice(0, 6);
+
+    } catch (error) {
+      console.error('Error cargando relacionados:', error);
       this.relatedProducts = [];
-      return;
+    } finally {
+      this.loadingRelated = false;
+      this.cd.detectChanges();
+    }
+  }
+  getProductCategoryIds(product: any): string[] {
+    if (!product) return [];
+
+    if (Array.isArray(product.categories)) {
+      return product.categories.filter(Boolean);
     }
 
-    const currentCategories = this.getProductCategoryIds(this.product);
-
-    if (currentCategories.length === 0) {
-      this.relatedProducts = [];
-      return;
+    if (typeof product.categories === 'string') {
+      return [product.categories];
     }
 
-    const products = await this.productsService.getProducts();
+    const expandedCategories = product.expand?.categories;
 
-    this.relatedProducts = products
-      .filter((item) => {
-        if (item.id === this.product?.id) return false;
+    if (Array.isArray(expandedCategories)) {
+      return expandedCategories
+        .map((category: any) => category.id)
+        .filter(Boolean);
+    }
 
-        const itemCategories = this.getProductCategoryIds(item);
+    if (expandedCategories?.id) {
+      return [expandedCategories.id];
+    }
 
-        return itemCategories.some((categoryId) =>
-          currentCategories.includes(categoryId)
-        );
-      })
-      .slice(0, 6);
-
-  } catch (error) {
-    console.error('Error cargando relacionados:', error);
-    this.relatedProducts = [];
-  } finally {
-    this.loadingRelated = false;
-    this.cd.detectChanges();
+    return [];
   }
-}
-getProductCategoryIds(product: any): string[] {
-  if (!product) return [];
-
-  if (Array.isArray(product.categories)) {
-    return product.categories.filter(Boolean);
-  }
-
-  if (typeof product.categories === 'string') {
-    return [product.categories];
-  }
-
-  const expandedCategories = product.expand?.categories;
-
-  if (Array.isArray(expandedCategories)) {
-    return expandedCategories
-      .map((category: any) => category.id)
-      .filter(Boolean);
-  }
-
-  if (expandedCategories?.id) {
-    return [expandedCategories.id];
-  }
-
-  return [];
-}
 
   getProductImages(product?: Product): string[] {
     if (!product) return [];
@@ -224,99 +226,102 @@ getProductCategoryIds(product: any): string[] {
     this.router.navigateByUrl(`/product-detail/${product.id}`);
   }
 
-  addToCart(product?: Product) {
-    if (!product) return;
-    console.log('Añadir al carrito:', product);
+  addToCart(product: any): void {
+    const image = product.images?.length
+      ? this.getProductImages(product)[0]
+      : 'assets/images/no-image.png';
+
+    this.cartService.addItem(product, 1, image);
   }
   zoomEnabled = false;
 
-toggleZoom(): void {
-  this.zoomEnabled = !this.zoomEnabled;
-}
+  toggleZoom(): void {
+    this.zoomEnabled = !this.zoomEnabled;
+  }
 
-onZoomMove(event: MouseEvent): void {
-  if (!this.zoomEnabled) return;
+  onZoomMove(event: MouseEvent): void {
+    if (!this.zoomEnabled) return;
 
-  const container = event.currentTarget as HTMLElement;
-  const image = container.querySelector('img') as HTMLImageElement;
+    const container = event.currentTarget as HTMLElement;
+    const image = container.querySelector('img') as HTMLImageElement;
 
-  if (!image) return;
+    if (!image) return;
 
-  const rect = container.getBoundingClientRect();
+    const rect = container.getBoundingClientRect();
 
-  const x = ((event.clientX - rect.left) / rect.width) * 100;
-  const y = ((event.clientY - rect.top) / rect.height) * 100;
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
 
-  image.style.transformOrigin = `${x}% ${y}%`;
-  image.style.transform = 'scale(2)';
-}
+    image.style.transformOrigin = `${x}% ${y}%`;
+    image.style.transform = 'scale(2)';
+  }
 
-resetZoom(event: MouseEvent): void {
-  const container = event.currentTarget as HTMLElement;
-  const image = container.querySelector('img') as HTMLImageElement;
+  resetZoom(event: MouseEvent): void {
+    const container = event.currentTarget as HTMLElement;
+    const image = container.querySelector('img') as HTMLImageElement;
 
-  if (!image) return;
+    if (!image) return;
 
-  image.style.transformOrigin = 'center center';
-  image.style.transform = 'scale(1)';
-}
+    image.style.transformOrigin = 'center center';
+    image.style.transform = 'scale(1)';
+  }
 
 
-questionForm = {
-  name: '',
-  email: '',
-  message: '',
-};
-
-get productShareUrl(): string {
-  return `${window.location.origin}/product-detail/${this.product?.id}`;
-}
-
-openSharePopup(): void {
-  console.log('Abriendo popup compartir');
-  this.showSharePopup = true;
-  this.cd.detectChanges();
-}
-
-openQuestionPopup(): void {
-  console.log('Abriendo popup pregunta');
-  this.showQuestionPopup = true;
-  this.cd.detectChanges();
-}
-
-closeSharePopup(): void {
-  this.showSharePopup = false;
-  this.cd.detectChanges();
-}
-
-closeQuestionPopup(): void {
-  this.showQuestionPopup = false;
-  this.cd.detectChanges();
-}
-async copyProductLink(): Promise<void> {
-  await navigator.clipboard.writeText(this.productShareUrl);
-  alert('Enlace copiado');
-}
-
-shareOn(platform: 'facebook' | 'instagram' | 'whatsapp'): void {
-  const url = encodeURIComponent(this.productShareUrl);
-  const text = encodeURIComponent(`Mira este producto: ${this.product?.name}`);
-
-  const links = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-    instagram: `https://www.instagram.com/?url=${url}&text=${text}`,
-    whatsapp: `https://wa.me/?text=${text}%20${url}`,
+  questionForm = {
+    name: '',
+    email: '',
+    message: '',
   };
 
-  window.open(links[platform], '_blank');
-}
+  get productShareUrl(): string {
+    return `${window.location.origin}/product-detail/${this.product?.id}`;
+  }
 
-sendQuestion(): void {
-  if (!this.product) return;
+  openSharePopup(): void {
+    console.log('Abriendo popup compartir');
+    this.showSharePopup = true;
+    this.cd.detectChanges();
+  }
 
-  const phone = '56912345678'; // cambia por tu WhatsApp real
+  openQuestionPopup(): void {
+    console.log('Abriendo popup pregunta');
+    this.showQuestionPopup = true;
+    this.cd.detectChanges();
+  }
 
-  const message = `
+  closeSharePopup(): void {
+    this.showSharePopup = false;
+    this.cd.detectChanges();
+  }
+
+  closeQuestionPopup(): void {
+    this.showQuestionPopup = false;
+    this.cd.detectChanges();
+  }
+  async copyProductLink(): Promise<void> {
+    await navigator.clipboard.writeText(this.productShareUrl);
+    alert('Enlace copiado');
+  }
+
+  shareOn(platform: 'facebook' | 'instagram' | 'whatsapp'): void {
+    const url = encodeURIComponent(this.productShareUrl);
+    const text = encodeURIComponent(`Mira este producto: ${this.product?.name}`);
+
+    const links = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      instagram: `https://www.instagram.com/?url=${url}&text=${text}`,
+      whatsapp: `https://wa.me/?text=${text}%20${url}`,
+    };
+
+    window.open(links[platform], '_blank');
+  }
+
+  sendQuestion(): void {
+    if (!this.product) return;
+
+    const phone = '56912345678'; // cambia por tu WhatsApp real
+
+    const message = `
 Hola, quiero hacer una consulta sobre este producto:
 
 Producto: ${this.product.name}
@@ -330,15 +335,17 @@ Mensaje:
 ${this.questionForm.message}
   `;
 
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
 
-  this.closeQuestionPopup();
+    this.closeQuestionPopup();
 
-  this.questionForm = {
-    name: '',
-    email: '',
-    message: '',
-  };
-}
+    this.questionForm = {
+      name: '',
+      email: '',
+      message: '',
+    };
+  }
+
+
 
 }

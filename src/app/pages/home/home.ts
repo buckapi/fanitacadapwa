@@ -6,7 +6,7 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductsService } from '../../services/ProductsService.service';
 import { Product } from '../../models/product.model';
 import Swiper from 'swiper';
@@ -14,7 +14,7 @@ import { Autoplay, Navigation, FreeMode } from 'swiper/modules';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

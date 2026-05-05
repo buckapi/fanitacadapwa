@@ -28,3 +28,75 @@
 .logout-btn {
   cursor: pointer;
 }
+
+.products-menu-item {
+  position: relative;
+}
+
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 420px;
+  background: #ffffff;
+  z-index: 9999;
+  padding: 24px 28px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  display: block;
+}
+
+.mega-menu-item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.menu-title-wrapper {
+  display: flex;
+  align-items: center;
+  color: #111 !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu-title {
+  color: #111 !important;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 600px; /* controla el ancho */
+  background: #ffffff;
+  z-index: 9999;
+  padding: 20px 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.mega-menu-item {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  gap: 10px 20px;
+}
+
+.menu-title-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 6px 4px;
+  text-decoration: none;
+  color: #111;
+  transition: all 0.2s ease;
+}
+
+.menu-title-wrapper:hover {
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.menu-title {
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -10,6 +10,9 @@ import { Categories } from './pages/dashboard/sections/categories/categories';
 import { Orders } from './pages/dashboard/sections/orders/orders';
 import { Users } from './pages/dashboard/sections/users/users';
 import { ProductDetail } from './pages/product-detail/product-detail';
+import { Contact } from './pages/contact/contact';
+import { Cart} from './pages/cart/cart';
+import { Checkout } from './pages/checkout/checkout';
 
 export const routes: Routes = [
   {
@@ -31,6 +34,18 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+  },
+  {
+    path: 'contact',
+    component: Contact,
+  },
+  {
+    path: 'cart',
+    component: Cart,
+  },
+  {
+    path: 'checkout',
+    component: Checkout,
   },
   {
     path: 'dashboard',

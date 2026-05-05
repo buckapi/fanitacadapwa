@@ -1,0 +1,223 @@
+<main class="pt-12">
+  <section
+    class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
+    style="background-image: url(assets/images/inner-page-banner.png);"
+  >
+    <div class="container-fluid">
+      <span class="text-animation-word text-h1 text-n100 mb-3">
+        Tu carrito
+      </span>
+
+      <ul class="breadcrumb d-inline-flex align-items-center gap-lg-2 gap-1">
+        <li class="breadcrumb-item">
+          <a routerLink="/">Inicio</a>
+        </li>
+        <li class="breadcrumb-item active">
+          <a>Carrito de compras</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cart-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
+    <div class="container-fluid">
+
+      <div *ngIf="cartItems.length === 0" class="text-center py-5 bg-n20">
+        <h3 class="text-n100 mb-3">Tu carrito está vacío</h3>
+        <p class="text-n50 mb-4">
+          Agrega productos para continuar con tu compra.
+        </p>
+
+        <a
+          routerLink="/shop"
+          class="btn-secondary d-inline-flex align-items-center gap-2"
+        >
+          Ver productos
+          <span class="icon">
+            <i class="ph ph-arrow-up-right"></i>
+          </span>
+        </a>
+      </div>
+
+      <div class="row g-6" *ngIf="cartItems.length > 0">
+        <div class="col-xl-8">
+          <div class="product-cart-table table-responsive mb-lg-8 mb-6">
+            <table class="table common-table">
+              <thead>
+                <tr>
+                  <th class="p-xxl-6 p-lg-4 p-2">Producto</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Cantidad</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Total</th>
+                  <th class="p-xxl-6 p-lg-4 p-2">Acción</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of cartItems">
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <div class="cart-card d-flex align-items-center gap-lg-6 gap-4">
+                      <div class="product-thumb">
+                        <img
+                          [src]="item.image || 'assets/images/no-image.png'"
+                          [alt]="item.name"
+                          class="w-100"
+                        >
+                      </div>
+
+                      <div class="product-info">
+                        <span class="text-n100 text-base fw-medium d-block">
+                          {{ item.name }}
+                        </span>
+
+                        <span class="d-block text-secondary2 text-base my-lg-2 my-1">
+                          ${{ item.price | number:'1.0-0' }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <div class="quantity d-inline-flex gap-lg-5 gap-3 align-items-center py-1 px-2 border border-n100-1 bg-n20 radius-4">
+                      <button
+                        type="button"
+                        class="quantityDecrement text-n100"
+                        (click)="decrement(item.id)"
+                      >
+                        <i class="ph ph-minus"></i>
+                      </button>
+
+                      <input
+                        type="text"
+                        [value]="item.quantity"
+                        readonly
+                        class="quantityValue border-0 p-0 outline-0 bg-n20"
+                      >
+
+                      <button
+                        type="button"
+                        class="quantityIncrement text-n100"
+                        (click)="increment(item.id)"
+                      >
+                        <i class="ph ph-plus"></i>
+                      </button>
+                    </div>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <span class="text-n100 text-sm d-block text-nowrap">
+                      ${{ item.price * item.quantity | number:'1.0-0' }}
+                    </span>
+                  </td>
+
+                  <td class="p-xxl-6 p-lg-4 p-2">
+                    <button type="button" (click)="remove(item.id)">
+                      <i class="ph ph-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <label class="input-checkbox pb-lg-8 pb-6 border-bottom border-n100-1">
+            <input type="checkbox" hidden>
+            <span class="checkbox"></span>
+            <span class="text-base text-n50">
+              Deseo agregar una nota o indicación especial para mi pedido.
+            </span>
+          </label>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="p-xxl-10 p-md-6 p-4 bg-n20 border border-n100-1 mb-lg-8 mb-6">
+            <div class="free-shipping-progress">
+              <div class="progress-bar">
+                <div class="progress-bar-inner" style="width: 70%;">
+                  <span class="car-icon">
+                    <i class="ph ph-truck"></i>
+                  </span>
+                </div>
+              </div>
+
+              <span class="text-n100 text-sm fw-normal">
+                Envíos disponibles a todo Chile.
+              </span>
+            </div>
+
+            <span class="border-bottom border-n100-1 w-100 d-block my-lg-6 my-4"></span>
+
+            <form>
+              <span class="d-block text-n100 text-base fw-medium mb-lg-4 mb-2">
+                Nota del pedido
+              </span>
+
+              <textarea
+                class="note-form border-n100-1 p-4 w-100 focus-secondary2"
+                rows="3"
+                placeholder="Ej: talla, color, referencias o indicaciones para el despacho"
+              ></textarea>
+
+              <span class="border-bottom border-n100-1 w-100 d-block mb-lg-6 mb-4 mt-xl-9 mt-md-7 mt-5"></span>
+
+              <div class="d-grid gap-2 mb-lg-6 mb-4">
+                <div class="d-between">
+                  <span class="text-n100 text-base fw-medium">Subtotal</span>
+                  <span class="text-n100 text-base fw-medium">
+                    ${{ subtotal | number:'1.0-0' }}
+                  </span>
+                </div>
+
+                <span class="text-n50 text-sm">
+                  El valor del envío será confirmado al finalizar la compra.
+                </span>
+              </div>
+
+              <label class="input-checkbox mb-lg-6 mb-4">
+                <input type="checkbox" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">
+                  Acepto los
+                  <a routerLink="/terms" class="text-decoration-underline">
+                    términos y condiciones
+                  </a>
+                </span>
+              </label>
+
+              <div class="d-grid gap-lg-4 gap-2">
+                <a
+                  routerLink="/checkout"
+                  class="d-block text-center text-base fw-medium py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0 text-n100 w-100 border border-n100 hover-bg-n100 hover-text-n0"
+                >
+                  Continuar compra
+                </a>
+
+                <a
+                  routerLink="/shop"
+                  class="btn-secondary radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-center"
+                >
+                  Seguir comprando
+                </a>
+              </div>
+            </form>
+          </div>
+
+          <div class="d-grid gap-lg-4 gap-2">
+            <span class="text-n100 text-base fw-medium text-center">
+              Compra segura:
+            </span>
+
+            <div class="d-center gap-2">
+              <div>
+                <img class="w-100 max-w-100px" src="assets/images/visa-2.png" alt="Visa">
+              </div>
+              <div>
+                <img class="w-100 max-w-100px" src="assets/images/master.png" alt="Mastercard">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>

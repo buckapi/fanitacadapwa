@@ -1,0 +1,305 @@
+<main style="padding-top: 7rem !important;">
+  <section class="checkout-section px-xl-20 px-lg-10 px-sm-7 overflow-lg-visible">
+    <div class="container-fluid">
+
+      <form [formGroup]="checkoutForm" (ngSubmit)="completeOrder()">
+        <div class="row g-lg-0 g-6">
+
+          <div class="col-lg-6 bg-n0 pt-lg-15 pt-10 pe-lg-15 overflow-hidden order-lg-first order-last">
+
+            <div class="d-grid gap-lg-3 gap-2 mb-lg-8 mb-6">
+              <label class="text-n100 text-xl fw-medium">Contacto</label>
+
+              <input
+                type="text"
+                formControlName="contact"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Correo electrónico o teléfono"
+              >
+
+              <small class="text-danger" *ngIf="checkoutForm.get('contact')?.touched && checkoutForm.get('contact')?.invalid">
+                El contacto es obligatorio.
+              </small>
+
+              <label class="input-checkbox">
+                <input type="checkbox" formControlName="newsletter" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">Recibir novedades y ofertas</span>
+              </label>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+              <span class="text-n100 text-xl fw-medium">Entrega</span>
+
+              <div class="d-grid gap-2">
+                <label>País / Región</label>
+                <div class="country-select d-flex align-items-center border border-n100-1 focus-secondary2 bg-n0 position-relative">
+                  <select
+                    formControlName="country"
+                    class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0"
+                  >
+                    <option value="Chile">Chile</option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+
+              <div class="d-lg-flex d-grid align-items-center gap-lg-4 gap-2">
+                <input
+                  type="text"
+                  formControlName="firstName"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="Nombre"
+                >
+
+                <input
+                  type="text"
+                  formControlName="lastName"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="Apellido"
+                >
+              </div>
+
+              <input
+                type="text"
+                formControlName="company"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Empresa, opcional"
+              >
+
+              <input
+                type="text"
+                formControlName="address"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Dirección"
+              >
+
+              <input
+                type="text"
+                formControlName="apartment"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Departamento, casa, referencia, opcional"
+              >
+
+              <div class="d-lg-flex d-grid align-items-center gap-lg-4 gap-2">
+                <input
+                  type="text"
+                  formControlName="city"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="Ciudad"
+                >
+
+                <input
+                  type="text"
+                  formControlName="postalCode"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="Código postal, opcional"
+                >
+              </div>
+
+              <input
+                type="tel"
+                formControlName="phone"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Teléfono"
+              >
+
+              <label class="input-checkbox">
+                <input type="checkbox" formControlName="saveInfo" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">Guardar esta información para la próxima vez</span>
+              </label>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+              <span class="text-n100 text-xl fw-medium">Método de envío</span>
+
+              <div>
+                <label class="input-radiobox d-between gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                  <span class="d-flex align-items-center gap-lg-4 gap-2">
+                    <input type="radio" formControlName="shippingMethod" value="santiago" hidden>
+                    <span class="checkbox"></span>
+                    <span class="text-base text-n50">Entrega en Santiago</span>
+                  </span>
+                  <span>Gratis</span>
+                </label>
+
+                <label class="input-radiobox d-between gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                  <span class="d-flex align-items-center gap-lg-4 gap-2">
+                    <input type="radio" formControlName="shippingMethod" value="region" hidden>
+                    <span class="checkbox"></span>
+                    <span class="text-base text-n50">Envío a regiones</span>
+                  </span>
+                  <span>$5.000</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+              <div class="d-grid gap-1">
+                <span class="text-n100 text-xl fw-medium">Pago</span>
+                <span class="text-n50">Todas las transacciones serán confirmadas de forma segura.</span>
+              </div>
+
+              <div>
+                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                  <input type="radio" formControlName="paymentMethod" value="transferencia" hidden>
+                  <span class="checkbox"></span>
+                  <span class="text-base text-n50">Transferencia bancaria</span>
+                </label>
+
+                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                  <input type="radio" formControlName="paymentMethod" value="webpay" hidden>
+                  <span class="checkbox"></span>
+                  <span class="text-base text-n50">Pago online con tarjeta</span>
+                </label>
+
+                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                  <input type="radio" formControlName="paymentMethod" value="contra_entrega" hidden>
+                  <span class="checkbox"></span>
+                  <span class="text-base text-n50">Pago contra entrega</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+              <span class="text-n100 text-xl fw-medium">Dirección de facturación</span>
+
+              <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                <input type="radio" formControlName="billingAddress" value="same" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">Igual a la dirección de envío</span>
+              </label>
+
+              <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+                <input type="radio" formControlName="billingAddress" value="different" hidden>
+                <span class="checkbox"></span>
+                <span class="text-base text-n50">Usar una dirección diferente</span>
+              </label>
+            </div>
+
+            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+              <span class="text-n100 text-xl fw-medium">Nota del pedido</span>
+
+              <textarea
+                formControlName="note"
+                class="note-form border-n100-1 p-4 w-100 focus-secondary2"
+                rows="3"
+                placeholder="Ej: talla, color, referencias de entrega o comentarios adicionales"
+              ></textarea>
+            </div>
+
+            <label class="input-checkbox mb-lg-6 mb-4">
+              <input type="checkbox" formControlName="terms" hidden>
+              <span class="checkbox"></span>
+              <span class="text-base text-n50">
+                Acepto los
+                <a routerLink="/terms" class="text-decoration-underline">términos y condiciones</a>
+              </span>
+            </label>
+
+            <div class="pb-120">
+              <button
+                type="submit"
+                class="btn-secondary text-base fw-medium radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 w-100"
+              >
+                Completar pedido
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-6 bg-n20 pt-lg-15 pt-10 pb-lg-0 pb-10 ps-lg-15 checkout-right position-relative z-1">
+            <div class="position-sticky top-15">
+
+              <div *ngIf="cartItems.length === 0" class="text-center py-5">
+                <h4 class="text-n100 mb-3">No hay productos en el carrito</h4>
+                <a routerLink="/shop" class="btn-secondary">
+                  Ver productos
+                </a>
+              </div>
+
+              <div *ngIf="cartItems.length > 0">
+                <div class="product-list-wrapper d-grid gap-4 mb-lg-6 mb-4">
+                  <div class="product-list d-between" *ngFor="let item of cartItems">
+                    <div class="d-flex align-items-center gap-4">
+                      <div class="product-image max-w-120px bg-n0 p-1 position-relative">
+                        <span class="badge bg-primary2 text-n0 text-sm fw-medium position-absolute top-0 right-n10 radius-pill translate-middle">
+                          {{ item.quantity }}
+                        </span>
+
+                        <img
+                          class="w-100"
+                          [src]="item.image || 'assets/images/no-image.png'"
+                          [alt]="item.name"
+                        >
+                      </div>
+
+                      <div class="product-info d-flex flex-column">
+                        <span class="text-n100 text-base fw-medium">
+                          {{ item.name }}
+                        </span>
+
+                        <span class="text-sm text-n50">
+                          Cantidad: {{ item.quantity }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="product-price">
+                      <span class="text-secondary2 text-base fw-medium">
+                        ${{ item.price * item.quantity | number:'1.0-0' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-center border border-n100-1 bg-n0 mb-lg-6 mb-4">
+                  <input
+                    type="text"
+                    class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-n100"
+                    placeholder="Código de descuento"
+                  >
+
+                  <button
+                    type="button"
+                    class="text-base fw-medium text-n0 bg-n100 py-lg-4 py-2 px-xl-8 px-md-6 px-4"
+                  >
+                    Aplicar
+                  </button>
+                </div>
+
+                <div class="d-grid gap-lg-4 gap-2">
+                  <div class="d-grid gap-lg-3 gap-2">
+                    <div class="d-flex justify-content-between">
+                      <span class="text-n50 text-base fw-normal">Subtotal</span>
+                      <span class="text-n50 text-base fw-normal">
+                        ${{ subtotal | number:'1.0-0' }}
+                      </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <span class="text-n50 text-base fw-normal">Envío</span>
+                      <span class="text-n50 text-base fw-normal">
+                        {{ shipping === 0 ? 'Gratis' : ('$' + (shipping | number:'1.0-0')) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between">
+                    <span class="text-n100 text-xl fw-semibold">Total</span>
+                    <span class="text-n100 text-xl fw-semibold">
+                      ${{ total | number:'1.0-0' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </section>
+</main>

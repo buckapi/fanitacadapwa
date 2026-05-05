@@ -23591,8 +23591,8 @@ fieldset:disabled .btn {
   }
 
   .py-lg-5 {
-    padding-top: 1.25rem !important;
-    padding-bottom: 1.25rem !important;
+    padding-top: 0.1rem !important;
+    padding-bottom: 0.1rem !important;
   }
 
   .py-lg-4 {
@@ -43422,18 +43422,18 @@ html.lenis body {
 
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-thumb {
-  background: #E9FFA4;
+  background: #f7c407;
   border-radius: 5px;
 }
 
 ::-moz-selection {
   color: #c21e2a;
-  background: #E9FFA4;
+  background: #f7c407;
 }
 
 ::selection {
   color: #c21e2a;
-  background: #E9FFA4;
+  background: #f7c407;
 }
 
 section,
@@ -51741,7 +51741,7 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #E9FFA4;
+  background: #f7c407;
   color: #FFFFFF;
   cursor: pointer;
   position: relative;
@@ -51868,7 +51868,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: 400%;
 }
 .box-style.box-primary::before {
-  background: #E9FFA4;
+  background: #f7c407;
 }
 .box-style.box-primary2::before {
   background: #7D8877;
@@ -51984,7 +51984,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .input-checkbox input:checked + .checkbox {
   border: 1px solid #c21e2a;
-  background: #E9FFA4;
+  background: #f7c407;
 }
 .input-checkbox input:checked + .checkbox::after {
   content: "";
@@ -51999,7 +51999,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .focus-primary:focus, .focus-primary:focus-within, .focus-primary:focus-visible {
-  border-color: #E9FFA4 !important;
+  border-color: #f7c407 !important;
 }
 
 .focus-primary2:focus, .focus-primary2:focus-within, .focus-primary2:focus-visible {
@@ -52189,7 +52189,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .text-primary {
-  color: #E9FFA4 !important;
+  color: #f7c407 !important;
 }
 
 .text-primary2 {
@@ -52229,7 +52229,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .bg-primary {
-  background: #E9FFA4 !important;
+  background: #f7c407 !important;
 }
 
 .bg-primary2 {
@@ -52280,7 +52280,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.3s ease-in-out;
 }
 .hover-text-primary:hover {
-  color: #E9FFA4 !important;
+  color: #f7c407 !important;
 }
 
 .hover-text-primary2 {
@@ -52322,7 +52322,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.3s ease-in-out;
 }
 .hover-bg-primary:hover {
-  background: #E9FFA4 !important;
+  background: #f7c407 !important;
 }
 
 .hover-bg-primary2 {
@@ -52539,7 +52539,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .border-primary-1 {
-  border-color: #E9FFA4 !important;
+  border-color: #f7c407 !important;
 }
 
 .border-primary-2 {
@@ -52606,7 +52606,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.3s ease-in-out;
 }
 .hover-border-primary:hover {
-  border-color: #E9FFA4 !important;
+  border-color: #f7c407 !important;
 }
 
 .hover-border-n0 {
@@ -53384,7 +53384,7 @@ input[type=number]::-webkit-outer-spin-button {
     height: 95vh;
     overflow: hidden;
     overflow-y: auto;
-    background: #E9FFA4;
+    background: #f7c407;
     padding: 20px;
     transform: translateX(100%);
     transition: all 0.3s ease-in-out;
@@ -53847,7 +53847,7 @@ input[type=number]::-webkit-outer-spin-button {
 .loader_spokes-spin,
 .loader_tire {
   animation: bikeBody 3s ease-in-out infinite;
-  stroke: #E9FFA4;
+  stroke: #f7c407;
 }
 
 .loader_front {
@@ -54037,21 +54037,21 @@ input[type=number]::-webkit-outer-spin-button {
 .hero-section .hero-banner-item::after {
   top: 0;
   left: 0;
-  border-left: 2px solid #E9FFA4;
-  border-top: 2px solid #E9FFA4;
+  border-left: 2px solid #f7c407;
+  border-top: 2px solid #f7c407;
 }
 .hero-section .hero-banner-item::before {
   bottom: 0;
   right: 0;
-  border-right: 2px solid #E9FFA4;
-  border-bottom: 2px solid #E9FFA4;
+  border-right: 2px solid #f7c407;
+  border-bottom: 2px solid #f7c407;
 }
 .hero-section .hero-banner-item .hero-banner-wrapper::after, .hero-section .hero-banner-item .hero-banner-wrapper::before {
   content: "";
   position: absolute;
   width: 0;
   height: 0;
-  background: #E9FFA4;
+  background: #f7c407;
   opacity: 0.5;
   transition: all 0.8s ease-in-out 0s;
   -moz-transition: width 0.7s ease, height 0.7s ease;
@@ -54175,7 +54175,7 @@ input[type=number]::-webkit-outer-spin-button {
     right: 50%;
     width: 60%;
     height: 105.5%;
-    background: #E9FFA4;
+    background: #f7c407;
     z-index: -1;
     transform: translate(-50%, -50%);
     border: solid #FFFFFF;
@@ -54362,7 +54362,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 @media (min-width: 1200px) {
   .inner-hero-section {
-    padding-top: 180px;
+    padding-top: 290px;
     padding-bottom: 100px;
   }
 }
@@ -54394,7 +54394,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .round-wave-animation span {
   position: absolute;
-  background: #E9FFA4;
+  background: #f7c407;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -54502,7 +54502,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   animation: rotateText 10s linear infinite;
   z-index: 1;
-  background: #E9FFA4;
+  background: #f7c407;
 }
 
 .wishlist-card-img {
