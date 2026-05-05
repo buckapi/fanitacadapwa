@@ -100,3 +100,133 @@
   font-size: 14px;
   font-weight: 600;
 }
+
+.header-search-form {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.header-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 46px;
+}
+
+.header-search-box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 0 90px 0 18px;
+  font-size: 14px;
+  background: transparent;
+}
+
+.toggle-search-btn {
+  position: absolute;
+  right: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #111;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 48px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #777;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+  padding: 10px;
+  z-index: 9999;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.search-result-item:hover {
+  background: #f6f6f6;
+}
+
+.search-result-item img {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f1f1f1;
+}
+
+.search-result-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.search-result-item strong {
+  font-size: 14px;
+  color: #111;
+}
+
+.search-result-item small {
+  font-size: 12px;
+  color: #777;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-result-item span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+}
+
+.search-loading,
+.search-empty {
+  padding: 16px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
+@media (max-width: 991px) {
+  .header-search-form {
+    max-width: 100%;
+  }
+
+  .search-dropdown {
+    position: fixed;
+    top: 75px;
+    left: 15px;
+    right: 15px;
+  }
+}

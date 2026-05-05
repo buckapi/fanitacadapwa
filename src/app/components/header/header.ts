@@ -7,70 +7,159 @@ import { CategoriesService } from '../../services/CategoriesService.service';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../../services/cart.service';
 import { WishlistService, WishlistItem } from '../../services/wishlist.service';
+import { FormsModule } from '@angular/forms';
+import { Product } from '../../models/product.model';
+import { ProductsService } from '../../services/ProductsService.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header implements OnInit, OnDestroy {
   user: StoreUser | null = null;
   showUserMenu = false;
+
   categories: Category[] = [];
   loadingCategories = true;
   showCategoriesMenu = false;
+
   private userSub?: Subscription;
+  private searchTimeout?: any;
+
   cartItems: CartItem[] = [];
   cartCount = 0;
   cartSubtotal = 0;
   showCart = false;
+
   wishlistItems: WishlistItem[] = [];
-wishlistCount = 0;
+  wishlistCount = 0;
+
+  searchTerm = '';
+  searchResults: Product[] = [];
+  searching = false;
+  showSearchResults = false;
+
   constructor(
     public router: Router,
     public auth: AuthPocketbaseService,
     public categoriesService: CategoriesService,
     public cartService: CartService,
-      public wishlistService: WishlistService
-  ) { }
+    public wishlistService: WishlistService,
+    private productsService: ProductsService
+  ) {}
 
   ngOnInit(): void {
     this.userSub = this.auth.currentUser$.subscribe(user => {
       this.user = user;
     });
-     this.cartService.items$.subscribe(items => {
-    this.cartItems = items;
-    this.cartCount = items.reduce((total, item) => total + item.quantity, 0);
-    this.cartSubtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
-  });
-  this.wishlistService.items$.subscribe(items => {
-    this.wishlistItems = items;
-    this.wishlistCount = items.length;
-  });
+
+    this.cartService.items$.subscribe(items => {
+      this.cartItems = items;
+      this.cartCount = items.reduce((total, item) => total + item.quantity, 0);
+      this.cartSubtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+    });
+
+    this.wishlistService.items$.subscribe(items => {
+      this.wishlistItems = items;
+      this.wishlistCount = items.length;
+    });
 
     this.loadCategories();
   }
 
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
+
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   }
 
   async loadCategories(): Promise<void> {
     try {
       this.loadingCategories = true;
-
       const categories = await this.categoriesService.getCategories();
-
-      console.log('📦 categorías header:', categories);
-
       this.categories = categories || [];
     } catch (error) {
       console.error('❌ error cargando categorías header:', error);
     } finally {
       this.loadingCategories = false;
     }
+  }
+
+  onSearchChange(): void {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+
+    this.searchTimeout = setTimeout(() => {
+      this.searchProducts();
+    }, 350);
+  }
+
+  async searchProducts(): Promise<void> {
+    const term = this.searchTerm.trim();
+
+    if (term.length < 2) {
+      this.searchResults = [];
+      this.showSearchResults = false;
+      return;
+    }
+
+    try {
+      this.searching = true;
+      this.showSearchResults = true;
+
+      this.searchResults = await this.productsService.searchProducts(term);
+    } catch (error) {
+      console.error('❌ error buscando productos:', error);
+      this.searchResults = [];
+    } finally {
+      this.searching = false;
+    }
+  }
+
+  goToProduct(product: Product): void {
+    this.searchTerm = '';
+    this.searchResults = [];
+    this.showSearchResults = false;
+
+    this.router.navigate(['/product', product.id]);
+  }
+
+  submitSearch(event: Event): void {
+    event.preventDefault();
+
+    const term = this.searchTerm.trim();
+
+    if (!term) return;
+
+    this.showSearchResults = false;
+
+    this.router.navigate(['/shop'], {
+      queryParams: {
+        search: term
+      }
+    });
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.searchResults = [];
+    this.showSearchResults = false;
+  }
+
+  getProductImage(product: any): string {
+    const images = product.expand?.images;
+
+    if (Array.isArray(images) && images.length > 0) {
+      return this.productsService.getImageRecordUrl(images[0]) || 'assets/images/no-image.png';
+    }
+
+    return 'assets/images/no-image.png';
   }
 
   toggleUserMenu(event: Event): void {
@@ -95,23 +184,24 @@ wishlistCount = 0;
     event.preventDefault();
     this.showCategoriesMenu = !this.showCategoriesMenu;
   }
+
   openCart(): void {
-  this.showCart = true;
-}
+    this.showCart = true;
+  }
 
-closeCart(): void {
-  this.showCart = false;
-}
+  closeCart(): void {
+    this.showCart = false;
+  }
 
-incrementCartItem(id: string): void {
-  this.cartService.increment(id);
-}
+  incrementCartItem(id: string): void {
+    this.cartService.increment(id);
+  }
 
-decrementCartItem(id: string): void {
-  this.cartService.decrement(id);
-}
+  decrementCartItem(id: string): void {
+    this.cartService.decrement(id);
+  }
 
-removeCartItem(id: string): void {
-  this.cartService.removeItem(id);
-}
+  removeCartItem(id: string): void {
+    this.cartService.removeItem(id);
+  }
 }

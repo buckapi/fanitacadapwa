@@ -102,14 +102,40 @@
                     </nav>
                     <!-- search bar area -->
                     <div class="search-bar search-form-wrapper">
-                        <form action="#"
-                            class="header-search-form d-flex align-items-center gap-3 py-lg-3 py-2 px-xxl-6 px-md-4 px-3 radius-pill border border-n100-6 bg-n20 w-100 focus-secondary2">
-                            <input type="text" placeholder="Buscar Accesorios, Ropa, Zapatillas"
+                        <form
+                            class="header-search-form d-flex align-items-center gap-3 py-lg-3 py-2 px-xxl-6 px-md-4 px-3 radius-pill border border-n100-6 bg-n20 w-100 focus-secondary2"
+                            (submit)="submitSearch($event)">
+                            <input type="text" name="mainSearch" [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                                (focus)="showSearchResults = searchTerm.length >= 2"
+                                placeholder="Buscar accesorios, ropa, zapatillas..." autocomplete="off"
                                 class="w-100 border-0 outline-0 bg-transparent">
-                            <button type="submit" class="text-xl">
+
+                            <button type="submit" class="text-xl border-0 bg-transparent">
                                 <i class="ph ph-magnifying-glass"></i>
                             </button>
+
+                            <div class="search-dropdown" *ngIf="showSearchResults">
+                                <div class="search-loading" *ngIf="searching">
+                                    Buscando productos...
+                                </div>
+
+                                <div class="search-empty" *ngIf="!searching && searchResults.length === 0">
+                                    No se encontraron productos.
+                                </div>
+
+                                <button type="button" class="search-result-item" *ngFor="let product of searchResults"
+                                    (click)="goToProduct(product)">
+                                    <img [src]="getProductImage(product)" [alt]="product.name">
+
+                                    <div>
+                                        <strong>{{ product.name }}</strong>
+                                        <small>{{ product.description || 'Sin descripción' }}</small>
+                                        <span>${{ product.price | number:'1.0-0' }}</span>
+                                    </div>
+                                </button>
+                            </div>
                         </form>
+
                         <button type="button"
                             class="search-close-btn text-2xl position-absolute top-0 end-0 translate-middle me-5 mt-10 p-sm-2 p-1 bg-primary2 text-n0 d-xl-none">
                             <i class="ph ph-x"></i>
@@ -118,9 +144,7 @@
 
                     <div class="nav-btns d-flex align-items-center gap-xl-4 gap-lg-3 gap-4">
                         <!-- toggle search bar -->
-                        <button type="submit" class="toggle-search-btn text-xl d-xl-none">
-                            <i class="ph ph-magnifying-glass"></i>
-                        </button>
+                        
 
                         <div class="user-menu-wrapper position-relative">
 

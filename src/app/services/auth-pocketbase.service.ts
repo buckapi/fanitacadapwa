@@ -188,4 +188,11 @@ export class AuthPocketbaseService {
     );
   });
 }
+async countClients(): Promise<number> {
+  const result = await this.pb.collection('users').getList(1, 1, {
+    filter: `type = "client"`
+  });
+
+  return result.totalItems;
+}
 }

@@ -52,4 +52,9 @@ export class CategoriesService {
   unsubscribeCategories(): void {
     this.pb.collection(this.collection).unsubscribe('*');
   }
+
+  async countCategories(): Promise<number> {
+  const result = await this.pb.collection(this.collection).getList(1, 1);
+  return result.totalItems;
+}
 }

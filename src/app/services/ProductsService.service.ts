@@ -77,4 +77,27 @@ async getProductById(id: string): Promise<Product> {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
   }
+
+  async countProducts(): Promise<number> {
+  const result = await this.pb.collection(this.collection).getList(1, 1);
+  return result.totalItems;
+}
+async searchProducts(term: string): Promise<Product[]> {
+  const cleanTerm = term.trim();
+
+  if (!cleanTerm) return [];
+
+  const safeTerm = cleanTerm.replace(/"/g, '\\"');
+
+  return await this.pb.collection(this.collection).getFullList<Product>({
+    sort: '-created',
+    expand: 'images,categories',
+    filter: `
+      name ~ "${safeTerm}" ||
+      description ~ "${safeTerm}" ||
+      price ~ "${safeTerm}" ||
+      categories.name ~ "${safeTerm}"
+    `
+  });
+}
 }
