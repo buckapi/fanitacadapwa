@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CartItem, CartService } from '../../services/cart.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { EmailNotificationService } from '../../services/email-notification.service';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
   selector: 'app-checkout',
@@ -21,25 +24,22 @@ export class Checkout {
 
   constructor(
     private fb: FormBuilder,
-    public cartService: CartService
+    public cartService: CartService,
+    private ordersService: OrdersService,
+    private emailService: EmailNotificationService
   ) {
     this.checkoutForm = this.fb.group({
-      contact: ['', [Validators.required]],
-      newsletter: [false],
-
+      rut: ['', [Validators.required]],
       country: ['Chile', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       company: [''],
       address: ['', Validators.required],
       apartment: [''],
-      city: ['', Validators.required],
-      postalCode: [''],
       phone: ['', Validators.required],
       saveInfo: [false],
-
+      email: ['', [Validators.required, Validators.email]],
       shippingMethod: ['santiago', Validators.required],
-      paymentMethod: ['transferencia', Validators.required],
       billingAddress: ['same', Validators.required],
 
       note: [''],
@@ -69,23 +69,74 @@ export class Checkout {
     this.total = this.subtotal + this.shipping;
   }
 
-  completeOrder(): void {
-    if (this.checkoutForm.invalid) {
-      this.checkoutForm.markAllAsTouched();
-      return;
-    }
+ async completeOrder(): Promise<void> {
+  if (this.checkoutForm.invalid) {
+    this.checkoutForm.markAllAsTouched();
+    return;
+  }
+
+  if (this.cartItems.length === 0) {
+    alert('Tu carrito está vacío.');
+    return;
+  }
+
+  try {
+    const customer = this.checkoutForm.value;
 
     const orderData = {
-      customer: this.checkoutForm.value,
+      customer,
       items: this.cartItems,
       subtotal: this.subtotal,
       shipping: this.shipping,
       total: this.total,
-      status: 'pendiente'
+      status: 'pendiente',
+      customerEmail: customer.email,
+      customerName: `${customer.firstName} ${customer.lastName}`
     };
 
-    console.log('Orden lista:', orderData);
+    const order = await this.ordersService.createOrder(orderData);
 
-    // Luego aquí conectamos PocketBase / pago / WhatsApp / email
+    const isGuest = true;
+
+    const baseEmailPayload = {
+      toEmail: customer.email,
+      toName: `${customer.firstName} ${customer.lastName}`,
+      templateId: 5,
+      subject: 'Recibimos tu pedido en Fanaticada.cl',
+      params: {
+        orderId: order.id,
+        customerName: `${customer.firstName} ${customer.lastName}`,
+        customerEmail: customer.email,
+        customerPhone: customer.phone,
+        address: customer.address,
+        items: this.cartItems,
+        subtotal: this.subtotal,
+        shipping: this.shipping,
+        total: this.total,
+        isGuest,
+        loginMessage: isGuest
+          ? 'Te invitamos a iniciar sesión o crear una cuenta para consultar el estado de tu pedido.'
+          : 'Puedes ingresar a tu cuenta para consultar el estado de tu pedido.'
+      }
+    };
+
+    await firstValueFrom(this.emailService.sendOrderToClient(baseEmailPayload));
+
+    await firstValueFrom(this.emailService.sendOrderToAdmin({
+      ...baseEmailPayload,
+      toEmail: 'contacto@email.com',
+      toName: 'Administrador Fanaticada',
+      templateId: 6,
+      subject: `Nuevo pedido recibido #${order.id}`
+    }));
+
+    alert('Pedido creado correctamente. Revisa tu correo.');
+
+    this.cartService.clear();
+
+  } catch (error) {
+    console.error('Error creando pedido:', error);
+    alert('Ocurrió un error al crear el pedido.');
   }
+}
 }

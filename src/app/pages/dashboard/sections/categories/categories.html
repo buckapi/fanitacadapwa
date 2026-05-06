@@ -18,19 +18,40 @@
                 <label>Nombre</label>
                 <input type="text" formControlName="name" placeholder="Nombre de la categoría">
             </div>
+        
+            <div class="form-group" *ngIf="!categoryForm.get('parent')?.value">
+                <label>Subcategorías</label>
+
+                <div class="categories-grid">
+                    <label>
+                        <input type="checkbox" value="Hombres" (change)="onSubcategoryToggle($event)">
+                        Hombres
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="Mujer" (change)="onSubcategoryToggle($event)">
+                        Mujer
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="Infantil" (change)="onSubcategoryToggle($event)">
+                        Infantil
+                    </label>
+                </div>
+            </div>
             <div class="form-group">
-  <label>Imagen de categoría</label>
+                <label>Imagen de categoría</label>
 
-  <input type="file" accept="image/*" (change)="onImageSelected($event)">
+                <input type="file" accept="image/*" (change)="onImageSelected($event)">
 
-  <div class="image-preview" *ngIf="previewImage">
-    <img [src]="previewImage" alt="Preview categoría">
+                <div class="image-preview" *ngIf="previewImage">
+                    <img [src]="previewImage" alt="Preview categoría">
 
-    <button type="button" (click)="removeImage()">
-      ×
-    </button>
-  </div>
-</div>
+                    <button type="button" (click)="removeImage()">
+                        ×
+                    </button>
+                </div>
+            </div>
 
             <div class="form-row">
                 <div class="form-group">
@@ -77,10 +98,21 @@
             <div class="product-card" *ngFor="let cat of categories">
 
                 <div>
-                    <h3>{{ cat.name }}</h3>
+                    <h3>
+                        <span *ngIf="cat.parent">— </span>{{ cat.name }}
+                    </h3>
 
                     <div class="product-meta">
+                        <span *ngIf="cat.parent">
+                            Subcategoría de: {{ getParentName(cat.parent) }}
+                        </span>
+
+                        <span *ngIf="!cat.parent">
+                            Categoría principal
+                        </span>
+
                         <span>Orden: {{ cat.order || 0 }}</span>
+
                         <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
                             {{ cat.active ? 'Activa' : 'Inactiva' }}
                         </span>

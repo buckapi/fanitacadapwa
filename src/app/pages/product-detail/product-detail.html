@@ -96,6 +96,7 @@
                             {{ product.description || 'Producto disponible en nuestra tienda.' }}
                         </p>
 
+
                         <span class="d-block my-lg-8 my-md-6 my-4 border-bottom border-n100-1"></span>
 
                         <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4">
@@ -111,7 +112,19 @@
                                 {{ product.stock > 0 ? product.stock + ' disponibles' : 'Sin stock' }}
                             </span>
                         </div>
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.size || product.size">
+                            <span class="text-h6">TALLA:</span>
+                            <span class="text-n50 text-base">
+                                {{ product.size || product.size }}
+                            </span>
+                        </div>
 
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.color">
+                            <span class="text-h6">COLOR:</span>
+                            <span class="text-n50 text-base">
+                                {{ product.color }}
+                            </span>
+                        </div>
                         <div>
                             <div class="d-grid gap-lg-4 gap-2 mb-3">
                                 <span class="text-h6">CANTIDAD:</span>
@@ -135,7 +148,7 @@
                                         [disabled]="product.stock <= 0" (click)="addToCart(product)">
                                         AÑADIR AL CARRITO
                                     </button>
-                                    
+
                                 </div>
                             </div>
 
@@ -205,11 +218,7 @@
                 <h6>Compartir</h6>
 
                 <div class="share-buttons d-flex align-items-center gap-2">
-                    <button type="button"
-                        class="icon-32px text-lg share-item border border-n100-1 hover-bg-n100 hover-text-n0"
-                        (click)="shareOn('facebook')">
-                        <i class="ph ph-facebook-logo"></i>
-                    </button>
+                   
 
                     <button type="button"
                         class="icon-32px text-lg share-item border border-n100-1 hover-bg-n100 hover-text-n0"

@@ -47,16 +47,43 @@
                 <label>Editor / Marca</label>
                 <input type="text" formControlName="editor" placeholder="Marca o editor">
             </div>
-            <div class="categories-grid">
-                <label *ngFor="let cat of categories">
-                    <input type="checkbox" [value]="cat.id" (change)="onCategoryToggle($event)">
-                    {{ cat.name }}
-                </label>
+            <div class="form-group">
+                <label>Categoría</label>
+
+                <select formControlName="category" (change)="onParentCategoryChange($event)">
+                    <option value="">Selecciona una categoría</option>
+
+                    <option *ngFor="let cat of parentCategories" [value]="cat.id">
+                        {{ cat.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group" *ngIf="filteredSubcategories.length > 0">
+                <label>Subcategorías</label>
+
+                <div class="categories-grid">
+                    <label *ngFor="let sub of filteredSubcategories">
+                        <input type="checkbox" [value]="sub.id" [checked]="selectedSubcategories.includes(sub.id)"
+                            (change)="onSubcategoryToggle($event)">
+                        {{ sub.name }}
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Descripción</label>
                 <textarea formControlName="description" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Talla</label>
+                <input type="text" formControlName="size">
+            </div>
+
+            <div class="form-group">
+                <label>Color</label>
+                <input type="text" formControlName="color">
             </div>
 
             <div class="form-group">

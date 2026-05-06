@@ -11,6 +11,8 @@ import { ProductsService } from '../../services/ProductsService.service';
 import { Product } from '../../models/product.model';
 import Swiper from 'swiper';
 import { Autoplay, Navigation, FreeMode } from 'swiper/modules';
+import { WishlistService } from '../../services/wishlist.service';
+import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -26,7 +28,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public router: Router,
     public productsService: ProductsService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public auth: AuthPocketbaseService,
+    public wishlistService: WishlistService
   ) { }
 
   ngOnInit(): void {
@@ -187,4 +191,24 @@ private destroyHomeSliders(): void {
       console.error('Error navegando:', error);
     });
   }
+  toggleWishlist(product: any): void {
+  const user = this.auth.getCurrentUser();
+
+  if (!user) {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
+    return;
+  }
+
+  const image = product.images?.length
+    ? this.getFirstProductImage(product)
+    : 'assets/images/no-image.png';
+
+  this.wishlistService.toggleItem(product, image);
+}
+
+isFavorite(productId: string): boolean {
+  return this.wishlistService.isFavorite(productId);
+}
 }

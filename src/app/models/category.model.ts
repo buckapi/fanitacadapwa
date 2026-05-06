@@ -9,6 +9,8 @@ export interface Category {
   order?: number;
   active?: boolean;
 
+  parent?: string;
+
   created?: string;
   updated?: string;
 }

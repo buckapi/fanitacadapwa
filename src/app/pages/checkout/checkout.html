@@ -1,4 +1,4 @@
-<main style="padding-top: 7rem !important;">
+<main style="padding-top: 10rem !important;">
   <section class="checkout-section px-xl-20 px-lg-10 px-sm-7 overflow-lg-visible">
     <div class="container-fluid">
 
@@ -7,26 +7,7 @@
 
           <div class="col-lg-6 bg-n0 pt-lg-15 pt-10 pe-lg-15 overflow-hidden order-lg-first order-last">
 
-            <div class="d-grid gap-lg-3 gap-2 mb-lg-8 mb-6">
-              <label class="text-n100 text-xl fw-medium">Contacto</label>
-
-              <input
-                type="text"
-                formControlName="contact"
-                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Correo electrónico o teléfono"
-              >
-
-              <small class="text-danger" *ngIf="checkoutForm.get('contact')?.touched && checkoutForm.get('contact')?.invalid">
-                El contacto es obligatorio.
-              </small>
-
-              <label class="input-checkbox">
-                <input type="checkbox" formControlName="newsletter" hidden>
-                <span class="checkbox"></span>
-                <span class="text-base text-n50">Recibir novedades y ofertas</span>
-              </label>
-            </div>
+            
 
             <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
               <span class="text-n100 text-xl fw-medium">Entrega</span>
@@ -58,7 +39,14 @@
                   class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
                   placeholder="Apellido"
                 >
+                <input
+                  type="text"
+                  formControlName="rut"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="RUT"
+                >
               </div>
+
 
               <input
                 type="text"
@@ -71,7 +59,7 @@
                 type="text"
                 formControlName="address"
                 class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Dirección"
+                placeholder="Dirección (Calle, número, departamento, etc.)"
               >
 
               <input
@@ -81,21 +69,12 @@
                 placeholder="Departamento, casa, referencia, opcional"
               >
 
-              <div class="d-lg-flex d-grid align-items-center gap-lg-4 gap-2">
-                <input
-                  type="text"
-                  formControlName="city"
-                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                  placeholder="Ciudad"
-                >
-
-                <input
-                  type="text"
-                  formControlName="postalCode"
-                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                  placeholder="Código postal, opcional"
-                >
-              </div>
+             <input
+                type="email"
+                formControlName="email"
+                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="correo electrónico"
+              >
 
               <input
                 type="tel"
@@ -103,6 +82,7 @@
                 class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
                 placeholder="Teléfono"
               >
+
 
               <label class="input-checkbox">
                 <input type="checkbox" formControlName="saveInfo" hidden>
@@ -119,48 +99,13 @@
                   <span class="d-flex align-items-center gap-lg-4 gap-2">
                     <input type="radio" formControlName="shippingMethod" value="santiago" hidden>
                     <span class="checkbox"></span>
-                    <span class="text-base text-n50">Entrega en Santiago</span>
+                    <span class="text-base text-n50">Por pagar</span>
                   </span>
-                  <span>Gratis</span>
                 </label>
 
-                <label class="input-radiobox d-between gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
-                  <span class="d-flex align-items-center gap-lg-4 gap-2">
-                    <input type="radio" formControlName="shippingMethod" value="region" hidden>
-                    <span class="checkbox"></span>
-                    <span class="text-base text-n50">Envío a regiones</span>
-                  </span>
-                  <span>$5.000</span>
-                </label>
               </div>
             </div>
 
-            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
-              <div class="d-grid gap-1">
-                <span class="text-n100 text-xl fw-medium">Pago</span>
-                <span class="text-n50">Todas las transacciones serán confirmadas de forma segura.</span>
-              </div>
-
-              <div>
-                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
-                  <input type="radio" formControlName="paymentMethod" value="transferencia" hidden>
-                  <span class="checkbox"></span>
-                  <span class="text-base text-n50">Transferencia bancaria</span>
-                </label>
-
-                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
-                  <input type="radio" formControlName="paymentMethod" value="webpay" hidden>
-                  <span class="checkbox"></span>
-                  <span class="text-base text-n50">Pago online con tarjeta</span>
-                </label>
-
-                <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
-                  <input type="radio" formControlName="paymentMethod" value="contra_entrega" hidden>
-                  <span class="checkbox"></span>
-                  <span class="text-base text-n50">Pago contra entrega</span>
-                </label>
-              </div>
-            </div>
 
             <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
               <span class="text-n100 text-xl fw-medium">Dirección de facturación</span>
@@ -253,7 +198,7 @@
                   </div>
                 </div>
 
-                <div class="d-flex align-items-center border border-n100-1 bg-n0 mb-lg-6 mb-4">
+                <!-- <div class="d-flex align-items-center border border-n100-1 bg-n0 mb-lg-6 mb-4">
                   <input
                     type="text"
                     class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-n100"
@@ -266,7 +211,7 @@
                   >
                     Aplicar
                   </button>
-                </div>
+                </div> -->
 
                 <div class="d-grid gap-lg-4 gap-2">
                   <div class="d-grid gap-lg-3 gap-2">
@@ -280,7 +225,7 @@
                     <div class="d-flex justify-content-between">
                       <span class="text-n50 text-base fw-normal">Envío</span>
                       <span class="text-n50 text-base fw-normal">
-                        {{ shipping === 0 ? 'Gratis' : ('$' + (shipping | number:'1.0-0')) }}
+                        {{ shipping === 0 ? 'Por pagar' : ('$' + (shipping | number:'1.0-0')) }}
                       </span>
                     </div>
                   </div>

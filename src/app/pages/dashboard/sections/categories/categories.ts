@@ -22,7 +22,8 @@ export class Categories implements OnInit, OnDestroy {
   selectedId: string | null = null;
   selectedImageFile: File | null = null;
   previewImage: string | null = null;
-
+  parentCategories: Category[] = [];
+  selectedSubcategories: string[] = [];
   constructor(
     private fb: FormBuilder,
     private categoriesService: CategoriesService,
@@ -37,14 +38,14 @@ export class Categories implements OnInit, OnDestroy {
   }
 
   initForm() {
-    this.categoryForm = this.fb.group({
-      name: ['', Validators.required],
-      order: [0],
-      active: [true],
-      types: [''],
-      image: ['']
-    });
-  }
+  this.categoryForm = this.fb.group({
+    name: ['', Validators.required],
+    parent: [''],
+    order: [0],
+    active: [true],
+    image: ['']
+  });
+}
 
   async loadCategories(): Promise<void> {
     this.loading = true;
@@ -52,11 +53,22 @@ export class Categories implements OnInit, OnDestroy {
 
     try {
       const records = await this.categoriesService.getCategories();
-      console.log('Categorías cargadas:', records);
-      this.categories = records;
+
+      this.categories = records.sort((a, b) => {
+        const aParent = a.parent ? 1 : 0;
+        const bParent = b.parent ? 1 : 0;
+
+        if (aParent !== bParent) return aParent - bParent;
+
+        return (a.order || 0) - (b.order || 0);
+      });
+
+      this.parentCategories = this.categories.filter(cat => !cat.parent);
+
     } catch (error) {
       console.error('Error cargando categorías:', error);
       this.categories = [];
+      this.parentCategories = [];
     } finally {
       this.loading = false;
       this.cdr.detectChanges();
@@ -94,7 +106,7 @@ export class Categories implements OnInit, OnDestroy {
     this.categoriesService.unsubscribeCategories();
   }
 
-  async saveCategory() {
+ async saveCategory() {
   if (this.categoryForm.invalid) {
     this.categoryForm.markAllAsTouched();
     return;
@@ -103,6 +115,7 @@ export class Categories implements OnInit, OnDestroy {
   this.saving = true;
 
   try {
+
     let imageId = this.categoryForm.value.image || '';
 
     if (this.selectedImageFile) {
@@ -110,48 +123,96 @@ export class Categories implements OnInit, OnDestroy {
       imageId = imageRecord.id;
     }
 
+    const formValue = this.categoryForm.value;
+
     const data = {
-      ...this.categoryForm.value,
+      name: formValue.name,
+      parent: formValue.parent || '',
+      order: formValue.order || 0,
+      active: formValue.active,
       image: imageId
     };
 
+    let savedCategory: any;
+
+    // EDITAR
     if (this.editing && this.selectedId) {
-      await this.categoriesService.updateCategory(this.selectedId, data);
-    } else {
-      await this.categoriesService.createCategory(data);
+
+      savedCategory = await this.categoriesService.updateCategory(
+        this.selectedId,
+        data
+      );
+
+      // crear subcategorías si existen
+      if (!formValue.parent && this.selectedSubcategories.length > 0) {
+        await this.createSubcategoriesForParent(this.selectedId);
+      }
+
+    }
+
+    // CREAR
+    else {
+
+      savedCategory = await this.categoriesService.createCategory(data);
+
+      // crear subcategorías relacionadas
+      if (!formValue.parent && this.selectedSubcategories.length > 0) {
+
+        await this.createSubcategoriesForParent(savedCategory.id);
+
+      }
+
     }
 
     this.resetForm();
 
+    await this.loadCategories();
+
   } catch (error) {
+
     console.error('Error guardando categoría', error);
+
   } finally {
+
     this.saving = false;
+
   }
 }
+async createSubcategoriesForParent(parentId: string): Promise<void> {
+  for (const subName of this.selectedSubcategories) {
+    const alreadyExists = this.categories.some(cat =>
+      cat.parent === parentId &&
+      cat.name?.toLowerCase().trim() === subName.toLowerCase().trim()
+    );
 
+    if (!alreadyExists) {
+      await this.categoriesService.createCategory({
+        name: subName,
+        parent: parentId,
+        order: 0,
+        active: true,
+        image: ''
+      });
+    }
+  }
+}
   editCategory(cat: Category) {
-  this.editing = true;
-  this.selectedId = cat.id || null;
+    this.editing = true;
+    this.selectedId = cat.id || null;
 
-  this.categoryForm.patchValue({
-    name: cat.name,
-    order: cat.order || 0,
-    active: cat.active ?? true,
-    types: cat.types || '',
-    image: cat.image || ''
-  });
+    this.categoryForm.patchValue({
+      name: cat.name,
+      parent: cat.parent || '',
+      order: cat.order || 0,
+      active: cat.active ?? true,
+      image: cat.image || ''
+    });
 
-  // 👇 cargar preview si existe imagen
-  if (cat.image) {
-    this.previewImage = this.getImageUrl(cat.image);
-  } else {
-    this.previewImage = null;
+    this.previewImage = cat.image ? this.getImageUrl(cat.image) : null;
   }
-}
-getImageUrl(imageId: string): string {
-  return `https://db.buckapi.site:8010/api/files/images/${imageId}/image`;
-}
+  getImageUrl(imageId: string): string {
+    return `https://db.buckapi.site:8010/api/files/images/${imageId}/image`;
+  }
 
   async deleteCategory(cat: Category) {
     if (!cat.id) return;
@@ -173,46 +234,59 @@ getImageUrl(imageId: string): string {
       }
     });
   }
-onImageSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
 
-  if (!input.files || input.files.length === 0) return;
+    if (!input.files || input.files.length === 0) return;
 
-  const file = input.files[0];
+    const file = input.files[0];
 
-  this.selectedImageFile = file;
+    this.selectedImageFile = file;
 
-  const reader = new FileReader();
+    const reader = new FileReader();
 
-  reader.onload = () => {
-    this.previewImage = reader.result as string;
-    this.cdr.detectChanges();
-  };
+    reader.onload = () => {
+      this.previewImage = reader.result as string;
+      this.cdr.detectChanges();
+    };
 
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
 
-  input.value = '';
-}
+    input.value = '';
+  }
   resetForm() {
-  this.editing = false;
-  this.selectedId = null;
-  this.selectedImageFile = null;
-  this.previewImage = null;
+    this.editing = false;
+    this.selectedId = null;
+    this.selectedImageFile = null;
+    this.previewImage = null;
+    this.selectedSubcategories = [];
+    this.categoryForm.reset({
+      name: '',
+      parent: '',
+      order: 0,
+      active: true,
+      image: ''
+    });
+  }
+  getParentName(parentId: string): string {
+    return this.categories.find(cat => cat.id === parentId)?.name || 'Sin categoría';
+  }
+  removeImage(): void {
+    this.selectedImageFile = null;
+    this.previewImage = null;
 
-  this.categoryForm.reset({
-    name: '',
-    order: 0,
-    active: true,
-    types: '',
-    image: ''
-  });
-}
-removeImage(): void {
-  this.selectedImageFile = null;
-  this.previewImage = null;
+    this.categoryForm.patchValue({
+      image: ''
+    });
+  }
+  onSubcategoryToggle(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
 
-  this.categoryForm.patchValue({
-    image: ''
-  });
-}
+    if (input.checked) {
+      this.selectedSubcategories.push(value);
+    } else {
+      this.selectedSubcategories = this.selectedSubcategories.filter(item => item !== value);
+    }
+  }
 }

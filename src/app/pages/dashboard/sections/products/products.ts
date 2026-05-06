@@ -16,7 +16,10 @@ import { Category } from '../../../../models/category.model';
 export class Products implements OnInit, OnDestroy {
   products: Product[] = [];
   productForm!: FormGroup;
-
+  parentCategories: any[] = [];
+  subcategories: any[] = [];
+  filteredSubcategories: any[] = [];
+  selectedSubcategories: string[] = [];
   loading = false;
   saving = false;
   editing = false;
@@ -52,25 +55,29 @@ export class Products implements OnInit, OnDestroy {
       timeToDeliver: [0],
       rating: [0],
       stock: [0, [Validators.required, Validators.min(0)]],
-      categories: [[]],
+  category: ['', Validators.required],
+  subcategories: [[]],
       isEssential: [false],
       isPopular: [false],
       isBestSelling: [false],
       isRecent: [false],
-
+      size: [''],
+      color: [''],
       urlImages: [''],
       description: [''],
       status: ['active'],
       featured: [false]
     });
   }
+ 
   async loadCategories(): Promise<void> {
-    try {
-      this.categories = await this.categoriesService.getCategories();
-    } catch (error) {
-      console.error('Error cargando categorías:', error);
-    }
-  }
+  const records = await this.categoriesService.getCategories();
+
+  this.categories = records;
+
+  this.parentCategories = records.filter((cat: any) => !cat.parent);
+  this.subcategories = records.filter((cat: any) => cat.parent);
+}
   async loadProducts(): Promise<void> {
     this.loading = true;
     this.cd.detectChanges();
@@ -116,93 +123,129 @@ export class Products implements OnInit, OnDestroy {
       console.error('Error activando realtime de productos:', error);
     }
   }
-  async saveProduct(): Promise<void> {
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      return;
-    }
+  onParentCategoryChange(event: Event): void {
+  const input = event.target as HTMLSelectElement;
+  const parentId = input.value;
 
-    this.saving = true;
+  this.filteredSubcategories = this.subcategories.filter((sub: any) => sub.parent === parentId);
 
-    try {
-      const formValue = this.productForm.value;
+  this.selectedSubcategories = [];
 
-      const formData = new FormData();
+  this.productForm.patchValue({
+    subcategories: []
+  });
+}
+onSubcategoryToggle(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const id = input.value;
 
-      formData.append('name', formValue.name);
-      formData.append('price', String(Number(formValue.price)));
-      formData.append('editor', formValue.editor || '');
-      formData.append('unit', formValue.unit || 'unidad');
-      formData.append('timeToDeliver', String(Number(formValue.timeToDeliver || 0)));
-      formData.append('rating', String(Number(formValue.rating || 0)));
-      formData.append('stock', String(Number(formValue.stock || 0)));
-
-      formData.append('isEssential', String(!!formValue.isEssential));
-      formData.append('isPopular', String(!!formValue.isPopular));
-      formData.append('isBestSelling', String(!!formValue.isBestSelling));
-      formData.append('isRecent', String(!!formValue.isRecent));
-      formData.append('featured', String(!!formValue.featured));
-
-      formData.append('description', formValue.description || '');
-      formData.append('status', formValue.status || 'active');
-      formData.append('slug', this.productsService.generateSlug(formValue.name));
-      const selectedCategories: string[] = Array.isArray(formValue.categories)
-        ? formValue.categories
-        : [];
-
-      selectedCategories.forEach(categoryId => {
-        formData.append('categories', categoryId);
-      });
-      const imageIds: string[] = [...this.existingImages];
-
-      for (const file of this.selectedFiles) {
-        const imageRecord = await this.productsService.createImage(file);
-        imageIds.push(imageRecord.id);
-      }
-
-      imageIds.forEach(imageId => {
-        formData.append('images', imageId);
-      });
-
-      let savedProduct: Product;
-
-      if (this.editing && this.selectedProductId) {
-        savedProduct = await this.productsService.updateProduct(this.selectedProductId, formData);
-      } else {
-        savedProduct = await this.productsService.createProduct(formData);
-      }
-
-      const expandedProduct = await this.productsService.getProductById(savedProduct.id!);
-
-      const exists = this.products.some(product => product.id === expandedProduct.id);
-
-      if (exists) {
-        this.products = this.products.map(product =>
-          product.id === expandedProduct.id ? expandedProduct : product
-        );
-      } else {
-        this.products = [expandedProduct, ...this.products];
-      }
-
-      this.cd.detectChanges();
-
-      this.resetForm();
-      Swal.fire({
-        icon: 'success',
-        title: 'Producto guardado',
-        text: 'El producto se guardó correctamente.',
-      });
-    } catch (error) {
-      console.error('Error guardando producto:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al guardar el producto',
-        text: 'No se pudo guardar el producto. Revisa la consola.',
-      });
-    } finally {
-      this.saving = false;
-    }
+  if (input.checked) {
+    this.selectedSubcategories.push(id);
+  } else {
+    this.selectedSubcategories = this.selectedSubcategories.filter(subId => subId !== id);
   }
+
+  this.productForm.patchValue({
+    subcategories: this.selectedSubcategories
+  });
+}
+  async saveProduct(): Promise<void> {
+  if (this.productForm.invalid) {
+    this.productForm.markAllAsTouched();
+    return;
+  }
+
+  this.saving = true;
+
+  try {
+    const formValue = this.productForm.value;
+
+    const formData = new FormData();
+
+    formData.append('name', formValue.name);
+    formData.append('price', String(Number(formValue.price)));
+    formData.append('editor', formValue.editor || '');
+    formData.append('unit', formValue.unit || 'unidad');
+    formData.append('timeToDeliver', String(Number(formValue.timeToDeliver || 0)));
+    formData.append('rating', String(Number(formValue.rating || 0)));
+    formData.append('stock', String(Number(formValue.stock || 0)));
+    formData.append('size', formValue.size || '');
+    formData.append('color', formValue.color || '');
+
+    formData.append('isEssential', String(!!formValue.isEssential));
+    formData.append('isPopular', String(!!formValue.isPopular));
+    formData.append('isBestSelling', String(!!formValue.isBestSelling));
+    formData.append('isRecent', String(!!formValue.isRecent));
+    formData.append('featured', String(!!formValue.featured));
+
+    formData.append('description', formValue.description || '');
+    formData.append('status', formValue.status || 'active');
+    formData.append('slug', this.productsService.generateSlug(formValue.name));
+
+    // Categoría padre
+    if (formValue.category) {
+      formData.append('categories', formValue.category);
+    }
+
+    // Subcategorías múltiples
+    this.selectedSubcategories.forEach(subcategoryId => {
+      formData.append('subcategories', subcategoryId);
+    });
+
+    const imageIds: string[] = [...this.existingImages];
+
+    for (const file of this.selectedFiles) {
+      const imageRecord = await this.productsService.createImage(file);
+      imageIds.push(imageRecord.id);
+    }
+
+    imageIds.forEach(imageId => {
+      formData.append('images', imageId);
+    });
+
+    let savedProduct: Product;
+
+    if (this.editing && this.selectedProductId) {
+      savedProduct = await this.productsService.updateProduct(this.selectedProductId, formData);
+    } else {
+      savedProduct = await this.productsService.createProduct(formData);
+    }
+
+    const expandedProduct = await this.productsService.getProductById(savedProduct.id!);
+
+    const exists = this.products.some(product => product.id === expandedProduct.id);
+
+    if (exists) {
+      this.products = this.products.map(product =>
+        product.id === expandedProduct.id ? expandedProduct : product
+      );
+    } else {
+      this.products = [expandedProduct, ...this.products];
+    }
+
+    this.cd.detectChanges();
+
+    this.resetForm();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto guardado',
+      text: 'El producto se guardó correctamente.',
+    });
+
+  } catch (error) {
+    console.error('Error guardando producto:', error);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al guardar el producto',
+      text: 'No se pudo guardar el producto. Revisa la consola.',
+    });
+
+  } finally {
+    this.saving = false;
+  }
+}
 
   editProduct(product: Product): void {
     this.editing = true;

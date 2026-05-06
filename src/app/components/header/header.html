@@ -10,13 +10,19 @@
                             <span class="text-sm text-nowrap">
                                 Santiago, Chile </span>
                         </a>
-                        <a href="tel:+56912345678"
-                            class="d-flex align-items-center gap-2 text-n0 hover-text-secondary2">
+                        <a href="tel:+56965047494" class="d-flex align-items-center gap-2 text-n0 hover-text-secondary2">
                             <span class="text-base"><i class="ph ph-phone-call"></i></span>
                             <span class="text-sm text-nowrap">
-                                +56 9 12345678
+                                +56 9 6504 7494
                             </span>
                         </a>
+                        <a href="mailto:contacto@fanaticada.cl" target="_blank"
+                            class="d-flex align-items-center gap-2 text-n0 hover-text-secondary2">
+                            <span class="text-base"><i class="ph ph-envelope"></i></span>
+                            <span class="text-sm text-nowrap">
+                                contacto@fanaticada.cl </span>
+                        </a>
+
                     </div>
                     <div class="d-flex align-items-center gap-xl-6 gap-4">
 
@@ -26,7 +32,7 @@
 
                                 <li><a href="https://www.instagram.com/Fanaticada.cl" target="_blank"
                                         class="text-n0 text-xl hover-text-secondary2"><i
-                                            class="ph ph-instagram-logo"></i></a></li>
+                                            class="ph ph-instagram-logo"></i> @fanaticada.cl</a> </li>
                             </ul>
                         </div>
                     </div>
@@ -35,7 +41,7 @@
         </div>
     </div>
     <!-- header section start -->
-    <div class="container-fluid" style="background-color:#ffffff73">
+    <div class="container-fluid">
         <div class="row g-0 justify-content-center">
             <div class="col-3xl-11 px-3xl-0 px-xxl-8 px-sm-6 px-0">
                 <!-- navbar area -->
@@ -64,9 +70,7 @@
                                 </button>
 
                             </li>
-                            <li class="menu-link">
-                                <a class="slide-vertical" data-splitting routerLink="/about">Nosotros</a>
-                            </li>
+
 
                             <li class="menu-item products-menu-item" (mouseenter)="openCategoriesMenu()">
                                 <a class="slide-vertical" routerLink="/shop" (click)="toggleCategoriesMenu($event)">
@@ -93,7 +97,9 @@
                                     </div>
                                 </div>
                             </li>
-
+                            <li class="menu-link">
+                                <a class="slide-vertical" data-splitting routerLink="/about">Nosotros</a>
+                            </li>
 
                             <li class="menu-link">
                                 <a class="slide-vertical" routerLink="/contact" data-splitting>Contacto</a>
@@ -107,7 +113,7 @@
                             (submit)="submitSearch($event)">
                             <input type="text" name="mainSearch" [(ngModel)]="searchTerm" (input)="onSearchChange()"
                                 (focus)="showSearchResults = searchTerm.length >= 2"
-                                placeholder="Buscar accesorios, ropa, zapatillas..." autocomplete="off"
+                                placeholder="Buscar camisetas, accesorios, ropa, medias..." autocomplete="on"
                                 class="w-100 border-0 outline-0 bg-transparent">
 
                             <button type="submit" class="text-xl border-0 bg-transparent">
@@ -144,7 +150,7 @@
 
                     <div class="nav-btns d-flex align-items-center gap-xl-4 gap-lg-3 gap-4">
                         <!-- toggle search bar -->
-                        
+
 
                         <div class="user-menu-wrapper position-relative">
 
@@ -262,7 +268,7 @@
                     </div>
                     <!-- <span class="text-n100 text-sm fw-normal">Spend $100.00 more to enjoy <span class="text-secondary2">FREE
                                  SHIPPING!</span></span> -->
-                    <span class="text-n100 text-sm fw-normal"> Compra mayores a $53.00 para disfrutar de <span
+                    <span class="text-n100 text-sm fw-normal"> Envios se calculan en base a la dirección de envio <span
                             class="text-secondary2">Envío a todo el pais </span></span>
                     <!-- <span class="text-n100 text-sm fw-normal">Congratulations! You've got <span class="text-secondary2">FREE
                                  SHIPPING!</span></span> -->
