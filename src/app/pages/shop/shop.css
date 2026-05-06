@@ -33,29 +33,142 @@
 .single-wishlist-btn:active i {
   transform: scale(1.3);
 }
+.product-card2 {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card2:hover {
+  transform: translateY(-4px);
+}
+
+.product-thumb-wrapper {
+  width: 100%;
+  height: 340px;
+}
+
+.product-thumb-fixed {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-thumb-link {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .product-home-img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.product-info-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.single-wishlist-btn i {
+  transition: transform 0.2s ease;
+}
+
+.single-wishlist-btn:active i {
+  transform: scale(1.3);
 }
 
 @media (max-width: 768px) {
+  .product-section {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-top: 50px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .product-section .row.g-0 {
+    --bs-gutter-x: 10px;
+    --bs-gutter-y: 12px;
+  }
 
   .product-card2 {
-    height: 100%;
+    padding: 10px !important;
+    border-radius: 14px;
+  }
+
+  .product-thumb-wrapper {
+    height: 190px;
+  }
+
+  .product-home-img {
+    border-radius: 10px;
   }
 
   .product-card2 h4 {
-    font-size: 14px;
-    line-height: 1.3;
+    font-size: 13px;
+    line-height: 1.25;
+    min-height: 34px;
+    margin-bottom: 4px !important;
   }
 
-  .product-card2 .outline-btn {
-    font-size: 12px;
-    padding: 8px 10px;
+  .product-card2 .text-sm {
+    font-size: 11px;
   }
 
   .product-card2 .text-xl {
+    font-size: 15px !important;
+  }
+
+  .product-card2 .outline-btn {
+    width: 100%;
+    font-size: 12px;
+    padding: 8px 10px;
+    margin-top: 8px;
+  }
+
+  .product-card2 .d-between {
+    display: block !important;
+  }
+
+  .product-card2 .h-1px {
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .single-wishlist-btn {
+    width: 34px !important;
+    height: 34px !important;
     font-size: 16px !important;
+  }
+
+  .product-type {
+    padding: 4px 12px !important;
+  }
+
+  .product-type span {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 390px) {
+  .product-thumb-wrapper {
+    height: 170px;
+  }
+
+  .product-card2 {
+    padding: 8px !important;
+  }
+
+  .product-card2 h4 {
+    font-size: 12.5px;
   }
 }
