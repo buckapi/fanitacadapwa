@@ -332,522 +332,205 @@
     </section>
     <!-- product section end -->
 <section class="best-product-section pt-120 pb-120">
-            <div class="px-xl-20 px-lg-10 px-sm-7 mb-lg-15 mb-md-10 mb-8">
-                <div class="container-fluid">
-                    <div class="row g-6 justify-content-between align-items-end">
-                        <div class="col-lg-6 col-md-9">
-                            <h2 class="text-animation-word display-four text-n100 text-uppercase mb-lg-6 mb-4">BEST
-                                PRODUCTS IN 2024
-                            </h2>
-                            <p class="text-sm text-n50 fw-normal ch-85">Welcome to CycleCity, where your cycling journey
-                                begins! As
-                                avid
-                                cyclists ourselves,
-                                we understand the joy and freedom that comes from pedaling on two wheels</p>
-                        </div>
-                        <div class="col-auto">
-                            <a href="index.html#" class="outline-btn radius-pill text-n100 fw-medium box-style box-secondary2">
-                                More Shop
-                                <span class="icon">
-                                    <i class="ph ph-arrow-up-right"></i>
-                                    <i class="ph ph-arrow-up-right"></i>
+
+    <div class="px-xl-20 px-lg-10 px-sm-7 mb-lg-15 mb-md-10 mb-8">
+        <div class="container-fluid">
+            <div class="row g-6 justify-content-between align-items-end">
+                <div class="col-lg-6 col-md-9">
+                    <h2 class="text-animation-word display-four text-n100 text-uppercase mb-lg-6 mb-4">
+                        Productos destacados
+                    </h2>
+
+                    <p class="text-sm text-n50 fw-normal ch-85">
+                        Encuentra camisetas, ropa deportiva y accesorios seleccionados para verdaderos fanáticos.
+                    </p>
+                </div>
+
+                <div class="col-auto">
+                    <a routerLink="/shop"
+                       class="outline-btn radius-pill text-n100 fw-medium box-style box-secondary2">
+                        Ver todos
+                        <span class="icon">
+                            <i class="ph ph-arrow-up-right"></i>
+                            <i class="ph ph-arrow-up-right"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="loadingProducts" class="px-xl-20 px-lg-10 px-sm-7">
+        Cargando productos destacados...
+    </div>
+
+    <div *ngIf="!loadingProducts && featuredProducts.length === 0" class="px-xl-20 px-lg-10 px-sm-7">
+        No hay productos destacados disponibles.
+    </div>
+
+    <div class="swiper best-product-slider mb-lg-15 mb-md-10 mb-8"
+         *ngIf="!loadingProducts && featuredProducts.length > 0">
+
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide" *ngFor="let product of featuredProducts">
+
+                <div class="product-card3 has-color-option">
+
+                    <div
+                        class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-1">
+                                <span
+                                    *ngIf="product.isRecent"
+                                    class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-n100 text-n100">
+                                    NUEVO
                                 </span>
-                            </a>
+
+                                <span
+                                    *ngIf="product.featured"
+                                    class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-secondary2 text-n0 bg-secondary2">
+                                    DESTACADO
+                                </span>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
+                                [attr.data-tooltip]="isFavorite(product.id!) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                                (click)="toggleWishlist(product); $event.stopPropagation()">
+
+                                <i [class]="isFavorite(product.id!) ? 'ph-fill ph-heart text-danger' : 'ph ph-heart'"></i>
+                            </button>
                         </div>
+
+                        <div class="product-thumb scale-animation" (click)="goToProduct(product)">
+                            <img
+                                class="product-image w-100"
+                                [src]="getFirstProductImage(product)"
+                                [alt]="product.name">
+                        </div>
+
+                        <button
+                            type="button"
+                            class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8"
+                            (click)="goToProduct(product)">
+                            Ver producto
+                        </button>
+
                     </div>
+
+                    <div class="d-grid gap-lg-5 gap-3">
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                   
+
+                                    <span class="text-sm fw-normal text-n50 text-nowrap">
+                                        Producto destacado
+                                    </span>
+                                </div>
+
+                                <span class="text-sm fw-normal text-n50 text-nowrap">
+                                    Marca:
+                                    <span class="text-n100 fw-bold">
+                                        {{ product.editor || 'Fanaticada.cl' }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                            <button
+                                type="button"
+                                class="border-0 bg-transparent p-0 text-start"
+                                (click)="goToProduct(product)">
+
+                                <h4 class="text-animation-word text-n100 hover-text-secondary2">
+                                    {{ product.name }}
+                                </h4>
+                            </button>
+
+                            <span class="text-h4 text-n100">
+                                ${{ product.price | number:'1.0-0' }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+    <!-- category section start -->
+    <section class="category-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
+    <div class="container-fluid">
+
+        <div class="row g-6 justify-content-center align-items-end mb-lg-15 mb-md-10 mb-8">
+            <div class="col-lg-6 text-center">
+                <h2 class="text-animation-word display-four text-n100 text-uppercase mb-lg-6 mb-4">
+                    CATEGORÍAS
+                </h2>
+
+                <p class="text-sm text-n50 fw-normal ch-85 mx-auto">
+                    Explora nuestras categorías principales.
+                </p>
+            </div>
+        </div>
+
+        <div *ngIf="loadingCategories" class="text-center py-5">
+            Cargando categorías...
+        </div>
+
+        <div *ngIf="!loadingCategories && parentCategories.length === 0" class="text-center py-5">
+            No hay categorías disponibles.
+        </div>
+
+        <div class="row g-6" *ngIf="!loadingCategories && parentCategories.length > 0">
+
+            <div class="col-lg-4 col-xs-6" *ngFor="let cat of parentCategories">
+                <div class="animate-box">
+
+                    <button
+                        type="button"
+                        class="d-block category-card shake-animation border-0 bg-transparent p-0 w-100"
+                        (click)="goToCategory(cat)">
+
+                        <div class="shake-thumb">
+                            <img
+                                class="w-100"
+                                [src]="getCategoryImage(cat)"
+                                [alt]="cat.name">
+                        </div>
+
+                        <div class="shake-thumb">
+                            <img
+                                class="w-100"
+                                [src]="getCategoryImage(cat)"
+                                [alt]="cat.name">
+                        </div>
+
+                        <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
+                            <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">
+                                {{ cat.name }}
+                            </span>
+                        </div>
+
+                    </button>
+
                 </div>
             </div>
 
-            <!-- best product in year swiper -->
-            <div class="swiper best-product-slider mb-lg-15 mb-md-10 mb-8">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-yellow.png" alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Merida Scultura
-                                            Sukura</h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center gap-1">
-                                        <span
-                                            class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-n100 text-n100">NEW</span>
-                                        <span
-                                            class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-secondary2 text-n0 bg-secondary2">SALE</span>
-                                    </div>
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-orange.png" alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Urban Wanderer
-                                        </h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-deep-green.png"
-                                        alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Electro Boost
-                                        </h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-green.png" alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Terra Roamer
-                                        </h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center gap-1">
-                                        <span
-                                            class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-n100 text-n100">NEW</span>
-                                        <span
-                                            class="py-lg-2 py-1 px-lg-5 px-3 radius-pill border border-secondary2 text-n0 bg-secondary2">SALE</span>
-                                    </div>
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-deep-green.png"
-                                        alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Electro Boost
-                                        </h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="product-card3 has-color-option">
-                            <div
-                                class="product-thumb-wrapper d-grid gap-xl-10 gap-md-8 gap-md-6 gap-4 p-xl-10 p-lg-8 p-md-6 p-4 mb-lg-7 mb-5 bg-n20">
-                                <!-- product type and wishlist btn -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button
-                                        class="single-wishlist-btn text-secondary2 text-xl icon-40px bg-n0 tooltip-btn tooltip-left position-relative"
-                                        data-tooltip="Add to wishlist">
-                                        <i class="ph ph-heart"></i>
-                                    </button>
-                                </div>
-                                <!-- product thumb -->
-                                <div class="product-thumb scale-animation">
-                                    <img class="product-image w-100" src="assets/images/bike-green.png" alt="product">
-                                </div>
-                                <!-- button -->
-                                <a href="shop.html" class="outline-btn box-style box-secondary2 fw-bold w-100 radius-8">
-                                    Shop Bike
-                                </a>
-                            </div>
-                            <div class="d-grid gap-lg-5 gap-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <ul class="d-flex align-items-center text-n100 gap-1 text-base">
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                                <li><span><i class="ph-fill ph-star"></i></span></li>
-                                            </ul>
-                                            <span class="text-sm fw-normal text-n50 text-nowrap">1 Reviews</span>
-                                        </div>
-                                        <span class="text-sm fw-normal text-n50 text-nowrap">Brand: <span
-                                                class="text-n100 fw-bold">Schwmin</span></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 custom-cursor-none">
-                                        <!-- select product color -->
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Green" data-image="./assets/images/bike-green.png"
-                                            style="background-color: #008000;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Yellow" data-image="./assets/images/bike-yellow.png"
-                                            style="background-color: #fde34d;"></button>
-                                        <button class="color-option icon-16px tooltip-btn tooltip-top position-relative"
-                                            data-tooltip="Orange" data-image="./assets/images/bike-orange.png"
-                                            style="background-color: #EB453B;"></button>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <a href="shop-details.html">
-                                        <h4 class="text-animation-word text-n100 hover-text-secondary2">Terra Roamer
-                                        </h4>
-                                    </a>
-                                    <span class="text-h4 text-n100">$321</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="px-xl-20 px-lg-10 px-sm-7">
-                <div class="container-fluid">
-                    <div class="bg-n100-1 best-product-pagination h-1px position-relative d-between"></div>
-                </div>
-            </div>
-        </section>
-    <!-- category section start -->
-    <section class="category-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
-        <div class="container-fluid">
-            <div class="row g-6 justify-content-center align-items-end mb-lg-15 mb-md-10 mb-8">
-                <div class="col-lg-6 text-center">
-                    <h2 class="text-animation-word display-four text-n100 text-uppercase mb-lg-6 mb-4">
-                        CATEGORIAS
-                    </h2>
-                    <p class="text-sm text-n50 fw-normal ch-85 mx-auto">Nuestras categorias</p>
-                </div>
-            </div>
-            <div class="row g-6">
-                <div class="col-lg-4 col-xs-6">
-                    <div class="animate-box">
-                        <a href="#" class="d-block category-card shake-animation">
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-hombres.png" alt="category">
-                            </div>
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-hombres.png" alt="category">
-                            </div>
-                            <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                                <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">HOMBRES</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="animate-box">
-                        <a href="#" class="d-block category-card shake-animation">
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-niños.png" alt="category">
-                            </div>
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-niños.png" alt="category">
-                            </div>
-                            <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                                <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">NIÑOS</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-xs-6">
-                    <div class="animate-box">
-                        <a href="#" class="d-block category-card shake-animation">
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-accessories.png" alt="category">
-                            </div>
-                            <div class="shake-thumb">
-                                <img class="w-100" src="assets/images/category-accessories.png" alt="category">
-                            </div>
-                            <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                                <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">ACCESORIOS</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <!--  <div class="col-lg-4 col-xs-6">
-                <div class="animate-box">
-                    <a href="#" class="d-block category-card shake-animation">
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-gear.png" alt="category">
-                        </div>
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-gear.png" alt="category">
-                        </div>
-                        <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                            <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">GEAR</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-xs-6">
-                <div class="animate-box">
-                    <a href="#" class="d-block category-card shake-animation">
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-electronics.png" alt="category">
-                        </div>
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-electronics.png" alt="category">
-                        </div>
-                        <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                            <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">ELECTRONICS</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-xs-6">
-                <div class="animate-box">
-                    <a href="#" class="d-block category-card shake-animation">
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-equioment.png" alt="category">
-                        </div>
-                        <div class="shake-thumb">
-                            <img class="w-100" src="assets/images/category2-equioment.png" alt="category">
-                        </div>
-                        <div class="position-absolute bottom-0 left-0 z-3 mb-lg-8 mb-6 ms-lg-8 ms-6">
-                            <span class="outline-btn bg-n0 radius-pill box-style box-secondary2">EQUIPMENT</span>
-                        </div>
-                    </a>
-                </div>
-            </div> -->
-            </div>
         </div>
-    </section>
+
+    </div>
+</section>
     <!-- category section end -->
 
     <!-- gallery slider start -->
@@ -979,9 +662,7 @@
     </div>
     <!-- gallery slider end -->
 
-    <!-- call to action -->
-    <!-- call to action section start -->
-    <!-- call to action section start -->
+   
     <section class="call-to-action-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120 bg-n100">
         <div class="container-fluid">
             <div class="row justify-content-center">

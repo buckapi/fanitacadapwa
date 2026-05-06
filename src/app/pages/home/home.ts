@@ -13,6 +13,8 @@ import Swiper from 'swiper';
 import { Autoplay, Navigation, FreeMode } from 'swiper/modules';
 import { WishlistService } from '../../services/wishlist.service';
 import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
+import { CategoriesService } from '../../services/CategoriesService.service';
+import { Category } from '../../models/category.model';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -24,18 +26,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private swipers: Swiper[] = [];
   products: Product[] = [];
   loadingProducts = false;
-
-  constructor(
+featuredProducts: Product[] = [];
+categories: Category[] = [];
+parentCategories: Category[] = [];
+loadingCategories = false;
+constructor(
     public router: Router,
     public productsService: ProductsService,
     private cd: ChangeDetectorRef,
     public auth: AuthPocketbaseService,
-    public wishlistService: WishlistService
+    public wishlistService: WishlistService,
+      private categoriesService: CategoriesService
   ) { }
 
   ngOnInit(): void {
     this.loadProducts();
     this.listenRealtimeProducts();
+    this.loadCategories();
 
   }
 
@@ -43,24 +50,35 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 ngOnDestroy(): void {
   this.destroyHomeSliders();
   this.productsService.unsubscribeProducts();
+  
 }
-  async loadProducts(): Promise<void> {
-    this.loadingProducts = true;
+ async loadProducts(): Promise<void> {
+  this.loadingProducts = true;
+  this.cd.detectChanges();
+
+  try {
+    const records = await this.productsService.getProducts();
+
+    this.products = records.filter(product => product.status === 'active');
+
+    this.featuredProducts = this.products.filter(product =>
+      product.featured === true && product.status === 'active'
+    );
+
+  } catch (error) {
+    console.error('Error cargando productos en home:', error);
+    this.products = [];
+    this.featuredProducts = [];
+  } finally {
+    this.loadingProducts = false;
     this.cd.detectChanges();
 
-    try {
-      this.products = await this.productsService.getProducts();
-    } catch (error) {
-      console.error('Error cargando productos en home:', error);
-      this.products = [];
-    } finally {
-      this.loadingProducts = false;
-      this.cd.detectChanges();
-      setTimeout(() => {
-    this.initHomeSliders();
-  }, 150);
-    }
+    setTimeout(() => {
+      this.initHomeSliders();
+    }, 150);
   }
+}
+  
 ngAfterViewInit(): void {
   setTimeout(() => {
     this.initHomeSliders();
@@ -122,8 +140,32 @@ private initHomeSliders(): void {
       disableOnInteraction: false,
     },
   });
-
-  this.swipers = [textSlider, heroSlider, brandSlider, gallerySlider];
+const bestProductSlider = new Swiper('.best-product-slider', {
+  modules: [Autoplay, FreeMode],
+  slidesPerView: 1.1,
+  spaceBetween: 18,
+  loop: this.featuredProducts.length > 3,
+  speed: 800,
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    576: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    992: {
+      slidesPerView: 3,
+      spaceBetween: 24,
+    },
+    1400: {
+      slidesPerView: 4,
+      spaceBetween: 28,
+    },
+  },
+});
+  this.swipers = [textSlider, heroSlider, brandSlider, gallerySlider,bestProductSlider];
 }
 private destroyHomeSliders(): void {
   this.swipers.forEach((swiper) => {
@@ -210,5 +252,43 @@ private destroyHomeSliders(): void {
 
 isFavorite(productId: string): boolean {
   return this.wishlistService.isFavorite(productId);
+}
+getCategoryImage(cat: Category): string {
+  if (!cat.image) {
+    return 'assets/images/category-accessories.png';
+  }
+
+  return `https://db.buckapi.site:8010/api/files/images/${cat.image}/image`;
+}
+
+goToCategory(cat: Category): void {
+  if (!cat.id) return;
+
+  this.router.navigate(['/shop'], {
+    queryParams: {
+      category: cat.id
+    }
+  });
+}
+async loadCategories(): Promise<void> {
+  this.loadingCategories = true;
+
+  try {
+    const records = await this.categoriesService.getCategories();
+
+    this.categories = records || [];
+
+    this.parentCategories = this.categories
+      .filter(cat => !cat.parent && cat.active === true)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  } catch (error) {
+    console.error('Error cargando categorías en home:', error);
+    this.categories = [];
+    this.parentCategories = [];
+  } finally {
+    this.loadingCategories = false;
+    this.cd.detectChanges();
+  }
 }
 }
