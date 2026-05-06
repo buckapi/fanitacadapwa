@@ -253,13 +253,22 @@ private destroyHomeSliders(): void {
 isFavorite(productId: string): boolean {
   return this.wishlistService.isFavorite(productId);
 }
-getCategoryImage(cat: Category): string {
-  if (!cat.image) {
-    return 'assets/images/category-accessories.png';
+getCategoryImage(cat: any): string {
+  const fallback = 'assets/images/category-accessories.png';
+
+  const imageRecord = cat.expand?.image;
+
+  if (imageRecord?.id && imageRecord?.image) {
+    return `https://db.buckapi.site:8010/api/files/images/${imageRecord.id}/${imageRecord.image}`;
   }
 
-  return `https://db.buckapi.site:8010/api/files/images/${cat.image}/image`;
+  if (cat.id && cat.image && typeof cat.image === 'string' && cat.image.includes('.')) {
+    return `https://db.buckapi.site:8010/api/files/categories/${cat.id}/${cat.image}`;
+  }
+
+  return fallback;
 }
+
 
 goToCategory(cat: Category): void {
   if (!cat.id) return;

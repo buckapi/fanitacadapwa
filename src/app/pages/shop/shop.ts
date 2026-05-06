@@ -46,7 +46,7 @@ export class Shop implements OnInit, OnDestroy {
 
       this.categories = records;
       this.parentCategories = records.filter((cat: any) => !cat.parent);
-
+      this.cd.detectChanges();
     } catch (error) {
       console.error('Error cargando categorías:', error);
       this.categories = [];

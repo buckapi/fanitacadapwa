@@ -13,12 +13,18 @@ export class CategoriesService {
 
   constructor(private ngZone: NgZone) {}
 
-  async getCategories(): Promise<Category[]> {
+ /*  async getCategories(): Promise<Category[]> {
     return await this.pb.collection(this.collection).getFullList<Category>({
       sort: 'order'
     });
-  }
-
+  } */
+async getCategories(): Promise<Category[]> {
+  return await this.pb.collection(this.collection).getFullList<Category>({
+    sort: 'order',
+    expand: 'image',
+    requestKey: null
+  });
+}
   async createCategory(data: Partial<Category>): Promise<Category> {
     return await this.pb.collection(this.collection).create<Category>(data);
   }

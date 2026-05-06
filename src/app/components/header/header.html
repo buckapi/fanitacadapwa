@@ -72,8 +72,8 @@
 
                             </li>
 
-                            <li class="menu-item products-menu-item" (mouseenter)="openCategoriesMenu()"
-                                (mouseleave)="scheduleCloseCategoriesMenu()">
+                            <li class="menu-item menu-item-has-children products-menu-item position-relative"
+                                (mouseenter)="openCategoriesMenu()" (mouseleave)="scheduleCloseCategoriesMenu()">
 
                                 <a class="slide-vertical" routerLink="/shop" (click)="toggleCategoriesMenu($event)">
                                     PRODUCTOS
@@ -90,7 +90,6 @@
 
                                         <a routerLink="/shop" [queryParams]="{ category: 'all' }"
                                             class="mega-category-item all" (click)="closeCategoriesMenu()">
-
                                             <i class="ph ph-squares-four"></i>
                                             <span>Todos los productos</span>
                                         </a>
@@ -106,11 +105,11 @@
                                                 </div>
 
                                                 <i *ngIf="getSubcategories(category.id!).length > 0"
-                                                    class="ph ph-caret-right sub-icon">
-                                                </i>
+                                                    class="ph ph-caret-right sub-icon"></i>
+
                                             </a>
 
-                                            <div class="mega-subcategories"
+                                            <!-- <div class="mega-subcategories"
                                                 *ngIf="getSubcategories(category.id!).length > 0">
 
                                                 <a *ngFor="let sub of getSubcategories(category.id!)" routerLink="/shop"
@@ -118,17 +117,17 @@
               category: category.id,
               subcategory: sub.id
             }" class="mega-subcategory-item" (click)="closeCategoriesMenu()">
-
                                                     {{ sub.name }}
                                                 </a>
 
-                                            </div>
+                                            </div> -->
 
                                         </div>
 
                                     </div>
 
                                 </div>
+
                             </li>
                             <li class="menu-link">
                                 <a class="slide-vertical" data-splitting routerLink="/about">NOSOTROS</a>

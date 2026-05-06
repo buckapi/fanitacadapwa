@@ -44,7 +44,7 @@
                         No hay productos disponibles para esta categoría.
                     </div>
 
-                    <div class="col-lg-4 col-xs-6" *ngFor="let product of filteredProducts">
+                    <div class="col-6 col-lg-4" *ngFor="let product of filteredProducts">
                         <div
                             class="product-card2 position-relative p-xl-10 p-lg-8 p-6 bg-n0 border border-n100-5 box-style box-n20 card-tilt animate-box">
 
@@ -95,8 +95,9 @@
                                         </span>
                                     </div>
 
-                                    <button class="outline-btn text-n100 fw-medium box-style box-secondary2">
-                                        Añadir al carrito
+                                    <button class="outline-btn text-n100 fw-medium box-style box-secondary2"
+                                        style="cursor: pointer; color:#000;" (click)="goToProduct(product)">
+                                        Ver producto
                                     </button>
                                 </div>
                             </div>

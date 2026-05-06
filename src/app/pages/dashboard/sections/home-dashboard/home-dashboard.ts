@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthPocketbaseService } from '../../../../services/auth-pocketbase.service';
 import { CategoriesService } from '../../../../services/CategoriesService.service';
@@ -23,11 +23,13 @@ export class HomeDashboard implements OnInit {
     private productsService: ProductsService,
     private categoriesService: CategoriesService,
     private authService: AuthPocketbaseService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadStats();
+    this.cdr.detectChanges();
   }
 
   async loadStats(): Promise<void> {
@@ -43,7 +45,7 @@ export class HomeDashboard implements OnInit {
       this.productsCount = products;
       this.categoriesCount = categories;
       this.clientsCount = clients;
-
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error cargando estadísticas:', error);
     } finally {

@@ -14,7 +14,7 @@ import { ProductsService } from '../../services/ProductsService.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
@@ -23,7 +23,6 @@ export class Header implements OnInit, OnDestroy {
   showUserMenu = false;
 
   categories: Category[] = [];
-  loadingCategories = true;
   showCategoriesMenu = false;
 
   private userSub?: Subscription;
@@ -41,7 +40,9 @@ export class Header implements OnInit, OnDestroy {
   searchResults: Product[] = [];
   searching = false;
   showSearchResults = false;
-  
+  parentCategories: Category[] = [];
+
+  loadingCategories = false;
   constructor(
     public router: Router,
     public auth: AuthPocketbaseService,
@@ -49,7 +50,7 @@ export class Header implements OnInit, OnDestroy {
     public cartService: CartService,
     public wishlistService: WishlistService,
     private productsService: ProductsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userSub = this.auth.currentUser$.subscribe(user => {
@@ -77,24 +78,33 @@ export class Header implements OnInit, OnDestroy {
       clearTimeout(this.searchTimeout);
     }
   }
-  get parentCategories(): Category[] {
-  return this.categories.filter(cat => !cat.parent);
-}
 
-getSubcategories(parentId: string): Category[] {
-  return this.categories.filter(cat => cat.parent === parentId);
-}
-  async loadCategories(): Promise<void> {
-    try {
-      this.loadingCategories = true;
-      const categories = await this.categoriesService.getCategories();
-      this.categories = categories || [];
-    } catch (error) {
-      console.error('❌ error cargando categorías header:', error);
-    } finally {
-      this.loadingCategories = false;
-    }
+  getSubcategories(parentId: string): Category[] {
+    return this.categories.filter(cat => cat.parent === parentId);
   }
+ async loadCategories(): Promise<void> {
+  this.loadingCategories = true;
+
+  try {
+    const records = await this.categoriesService.getCategories();
+
+    this.categories = records || [];
+
+    this.parentCategories = this.categories
+      .filter(cat => !cat.parent)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    console.log('Todas las categorías header:', this.categories);
+    console.log('Categorías padre header:', this.parentCategories);
+
+  } catch (error) {
+    console.error('Error cargando categorías en header:', error);
+    this.categories = [];
+    this.parentCategories = [];
+  } finally {
+    this.loadingCategories = false;
+  }
+}
 
   onSearchChange(): void {
     if (this.searchTimeout) {
@@ -178,7 +188,7 @@ getSubcategories(parentId: string): Category[] {
     await this.auth.logout();
   }
 
- 
+
 
   toggleCategoriesMenu(event: Event): void {
     event.preventDefault();
@@ -206,26 +216,26 @@ getSubcategories(parentId: string): Category[] {
   }
   private categoriesMenuTimeout?: any;
 
-openCategoriesMenu(): void {
-  this.cancelCloseCategoriesMenu();
-  this.showCategoriesMenu = true;
-}
-
-scheduleCloseCategoriesMenu(): void {
-  this.categoriesMenuTimeout = setTimeout(() => {
-    this.showCategoriesMenu = false;
-  }, 250);
-}
-
-cancelCloseCategoriesMenu(): void {
-  if (this.categoriesMenuTimeout) {
-    clearTimeout(this.categoriesMenuTimeout);
-    this.categoriesMenuTimeout = null;
+  openCategoriesMenu(): void {
+    this.cancelCloseCategoriesMenu();
+    this.showCategoriesMenu = true;
   }
-}
 
-closeCategoriesMenu(): void {
-  this.cancelCloseCategoriesMenu();
-  this.showCategoriesMenu = false;
-}
+  scheduleCloseCategoriesMenu(): void {
+    this.categoriesMenuTimeout = setTimeout(() => {
+      this.showCategoriesMenu = false;
+    }, 250);
+  }
+
+  cancelCloseCategoriesMenu(): void {
+    if (this.categoriesMenuTimeout) {
+      clearTimeout(this.categoriesMenuTimeout);
+      this.categoriesMenuTimeout = null;
+    }
+  }
+
+  closeCategoriesMenu(): void {
+    this.cancelCloseCategoriesMenu();
+    this.showCategoriesMenu = false;
+  }
 }
