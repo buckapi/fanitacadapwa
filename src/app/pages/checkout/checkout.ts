@@ -5,7 +5,7 @@ import { CartItem, CartService } from '../../services/cart.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { EmailNotificationService } from '../../services/email-notification.service';
-import { OrdersService } from '../../services/orders.service';
+import { OrdersService } from '../../services/OrdersService.service';
 
 @Component({
   selector: 'app-checkout',

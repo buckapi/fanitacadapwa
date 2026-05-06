@@ -41,7 +41,7 @@ export class Header implements OnInit, OnDestroy {
   searchResults: Product[] = [];
   searching = false;
   showSearchResults = false;
-
+  
   constructor(
     public router: Router,
     public auth: AuthPocketbaseService,
@@ -77,7 +77,13 @@ export class Header implements OnInit, OnDestroy {
       clearTimeout(this.searchTimeout);
     }
   }
+  get parentCategories(): Category[] {
+  return this.categories.filter(cat => !cat.parent);
+}
 
+getSubcategories(parentId: string): Category[] {
+  return this.categories.filter(cat => cat.parent === parentId);
+}
   async loadCategories(): Promise<void> {
     try {
       this.loadingCategories = true;
@@ -172,13 +178,7 @@ export class Header implements OnInit, OnDestroy {
     await this.auth.logout();
   }
 
-  openCategoriesMenu(): void {
-    this.showCategoriesMenu = true;
-  }
-
-  closeCategoriesMenu(): void {
-    this.showCategoriesMenu = false;
-  }
+ 
 
   toggleCategoriesMenu(event: Event): void {
     event.preventDefault();
@@ -204,4 +204,28 @@ export class Header implements OnInit, OnDestroy {
   removeCartItem(id: string): void {
     this.cartService.removeItem(id);
   }
+  private categoriesMenuTimeout?: any;
+
+openCategoriesMenu(): void {
+  this.cancelCloseCategoriesMenu();
+  this.showCategoriesMenu = true;
+}
+
+scheduleCloseCategoriesMenu(): void {
+  this.categoriesMenuTimeout = setTimeout(() => {
+    this.showCategoriesMenu = false;
+  }, 250);
+}
+
+cancelCloseCategoriesMenu(): void {
+  if (this.categoriesMenuTimeout) {
+    clearTimeout(this.categoriesMenuTimeout);
+    this.categoriesMenuTimeout = null;
+  }
+}
+
+closeCategoriesMenu(): void {
+  this.cancelCloseCategoriesMenu();
+  this.showCategoriesMenu = false;
+}
 }

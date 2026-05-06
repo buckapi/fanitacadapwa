@@ -20,7 +20,7 @@
                             </button>
                         </li>
 
-                        <li *ngFor="let category of categories">
+                        <li *ngFor="let category of parentCategories">
                             <button type="button"
                                 class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
                                 [class.active]="selectedCategory === category.id"

@@ -18,7 +18,7 @@
                 <label>Nombre</label>
                 <input type="text" formControlName="name" placeholder="Nombre de la categoría">
             </div>
-        
+
             <div class="form-group" *ngIf="!categoryForm.get('parent')?.value">
                 <label>Subcategorías</label>
 
@@ -95,29 +95,25 @@
                 No hay categorías registradas.
             </div>
 
-            <div class="product-card" *ngFor="let cat of categories">
-
+            <div class="product-card" *ngFor="let cat of parentCategories">
                 <div>
-                    <h3>
-                        <span *ngIf="cat.parent">— </span>{{ cat.name }}
-                    </h3>
+  <h3>{{ cat.name }}</h3>
 
-                    <div class="product-meta">
-                        <span *ngIf="cat.parent">
-                            Subcategoría de: {{ getParentName(cat.parent) }}
-                        </span>
+  <div class="product-meta">
+    <span>Categoría principal</span>
+    <span>Orden: {{ cat.order || 0 }}</span>
 
-                        <span *ngIf="!cat.parent">
-                            Categoría principal
-                        </span>
+    <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
+      {{ cat.active ? 'Activa' : 'Inactiva' }}
+    </span>
+  </div>
 
-                        <span>Orden: {{ cat.order || 0 }}</span>
-
-                        <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
-                            {{ cat.active ? 'Activa' : 'Inactiva' }}
-                        </span>
-                    </div>
-                </div>
+  <div class="product-meta mt-2" *ngIf="getSubcategories(cat.id!).length > 0">
+    <span *ngFor="let sub of getSubcategories(cat.id!)">
+      {{ sub.name }}
+    </span>
+  </div>
+</div>
 
                 <div class="card-actions">
                     <button type="button" (click)="editCategory(cat)">

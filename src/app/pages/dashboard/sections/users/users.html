@@ -1,1 +1,126 @@
-<p>users works!</p>
+<section class="users-admin">
+
+  <div class="admin-header">
+    <div>
+      <span>Panel administrativo</span>
+      <h1>Gestión de usuarios</h1>
+      <p>Consulta, revisa y administra los usuarios registrados en la tienda.</p>
+    </div>
+  </div>
+
+  <div class="users-layout">
+
+    <div class="users-list">
+
+      <div class="list-header">
+        <h2>Usuarios</h2>
+        <span>{{ users.length }} registros</span>
+      </div>
+
+      <div *ngIf="loading" class="loading">
+        Cargando usuarios...
+      </div>
+
+      <div *ngIf="!loading && users.length === 0" class="empty">
+        No hay usuarios registrados.
+      </div>
+
+      <div
+        class="user-card"
+        *ngFor="let user of users"
+        [class.active]="selectedUser?.id === user.id">
+
+        <div class="user-avatar" (click)="viewUser(user)">
+          <img [src]="getAvatar(user)" [alt]="user.name || user.email || 'Usuario'">
+        </div>
+
+        <div class="user-main" (click)="viewUser(user)">
+          <div class="user-top">
+            <h3>{{ user.name || user.username || 'Usuario sin nombre' }}</h3>
+
+            <span class="status-badge" [class.active-status]="user.status" [class.inactive-status]="!user.status">
+              {{ user.status ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+
+          <p>{{ user.email || 'Sin correo' }}</p>
+
+          <div class="user-meta">
+            <span>{{ getRoleLabel(user) }}</span>
+            <span>{{ user.phone || 'Sin teléfono' }}</span>
+            <span>{{ formatDate(user.created) }}</span>
+          </div>
+        </div>
+
+        <div class="user-actions">
+          <select [value]="user.status ? 'true' : 'false'" (change)="changeStatus(user, $event)">
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+
+          <select [value]="user.rolw || user.type || 'client'" (change)="changeRole(user, $event)">
+            <option *ngFor="let role of roleOptions" [value]="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+
+          <button type="button" class="danger" (click)="deleteUser(user)">
+            Eliminar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <aside class="user-detail" *ngIf="selectedUser">
+
+      <div class="detail-header">
+        <div>
+          <span>Detalle de usuario</span>
+          <h2>{{ selectedUser.name || selectedUser.username || 'Usuario' }}</h2>
+        </div>
+
+        <button type="button" (click)="closeDetail()">×</button>
+      </div>
+
+      <div class="detail-profile">
+        <img [src]="getAvatar(selectedUser)" [alt]="selectedUser.name || selectedUser.email || 'Usuario'">
+
+        <div>
+          <h3>{{ selectedUser.name || 'Sin nombre' }}</h3>
+          <p>{{ selectedUser.email || 'Sin correo' }}</p>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Información general</h3>
+
+        <p><strong>Username:</strong> {{ selectedUser.username || 'N/A' }}</p>
+        <p><strong>Correo verificado:</strong> {{ selectedUser.verified ? 'Sí' : 'No' }}</p>
+        <p><strong>Visibilidad email:</strong> {{ selectedUser.emailVisibility ? 'Visible' : 'Oculto' }}</p>
+        <p><strong>Teléfono:</strong> {{ selectedUser.phone || 'N/A' }}</p>
+        <p><strong>Tipo:</strong> {{ selectedUser.type || 'N/A' }}</p>
+        <p><strong>Rol:</strong> {{ selectedUser.rolw || 'N/A' }}</p>
+        <p><strong>Estado:</strong> {{ selectedUser.status ? 'Activo' : 'Inactivo' }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>Ubicación</h3>
+
+        <p><strong>Lat:</strong> {{ selectedUser.lat || 'N/A' }}</p>
+        <p><strong>Long:</strong> {{ selectedUser.long || 'N/A' }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>Fechas</h3>
+
+        <p><strong>Registro:</strong> {{ formatDate(selectedUser.created) }}</p>
+        <p><strong>Actualización:</strong> {{ formatDate(selectedUser.updated) }}</p>
+      </div>
+
+    </aside>
+
+  </div>
+
+</section>

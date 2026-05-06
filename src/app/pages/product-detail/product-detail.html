@@ -73,7 +73,7 @@
                             {{ product.name }}
                         </h1>
 
-                        <div
+                       <!--  <div
                             class="d-flex align-items-center gap-4xl-20 gap-3xl-15 gap-xl-10 gap-lg-8 gap-md-6 gap-4 mb-lg-8 mb-md-6 mb-4">
                             <div class="product-rating d-flex align-items-center gap-1">
                                 <ul class="d-flex align-items-center">
@@ -86,7 +86,7 @@
                                     {{ product.rating || 5 }} / 5
                                 </span>
                             </div>
-                        </div>
+                        </div> -->
 
                         <h3 class="text-n100 mb-lg-4 mb-2">
                             $ {{ product.price | number:'1.0-0' }}
@@ -132,20 +132,23 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <div
                                         class="quantity d-flex align-items-center py-3 px-lg-5 px-3 border border-n100-1">
-                                        <button class="quantityDecrement text-n100">
+                                        <button type="button" class="quantityDecrement text-n100"
+                                            (click)="decreaseQuantity()">
                                             <i class="ph ph-minus"></i>
                                         </button>
 
-                                        <input type="text" value="1" class="quantityValue border-0 p-0 outline-0">
+                                        <input type="text" [value]="quantity" readonly
+                                            class="quantityValue border-0 p-0 outline-0">
 
-                                        <button class="quantityIncrement text-n100">
+                                        <button type="button" class="quantityIncrement text-n100"
+                                            (click)="increaseQuantity()">
                                             <i class="ph ph-plus"></i>
                                         </button>
                                     </div>
 
                                     <button
                                         class="text-sm fw-bold text-n100 bg-n20 hover-text-n0 hover-bg-n100 py-3 px-lg-5 px-3 border border-n100 w-100"
-                                        [disabled]="product.stock <= 0" (click)="addToCart(product)">
+                                        [disabled]="product.stock <= 0" (click)="addToCart(product, quantity)">
                                         AÑADIR AL CARRITO
                                     </button>
 
@@ -183,6 +186,10 @@
                                 <span class="d-flex text-xl"><i class="ph ph-truck"></i></span>
                                 Producto disponible para compra.
                             </li>
+                            <li class="d-flex gap-2 text-base text-n100">
+                                <span class="d-flex text-xl"><i class="ph ph-percent"></i></span>
+                                Todos lo productos incluyen IVA
+                            </li>
                         </ul>
 
                     </div>
@@ -218,7 +225,7 @@
                 <h6>Compartir</h6>
 
                 <div class="share-buttons d-flex align-items-center gap-2">
-                   
+
 
                     <button type="button"
                         class="icon-32px text-lg share-item border border-n100-1 hover-bg-n100 hover-text-n0"

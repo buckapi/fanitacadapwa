@@ -178,6 +178,9 @@ export class Categories implements OnInit, OnDestroy {
 
   }
 }
+getSubcategories(parentId: string): Category[] {
+  return this.categories.filter(cat => cat.parent === parentId);
+}
 async createSubcategoriesForParent(parentId: string): Promise<void> {
   for (const subName of this.selectedSubcategories) {
     const alreadyExists = this.categories.some(cat =>

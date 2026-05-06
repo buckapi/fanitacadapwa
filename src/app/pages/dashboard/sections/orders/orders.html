@@ -1,1 +1,130 @@
-<p>orders works!</p>
+<section class="orders-admin">
+
+  <div class="admin-header">
+    <div>
+      <span>Panel administrativo</span>
+      <h1>Gestión de órdenes</h1>
+      <p>Consulta, revisa y actualiza el estado de los pedidos de la tienda.</p>
+    </div>
+  </div>
+
+  <div class="orders-layout">
+
+    <div class="orders-list">
+
+      <div class="list-header">
+        <h2>Órdenes</h2>
+        <span>{{ orders.length }} registros</span>
+      </div>
+
+      <div *ngIf="loading" class="loading">
+        Cargando órdenes...
+      </div>
+
+      <div *ngIf="!loading && orders.length === 0" class="empty">
+        No hay órdenes registradas.
+      </div>
+
+      <div
+        class="order-card"
+        *ngFor="let order of orders"
+        [class.active]="selectedOrder?.id === order.id">
+
+        <div class="order-main" (click)="viewOrder(order)">
+          <div class="order-top">
+            <h3>#{{ order.id }}</h3>
+
+            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+              {{ getStatusLabel(order.status) }}
+            </span>
+          </div>
+
+          <p>
+            {{ order.customerName || order.customer?.name || 'Cliente sin nombre' }}
+          </p>
+
+          <div class="order-meta">
+            <span>{{ order.customerEmail || order.customer?.email || 'Sin correo' }}</span>
+            <span>{{ getItemsCount(order) }} productos</span>
+            <span>{{ formatDate(order.created) }}</span>
+          </div>
+        </div>
+
+        <div class="order-actions">
+          <strong>${{ order.total | number:'1.0-0' }}</strong>
+
+          <select [value]="order.status" (change)="changeStatus(order, $event)">
+            <option *ngFor="let status of statusOptions" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+
+          <button type="button" class="danger" (click)="deleteOrder(order)">
+            Eliminar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <aside class="order-detail" *ngIf="selectedOrder">
+
+      <div class="detail-header">
+        <div>
+          <span>Detalle de orden</span>
+          <h2>#{{ selectedOrder.id }}</h2>
+        </div>
+
+        <button type="button" (click)="closeDetail()">×</button>
+      </div>
+
+      <div class="detail-section">
+        <h3>Cliente</h3>
+
+        <p><strong>Nombre:</strong> {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}</p>
+        <p><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone || 'N/A' }}</p>
+        <p><strong>Dirección:</strong> {{ selectedOrder.customer?.address || 'N/A' }}</p>
+        <p><strong>Ciudad:</strong> {{ selectedOrder.customer?.city || 'N/A' }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>Productos</h3>
+
+        <div class="order-item" *ngFor="let item of selectedOrder.items">
+          <div>
+            <strong>{{ item.name }}</strong>
+            <span>
+              Cantidad: {{ item.quantity }}
+              <ng-container *ngIf="item.size"> · Talla: {{ item.size }}</ng-container>
+              <ng-container *ngIf="item.color"> · Color: {{ item.color }}</ng-container>
+            </span>
+          </div>
+
+          <strong>${{ item.price * item.quantity | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="detail-section totals">
+        <div>
+          <span>Subtotal</span>
+          <strong>${{ selectedOrder.subtotal | number:'1.0-0' }}</strong>
+        </div>
+
+        <div>
+          <span>Envío</span>
+          <strong>${{ selectedOrder.shipping | number:'1.0-0' }}</strong>
+        </div>
+
+        <div class="total-final">
+          <span>Total</span>
+          <strong>${{ selectedOrder.total | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+</section>

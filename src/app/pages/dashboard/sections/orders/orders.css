@@ -1,0 +1,291 @@
+.orders-admin {
+  padding: 32px;
+}
+
+.admin-header {
+  margin-bottom: 28px;
+}
+
+.admin-header span {
+  color: #c21e2a;
+  font-weight: 700;
+}
+
+.admin-header h1 {
+  margin: 6px 0;
+  font-size: 32px;
+}
+
+.admin-header p {
+  color: #666;
+  margin: 0;
+}
+
+.orders-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.orders-list,
+.order-detail {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.list-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.list-header span {
+  color: #777;
+  font-size: 14px;
+}
+
+.order-card {
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.order-card:hover,
+.order-card.active {
+  border-color: #c21e2a;
+  box-shadow: 0 10px 24px rgba(194, 30, 42, 0.08);
+}
+
+.order-main {
+  cursor: pointer;
+}
+
+.order-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.order-top h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.order-card p {
+  margin: 8px 0 12px;
+  color: #333;
+  font-weight: 600;
+}
+
+.order-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.order-meta span {
+  background: #f7f7f7;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #555;
+}
+
+.order-actions {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.order-actions strong {
+  font-size: 18px;
+  color: #111;
+  text-align: right;
+}
+
+.order-actions select {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.order-actions button {
+  border: none;
+  background: #dc3545;
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f1f1f1;
+  color: #444;
+}
+
+.status-pending {
+  background: #fff4d6;
+  color: #9a6a00;
+}
+
+.status-paid {
+  background: #e4f7ec;
+  color: #16743b;
+}
+
+.status-processing {
+  background: #e7f0ff;
+  color: #1f5bb5;
+}
+
+.status-shipped {
+  background: #eee7ff;
+  color: #5b35b1;
+}
+
+.status-completed {
+  background: #dff8ef;
+  color: #08764a;
+}
+
+.status-cancelled {
+  background: #ffe3e3;
+  color: #b42318;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.detail-header span {
+  color: #c21e2a;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.detail-header h2 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.detail-header button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.detail-section {
+  border-top: 1px solid #eee;
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.detail-section h3 {
+  margin: 0 0 14px;
+  font-size: 17px;
+}
+
+.detail-section p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #f8f8f8;
+  margin-bottom: 10px;
+}
+
+.order-item div {
+  display: grid;
+  gap: 4px;
+}
+
+.order-item span {
+  color: #666;
+  font-size: 13px;
+}
+
+.totals {
+  display: grid;
+  gap: 10px;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.total-final {
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  font-size: 18px;
+}
+
+.loading,
+.empty {
+  padding: 20px;
+  background: #f7f7f7;
+  border-radius: 14px;
+  color: #666;
+}
+
+@media (max-width: 1100px) {
+  .orders-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .order-detail {
+    position: static;
+  }
+}
+
+@media (max-width: 576px) {
+  .orders-admin {
+    padding: 20px;
+  }
+
+  .order-card {
+    grid-template-columns: 1fr;
+  }
+
+  .order-actions strong {
+    text-align: left;
+  }
+}

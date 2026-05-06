@@ -1,1 +1,130 @@
-<p>orders-client works!</p>
+<section class="client-orders-page">
+
+  <div class="client-orders-header">
+    <span>Mi cuenta</span>
+    <h1>Mis pedidos</h1>
+    <p>Consulta el estado y detalle de tus compras realizadas en Fanaticada.cl.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Cargando tus pedidos...
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty">
+    <h3>No tienes pedidos todavía</h3>
+    <p>Cuando realices una compra, aparecerá aquí el detalle de tu pedido.</p>
+
+    <a routerLink="/shop">
+      Ver productos
+    </a>
+  </div>
+
+  <div class="orders-grid" *ngIf="!loading && orders.length > 0">
+
+    <div class="orders-list">
+
+      <div
+        class="client-order-card"
+        *ngFor="let order of orders"
+        [class.active]="selectedOrder?.id === order.id"
+        (click)="viewOrder(order)">
+
+        <div class="order-card-top">
+          <div>
+            <small>Pedido</small>
+            <h3>#{{ order.id }}</h3>
+          </div>
+
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+            {{ getStatusLabel(order.status) }}
+          </span>
+        </div>
+
+        <div class="order-card-body">
+          <p>
+            {{ getItemsCount(order) }} producto(s)
+          </p>
+
+          <strong>
+            ${{ order.total | number:'1.0-0' }}
+          </strong>
+        </div>
+
+        <div class="order-card-footer">
+          {{ formatDate(order.created) }}
+        </div>
+
+      </div>
+
+    </div>
+
+    <aside class="order-detail" *ngIf="selectedOrder">
+
+      <div class="detail-header">
+        <div>
+          <span>Detalle del pedido</span>
+          <h2>#{{ selectedOrder.id }}</h2>
+        </div>
+
+        <button type="button" (click)="closeDetail(); $event.stopPropagation()">×</button>
+      </div>
+
+      <div class="detail-section">
+        <h3>Estado</h3>
+
+        <span class="status-badge" [ngClass]="getStatusClass(selectedOrder.status)">
+          {{ getStatusLabel(selectedOrder.status) }}
+        </span>
+      </div>
+
+      <div class="detail-section">
+        <h3>Productos</h3>
+
+        <div class="order-item" *ngFor="let item of selectedOrder.items">
+          <div>
+            <strong>{{ item.name }}</strong>
+
+            <span>
+              Cantidad: {{ item.quantity }}
+              <ng-container *ngIf="item.size"> · Talla: {{ item.size }}</ng-container>
+              <ng-container *ngIf="item.color"> · Color: {{ item.color }}</ng-container>
+            </span>
+          </div>
+
+          <strong>
+            ${{ item.price * item.quantity | number:'1.0-0' }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Datos de entrega</h3>
+
+        <p><strong>Nombre:</strong> {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}</p>
+        <p><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone || 'N/A' }}</p>
+        <p><strong>Dirección:</strong> {{ selectedOrder.customer?.address || 'N/A' }}</p>
+      </div>
+
+      <div class="detail-section totals">
+        <div>
+          <span>Subtotal</span>
+          <strong>${{ selectedOrder.subtotal | number:'1.0-0' }}</strong>
+        </div>
+
+        <div>
+          <span>Envío</span>
+          <strong>${{ selectedOrder.shipping | number:'1.0-0' }}</strong>
+        </div>
+
+        <div class="total-final">
+          <span>Total</span>
+          <strong>${{ selectedOrder.total | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+</section>

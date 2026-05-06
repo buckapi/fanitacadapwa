@@ -10,7 +10,8 @@
                             <span class="text-sm text-nowrap">
                                 Santiago, Chile </span>
                         </a>
-                        <a href="tel:+56965047494" class="d-flex align-items-center gap-2 text-n0 hover-text-secondary2">
+                        <a href="tel:+56965047494"
+                            class="d-flex align-items-center gap-2 text-n0 hover-text-secondary2">
                             <span class="text-base"><i class="ph ph-phone-call"></i></span>
                             <span class="text-sm text-nowrap">
                                 +56 9 6504 7494
@@ -71,38 +72,70 @@
 
                             </li>
 
+                            <li class="menu-item products-menu-item" (mouseenter)="openCategoriesMenu()"
+                                (mouseleave)="scheduleCloseCategoriesMenu()">
 
-                            <li class="menu-item products-menu-item" (mouseenter)="openCategoriesMenu()">
                                 <a class="slide-vertical" routerLink="/shop" (click)="toggleCategoriesMenu($event)">
-                                    Productos
+                                    PRODUCTOS
                                     <span class="menu-icon">
                                         <i class="ph-fill ph-caret-down"></i>
                                     </span>
                                 </a>
 
-                                <div class="mega-menu" *ngIf="showCategoriesMenu">
-                                    <div class="mega-menu-item">
+                                <div class="mega-menu" *ngIf="showCategoriesMenu"
+                                    (mouseenter)="cancelCloseCategoriesMenu()"
+                                    (mouseleave)="scheduleCloseCategoriesMenu()">
+
+                                    <div class="mega-menu-simple">
 
                                         <a routerLink="/shop" [queryParams]="{ category: 'all' }"
-                                            class="menu-title-wrapper" (click)="closeCategoriesMenu()">
-                                            <span class="menu-title">TODOS</span>
+                                            class="mega-category-item all" (click)="closeCategoriesMenu()">
+
+                                            <i class="ph ph-squares-four"></i>
+                                            <span>Todos los productos</span>
                                         </a>
 
-                                        <a *ngFor="let category of categories" routerLink="/shop"
-                                            [queryParams]="{ category: category.id }" class="menu-title-wrapper"
-                                            (click)="closeCategoriesMenu()">
-                                            <span class="menu-title">{{ category.name }}</span>
-                                        </a>
+                                        <div class="mega-category-group" *ngFor="let category of parentCategories">
+
+                                            <a routerLink="/shop" [queryParams]="{ category: category.id }"
+                                                class="mega-category-item" (click)="closeCategoriesMenu()">
+
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <i class="ph ph-tag"></i>
+                                                    <span>{{ category.name }}</span>
+                                                </div>
+
+                                                <i *ngIf="getSubcategories(category.id!).length > 0"
+                                                    class="ph ph-caret-right sub-icon">
+                                                </i>
+                                            </a>
+
+                                            <div class="mega-subcategories"
+                                                *ngIf="getSubcategories(category.id!).length > 0">
+
+                                                <a *ngFor="let sub of getSubcategories(category.id!)" routerLink="/shop"
+                                                    [queryParams]="{
+              category: category.id,
+              subcategory: sub.id
+            }" class="mega-subcategory-item" (click)="closeCategoriesMenu()">
+
+                                                    {{ sub.name }}
+                                                </a>
+
+                                            </div>
+
+                                        </div>
 
                                     </div>
+
                                 </div>
                             </li>
                             <li class="menu-link">
-                                <a class="slide-vertical" data-splitting routerLink="/about">Nosotros</a>
+                                <a class="slide-vertical" data-splitting routerLink="/about">NOSOTROS</a>
                             </li>
 
                             <li class="menu-link">
-                                <a class="slide-vertical" routerLink="/contact" data-splitting>Contacto</a>
+                                <a class="slide-vertical" routerLink="/contact" data-splitting>CONTACTO</a>
                             </li>
                         </ul>
                     </nav>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import PocketBase, { RecordModel } from 'pocketbase';
 import { BehaviorSubject, from, map, Observable, tap } from 'rxjs';
-
+import { StoreUserAdmin } from '../models/store-user.model';
 export type UserType = 'admin' | 'client';
 
 export interface StoreUser {
@@ -194,5 +194,57 @@ async countClients(): Promise<number> {
   });
 
   return result.totalItems;
+}
+async getUsers(): Promise<StoreUserAdmin[]> {
+  const records = await this.pb.collection('users').getFullList({
+    sort: '-created',
+  });
+
+  return records as unknown as StoreUserAdmin[];
+}
+
+async getUserById(id: string): Promise<StoreUserAdmin> {
+  const record = await this.pb.collection('users').getOne(id);
+
+  return record as unknown as StoreUserAdmin;
+}
+
+async updateUser(id: string, data: Partial<StoreUserAdmin>): Promise<StoreUserAdmin> {
+  const record = await this.pb.collection('users').update(id, data);
+
+  return record as unknown as StoreUserAdmin;
+}
+
+async updateUserStatus(id: string, status: boolean): Promise<StoreUserAdmin> {
+  const record = await this.pb.collection('users').update(id, {
+    status
+  });
+
+  return record as unknown as StoreUserAdmin;
+}
+
+async deleteUser(id: string): Promise<boolean> {
+  await this.pb.collection('users').delete(id);
+  return true;
+}
+
+getAvatarUrl(user: StoreUserAdmin): string {
+  if (!user.id || !user.avatar) {
+    return 'assets/images/user-placeholder.png';
+  }
+
+  return `${this.pb.baseUrl}/api/files/users/${user.id}/${user.avatar}`;
+}
+
+async subscribeUsers(
+  callback: (action: string, record: StoreUserAdmin) => void
+): Promise<void> {
+  await this.pb.collection('users').subscribe('*', (event) => {
+    callback(event.action, event.record as unknown as StoreUserAdmin);
+  });
+}
+
+unsubscribeUsers(): void {
+  this.pb.collection('users').unsubscribe('*');
 }
 }

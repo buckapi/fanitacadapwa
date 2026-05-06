@@ -30,6 +30,39 @@ export class Products implements OnInit, OnDestroy {
   categories: Category[] = [];
   selectedCategories: string[] = [];
   existingImageRecords: any[] = [];
+  availableSizes: { value: string; label: string }[] = [];
+
+sizeOptions = {
+  ropaSuperior: [
+    { value: 'XS', label: 'XS - 34/36' },
+    { value: 'S', label: 'S - 38/40' },
+    { value: 'M', label: 'M - 42/44' },
+    { value: 'L', label: 'L - 44/46' },
+    { value: 'XL', label: 'XL - 48/50' },
+  ],
+
+  pantalones: [
+    { value: '34-36', label: '34/36 - XS' },
+    { value: '38-40', label: '38/40 - S' },
+    { value: '42-44', label: '42/44 - M' },
+    { value: '46-48', label: '46/48 - L' },
+    { value: '50+', label: '50+ - XL' },
+  ],
+
+  medias: [
+    { value: 'S/M', label: 'S/M - 35/39 CL' },
+    { value: 'L/XL', label: 'L/XL - 40/45 CL' },
+  ],
+
+  general: [
+    { value: 'XS', label: 'XS' },
+    { value: 'S', label: 'S' },
+    { value: 'M', label: 'M' },
+    { value: 'L', label: 'L' },
+    { value: 'XL', label: 'XL' },
+    { value: 'Única', label: 'Única' },
+  ]
+};
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
@@ -132,8 +165,32 @@ export class Products implements OnInit, OnDestroy {
   this.selectedSubcategories = [];
 
   this.productForm.patchValue({
-    subcategories: []
+    subcategories: [],
+    size: ''
   });
+
+  this.updateAvailableSizes(parentId);
+}
+updateAvailableSizes(categoryId: string): void {
+  const category = this.parentCategories.find((cat: any) => cat.id === categoryId);
+  const name = category?.name?.toLowerCase() || '';
+
+  if (name.includes('camiseta') || name.includes('chaqueta')) {
+    this.availableSizes = this.sizeOptions.ropaSuperior;
+    return;
+  }
+
+  if (name.includes('pantalon') || name.includes('pantalón') || name.includes('short')) {
+    this.availableSizes = this.sizeOptions.pantalones;
+    return;
+  }
+
+  if (name.includes('media') || name.includes('calcetin') || name.includes('calcetín')) {
+    this.availableSizes = this.sizeOptions.medias;
+    return;
+  }
+
+  this.availableSizes = this.sizeOptions.general;
 }
 onSubcategoryToggle(event: Event): void {
   const input = event.target as HTMLInputElement;

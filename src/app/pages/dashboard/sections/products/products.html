@@ -78,7 +78,14 @@
 
             <div class="form-group">
                 <label>Talla</label>
-                <input type="text" formControlName="size">
+
+                <select formControlName="size">
+                    <option value="">Selecciona una talla</option>
+
+                    <option *ngFor="let size of availableSizes" [value]="size.label">
+    {{ size.label }}
+</option>
+                </select>
             </div>
 
             <div class="form-group">

@@ -226,12 +226,12 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigateByUrl(`/product-detail/${product.id}`);
   }
 
-  addToCart(product: any): void {
+  addToCart(product: Product, quantity: number = 1): void {
     const image = product.images?.length
       ? this.getProductImages(product)[0]
       : 'assets/images/no-image.png';
 
-    this.cartService.addItem(product, 1, image);
+    this.cartService.addItem(product, quantity, image);
   }
   zoomEnabled = false;
 
@@ -303,12 +303,11 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
     alert('Enlace copiado');
   }
 
-  shareOn(platform: 'facebook' | 'instagram' | 'whatsapp'): void {
+  shareOn(platform: 'instagram' | 'whatsapp'): void {
     const url = encodeURIComponent(this.productShareUrl);
     const text = encodeURIComponent(`Mira este producto: ${this.product?.name}`);
 
     const links = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       instagram: `https://www.instagram.com/?url=${url}&text=${text}`,
       whatsapp: `https://wa.me/?text=${text}%20${url}`,
     };
@@ -319,7 +318,7 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   sendQuestion(): void {
     if (!this.product) return;
 
-    const phone = '56912345678'; // cambia por tu WhatsApp real
+    const phone = '56965047494'; // cambia por tu WhatsApp real
 
     const message = `
 Hola, quiero hacer una consulta sobre este producto:
@@ -346,6 +345,20 @@ ${this.questionForm.message}
     };
   }
 
+quantity = 1;
 
+increaseQuantity(): void {
+  if (!this.product) return;
+
+  if (this.quantity < this.product.stock) {
+    this.quantity++;
+  }
+}
+
+decreaseQuantity(): void {
+  if (this.quantity > 1) {
+    this.quantity--;
+  }
+}
 
 }
