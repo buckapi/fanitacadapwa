@@ -340,3 +340,125 @@
   background: #f3f3f3;
   color: #000;
 }
+/* =========================
+   MOBILE HEADER IMPROVEMENTS
+========================= */
+@media (max-width: 768px) {
+
+  .header-section {
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.96);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  /* CONTENEDOR HEADER */
+  .header-section .d-flex.align-items-center.justify-content-between {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    gap: 10px !important;
+  }
+
+  /* LOGO */
+  .logo img {
+    width: 52px !important;
+    max-width: 52px !important;
+    object-fit: contain;
+  }
+
+  /* NAV BUTTONS */
+  .nav-btns {
+    gap: 12px !important;
+  }
+
+  /* ICONOS */
+  .nav-btns .icon-36px,
+  .menu-toggle-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    font-size: 18px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+  }
+
+  /* BADGES */
+  .nav-btns .badge {
+    font-size: 10px !important;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+  }
+
+  /* MENU HAMBURGUESA */
+  .menu-toggle-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* SEARCH */
+  .search-bar {
+    display: none !important;
+  }
+
+  /* NAVBAR MOBILE */
+  .navbar-area {
+    max-width: 82vw;
+  }
+
+  /* MENU MOBILE */
+  .nav-menu-items {
+    padding-top: 20px;
+  }
+
+  .nav-menu-items a,
+  .nav-menu-items button {
+    font-size: 15px !important;
+  }
+
+  /* MEGA MENU MOBILE */
+  .mega-menu {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .mega-category-item {
+    padding: 10px 12px !important;
+    font-size: 14px;
+  }
+
+  /* HEADER GENERAL */
+  .container-fluid {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* EVITAR DESBORDAMIENTO */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+.mobile-logo {
+  width: 52px;
+}
+
+.desktop-logo {
+  width: 180px;
+}
+
+@media (max-width: 768px) {
+  .desktop-logo {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-logo {
+    display: none;
+  }
+}
