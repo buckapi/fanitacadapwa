@@ -1,0 +1,11 @@
+<main style="padding-top: 10rem;" class="container text-center">
+  <h1>Pago no completado</h1>
+
+  <p>Tu pago no pudo ser confirmado.</p>
+
+  <p *ngIf="buyOrder">Orden: {{ buyOrder }}</p>
+  <p *ngIf="reason">Motivo: {{ reason }}</p>
+  <p *ngIf="responseCode">Código: {{ responseCode }}</p>
+
+  <a routerLink="/checkout" class="btn-secondary">Intentar nuevamente</a>
+</main>

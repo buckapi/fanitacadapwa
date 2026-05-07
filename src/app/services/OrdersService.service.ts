@@ -7,6 +7,11 @@ import { Order } from '../models/order.model';
 })
 export class OrdersService {
   private pb = new PocketBase('https://db.buckapi.site:8010');
+
+constructor() {
+  this.pb.autoCancellation(false);
+}
+
     createOrder(orderData: any) {
     return this.pb.collection('orders').create(orderData);
     }
@@ -42,15 +47,23 @@ export class OrdersService {
     this.pb.collection('orders').unsubscribe('*');
   }
   async getOrdersByUser(userId: string): Promise<Order[]> {
-  return await this.pb.collection('orders').getFullList<Order>({
+
+  const result = await this.pb.collection('orders').getList<Order>(1, 20, {
     sort: '-created',
     filter: `user = "${userId}"`,
   });
+
+  return result.items;
 }
+
 async getOrdersByCustomerEmail(email: string): Promise<Order[]> {
-  return await this.pb.collection('orders').getFullList<Order>({
+
+  const result = await this.pb.collection('orders').getList<Order>(1, 20, {
     sort: '-created',
     filter: `customerEmail = "${email}"`,
   });
+
+  return result.items;
 }
+
 }

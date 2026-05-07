@@ -17,6 +17,8 @@ import { Register } from './pages/register/register';
 import { Account } from './pages/dashboard/sections/account/account';
 import { Wishlist } from './pages/dashboard/sections/wishlist/wishlist';
 import { OrdersClient } from './pages/dashboard/sections/orders-client/orders-client';
+import { PaymentSuccess } from './pages/payment-success/payment-success';
+import { PaymentError } from './pages/payment-error/payment-error';
 
 export const routes: Routes = [
   {
@@ -54,6 +56,14 @@ export const routes: Routes = [
   {
     path: 'register',
     component: Register,
+  },
+   {
+    path: 'payment-success',
+    component: PaymentSuccess
+  },
+  {
+    path: 'payment-error',
+    component: PaymentError
   },
   {
     path: 'dashboard',

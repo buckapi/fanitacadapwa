@@ -23,10 +23,7 @@
 
     <div class="orders-list">
 
-      <div
-        class="client-order-card"
-        *ngFor="let order of orders"
-        [class.active]="selectedOrder?.id === order.id"
+      <div class="client-order-card" *ngFor="let order of orders" [class.active]="selectedOrder?.id === order.id"
         (click)="viewOrder(order)">
 
         <div class="order-card-top">
@@ -102,8 +99,8 @@
 
         <p><strong>Nombre:</strong> {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}</p>
         <p><strong>Email:</strong> {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}</p>
-        <p><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone || 'N/A' }}</p>
-        <p><strong>Dirección:</strong> {{ selectedOrder.customer?.address || 'N/A' }}</p>
+        <p><strong>Teléfono:</strong> {{ getCustomerPhone(selectedOrder) }}</p>
+        <p><strong>Dirección:</strong> {{ getCustomerAddress(selectedOrder) }}</p>
       </div>
 
       <div class="detail-section totals">

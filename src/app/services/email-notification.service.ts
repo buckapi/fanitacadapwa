@@ -1,73 +1,56 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, timeout } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 
-export interface ApiResponse {
-  success: boolean;
-  message?: string;
+export interface OrderEmailProduct {
+  name: string;
+  quantity: number;
+  price: number;
+  size?: string;
+  image?: string;
 }
 
-export interface OrderEmailPayload {
+export interface PurchaseEmailDto {
   toEmail: string;
   toName: string;
   templateId: number;
-  subject?: string;
   params: {
     orderId: string;
     customerName: string;
     customerEmail: string;
-    customerPhone: string;
+    total: string;
+    subtotal: string;
+    shipping: string;
+    paymentMethod: string;
     address: string;
-    items: any[];
-    subtotal: number;
-    shipping: number;
-    total: number;
-    isGuest: boolean;
-    loginMessage?: string;
+    phone: string;
+    note?: string;
+    products: OrderEmailProduct[];
+    productsHtml: string;
   };
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class EmailNotificationService {
-  private baseUrl = 'https://TU-BACKEND.com';
-  private defaultTimeoutMs = 15000;
+  private http = inject(HttpClient);
+  private base = 'http://localhost:5005';
 
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json'
+  });
 
-  constructor(private http: HttpClient) {}
-
-  sendOrderToClient(dto: OrderEmailPayload): Observable<ApiResponse> {
-    return this.http
-      .post<ApiResponse>(`${this.baseUrl}/api/order-client`, dto, this.httpOptions)
-      .pipe(
-        timeout(this.defaultTimeoutMs),
-        catchError((error) => {
-          console.error('Error enviando pedido al cliente:', error);
-          return of({
-            success: false,
-            message: error?.error?.message || 'Error enviando pedido al cliente'
-          });
-        })
-      );
+  sendCustomerPurchase(dto: PurchaseEmailDto) {
+    return this.http.post(
+      `${this.base}/email/CompraCliente`,
+      dto,
+      { headers: this.headers }
+    );
   }
 
-  sendOrderToAdmin(dto: OrderEmailPayload): Observable<ApiResponse> {
-    return this.http
-      .post<ApiResponse>(`${this.baseUrl}/api/order-admin`, dto, this.httpOptions)
-      .pipe(
-        timeout(this.defaultTimeoutMs),
-        catchError((error) => {
-          console.error('Error enviando pedido al admin:', error);
-          return of({
-            success: false,
-            message: error?.error?.message || 'Error enviando pedido al admin'
-          });
-        })
-      );
+  sendAdminPurchase(dto: PurchaseEmailDto) {
+    return this.http.post(
+      `${this.base}/email/CompraAdmin`,
+      dto,
+      { headers: this.headers }
+    );
   }
 }

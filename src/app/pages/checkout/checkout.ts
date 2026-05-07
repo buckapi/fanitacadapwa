@@ -6,15 +6,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { EmailNotificationService } from '../../services/email-notification.service';
 import { OrdersService } from '../../services/OrdersService.service';
+import { PaymentsService } from '../../services/payments.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
 export class Checkout {
+
   cartItems: CartItem[] = [];
   subtotal = 0;
   shipping = 0;
@@ -26,8 +30,12 @@ export class Checkout {
     private fb: FormBuilder,
     public cartService: CartService,
     private ordersService: OrdersService,
-    private emailService: EmailNotificationService
+    private emailService: EmailNotificationService,
+    private paymentsService: PaymentsService,
+    private auth: AuthPocketbaseService,
+    private router: Router
   ) {
+
     this.checkoutForm = this.fb.group({
       rut: ['', [Validators.required]],
       country: ['Chile', Validators.required],
@@ -41,102 +49,177 @@ export class Checkout {
       email: ['', [Validators.required, Validators.email]],
       shippingMethod: ['santiago', Validators.required],
       billingAddress: ['same', Validators.required],
-
       note: [''],
       terms: [false, Validators.requiredTrue]
     });
 
+    const currentUser = this.auth.getCurrentUser?.();
+
+    if (currentUser?.email) {
+      this.checkoutForm.patchValue({
+        email: currentUser.email
+      });
+
+      this.checkoutForm.get('email')?.disable();
+    }
+
     this.cartService.items$.subscribe(items => {
       this.cartItems = items;
-      this.subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+
+      this.subtotal = items.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+
       this.calculateTotals();
     });
 
-    this.checkoutForm.get('shippingMethod')?.valueChanges.subscribe(() => {
-      this.calculateTotals();
-    });
+    this.checkoutForm.get('shippingMethod')
+      ?.valueChanges.subscribe(() => {
+        this.calculateTotals();
+      });
   }
 
   calculateTotals(): void {
-    const shippingMethod = this.checkoutForm.get('shippingMethod')?.value;
 
-    if (shippingMethod === 'santiago') {
-      this.shipping = 0;
-    } else {
-      this.shipping = 5000;
-    }
+    const shippingMethod =
+      this.checkoutForm.get('shippingMethod')?.value;
+
+    this.shipping =
+      shippingMethod === 'santiago' ? 0 : 5000;
 
     this.total = this.subtotal + this.shipping;
   }
 
- async completeOrder(): Promise<void> {
-  if (this.checkoutForm.invalid) {
-    this.checkoutForm.markAllAsTouched();
-    return;
-  }
+  async completeOrder(): Promise<void> {
+    const currentUser = this.auth.getCurrentUser?.();
 
-  if (this.cartItems.length === 0) {
-    alert('Tu carrito está vacío.');
-    return;
-  }
+    if (!currentUser?.id) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/checkout' }
+      });
+      return;
+    }
+    if (this.checkoutForm.invalid) {
+      this.checkoutForm.markAllAsTouched();
+      return;
+    }
 
-  try {
-    const customer = this.checkoutForm.value;
+    if (this.cartItems.length === 0) {
+      alert('Tu carrito está vacío.');
+      return;
+    }
 
-    const orderData = {
-      customer,
-      items: this.cartItems,
-      subtotal: this.subtotal,
-      shipping: this.shipping,
-      total: this.total,
-      status: 'pendiente',
-      customerEmail: customer.email,
-      customerName: `${customer.firstName} ${customer.lastName}`
-    };
+    try {
+      const customer = this.checkoutForm.getRawValue();
+      const customerName = `${customer.firstName} ${customer.lastName}`;
+      const currentUser = this.auth.getCurrentUser?.();
 
-    const order = await this.ordersService.createOrder(orderData);
-
-    const isGuest = true;
-
-    const baseEmailPayload = {
-      toEmail: customer.email,
-      toName: `${customer.firstName} ${customer.lastName}`,
-      templateId: 5,
-      subject: 'Recibimos tu pedido en Fanaticada.cl',
-      params: {
-        orderId: order.id,
-        customerName: `${customer.firstName} ${customer.lastName}`,
-        customerEmail: customer.email,
-        customerPhone: customer.phone,
-        address: customer.address,
+      const orderData = {
+        customer,
         items: this.cartItems,
         subtotal: this.subtotal,
         shipping: this.shipping,
         total: this.total,
-        isGuest,
-        loginMessage: isGuest
-          ? 'Te invitamos a iniciar sesión o crear una cuenta para consultar el estado de tu pedido.'
-          : 'Puedes ingresar a tu cuenta para consultar el estado de tu pedido.'
-      }
-    };
+        status: 'pendiente_pago',
+        customerEmail: currentUser!.email,
+        customerName,
+        user: currentUser!.id
 
-    await firstValueFrom(this.emailService.sendOrderToClient(baseEmailPayload));
+      };
 
-    await firstValueFrom(this.emailService.sendOrderToAdmin({
-      ...baseEmailPayload,
-      toEmail: 'contacto@email.com',
-      toName: 'Administrador Fanaticada',
-      templateId: 6,
-      subject: `Nuevo pedido recibido #${order.id}`
-    }));
+      const order = await this.ordersService.createOrder(orderData);
 
-    alert('Pedido creado correctamente. Revisa tu correo.');
+      const productsHtml = this.buildProductsHtml();
 
-    this.cartService.clear();
+      /*  const emailPayload = {
+         toEmail: customer.email,
+         toName: customerName,
+         templateId: 11,
+         params: {
+           orderId: order.id,
+           customerName,
+           customerEmail: customer.email,
+           total: `$${this.total.toLocaleString('es-CL')}`,
+           subtotal: `$${this.subtotal.toLocaleString('es-CL')}`,
+           shipping: `$${this.shipping.toLocaleString('es-CL')}`,
+           paymentMethod: 'Transbank',
+           address: `${customer.address} ${customer.apartment || ''}`,
+           phone: customer.phone,
+           note: customer.note || '',
+           productsHtml
+         }
+       }; */
+      const emailPayload = {
+        toEmail: customer.email,
+        toName: customerName,
+        templateId: 1,
+        params: {
+          orderId: order.id,
+          customerName,
+          customerEmail: customer.email,
+          total: `$${this.total.toLocaleString('es-CL')}`,
+          subtotal: `$${this.subtotal.toLocaleString('es-CL')}`,
+          shipping: `$${this.shipping.toLocaleString('es-CL')}`,
+          paymentMethod: 'Transbank',
+          address: `${customer.address} ${customer.apartment || ''}`,
+          phone: customer.phone,
+          note: customer.note || '',
 
-  } catch (error) {
-    console.error('Error creando pedido:', error);
-    alert('Ocurrió un error al crear el pedido.');
+          products: this.cartItems.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            size: item.size,
+            image: item.image
+          })),
+
+          productsHtml
+        }
+      };
+      /* 
+          // Notificación al cliente
+          await firstValueFrom(
+            this.emailService.sendCustomerPurchase(emailPayload)
+          );
+      
+          // Notificación al administrador
+          await firstValueFrom(
+            this.emailService.sendAdminPurchase({
+              ...emailPayload,
+              toEmail: 'contacto@fanaticada.cl',
+              toName: 'Fanaticada.cl',
+              templateId: 2
+            })
+          ); */
+
+      const payment = await this.paymentsService.createPayment({
+        amount: this.total,
+        orderId: order.id,
+        customerEmail: customer.email,
+        customerName,
+        userId: 'guest'
+      });
+
+      this.paymentsService.redirectToTransbank(
+        payment.url,
+        payment.token
+      );
+
+    } catch (error) {
+      console.error('Error iniciando pago:', error);
+      alert('Ocurrió un error al iniciar el pago.');
+    }
   }
-}
+  private buildProductsHtml(): string {
+    return this.cartItems.map(item => {
+      return `
+${item.name}
+Cantidad: ${item.quantity}
+${item.size ? `Talla: ${item.size}` : ''}
+Precio: $${item.price.toLocaleString('es-CL')}
+-------------------------
+`;
+    }).join('');
+  }
 }

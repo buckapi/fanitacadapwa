@@ -1,0 +1,9 @@
+<main style="padding-top: 10rem;" class="container text-center">
+  <h1>Pago aprobado</h1>
+  <p>Tu pedido fue pagado correctamente.</p>
+
+  <p *ngIf="orderId">Orden: {{ orderId }}</p>
+  <p *ngIf="amount">Total: ${{ amount | number:'1.0-0' }}</p>
+
+  <a routerLink="/dashboard/orders-client" class="btn-secondary">Ver ordenes</a>
+</main>

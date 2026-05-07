@@ -18,8 +18,9 @@ export class OrdersClient implements OnInit {
   selectedOrder: Order | null = null;
 
   statusOptions = [
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'paid', label: 'Pagada' },
+    { value: 'pendiente_pago', label: 'Pendiente de pago' },
+    { value: 'pagado', label: 'Pagada' },
+    { value: 'rechazado', label: 'Rechazada' },
     { value: 'processing', label: 'En preparación' },
     { value: 'shipped', label: 'Enviada' },
     { value: 'completed', label: 'Completada' },
@@ -32,35 +33,35 @@ export class OrdersClient implements OnInit {
     private cdRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.loadClientOrders();
-    this.cdRef.detectChanges();
+  async ngOnInit(): Promise<void> {
+    await this.loadClientOrders();
   }
 
   async loadClientOrders(): Promise<void> {
     this.loading = true;
+    this.orders = [];
+    this.selectedOrder = null;
 
     try {
-      const user = this.auth.getCurrentUser?.() || null;
+      const user = this.auth.getCurrentUser?.();
 
-      if (!user) {
-        this.orders = [];
+      if (!user?.email) {
         return;
       }
 
-      if (user.id) {
-        this.orders = await this.ordersService.getOrdersByUser(user.id);
-      }
+      /* this.orders = await this.ordersService.getOrdersByCustomerEmail(user.email); */
+      this.orders = await this.ordersService.getOrdersByUser(user.id);
 
-      if ((!this.orders || this.orders.length === 0) && user.email) {
-        this.orders = await this.ordersService.getOrdersByCustomerEmail(user.email);
+      if (this.orders.length > 0) {
+        this.selectedOrder = this.orders[0];
       }
 
     } catch (error) {
-      console.error('Error cargando pedidos del cliente:', error);
+      console.error('Error cargando pedidos:', error);
       this.orders = [];
     } finally {
       this.loading = false;
+      this.cdRef.detectChanges();
     }
   }
 
@@ -82,12 +83,28 @@ export class OrdersClient implements OnInit {
     }, 0);
   }
 
-  getStatusLabel(status: string): string {
-    return this.statusOptions.find(item => item.value === status)?.label || status;
+  getStatusLabel(status?: string): string {
+    return this.statusOptions.find(item => item.value === status)?.label || status || 'Pendiente';
   }
 
-  getStatusClass(status: string): string {
+  getStatusClass(status?: string): string {
     return `status-${status || 'pending'}`;
+  }
+
+  getCustomerPhone(order: Order): string {
+    return order.customer?.phone || 'N/A';
+  }
+
+  getCustomerAddress(order: Order): string {
+    const customer = order.customer;
+
+    if (!customer) return 'N/A';
+
+    return [
+      customer.address,
+      customer['apartment'],
+      customer['country']
+    ].filter(Boolean).join(', ') || 'N/A';
   }
 
   formatDate(date?: string): string {
