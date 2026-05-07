@@ -7,6 +7,7 @@ import { CategoriesService } from '../../services/CategoriesService.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
 import { Category } from '../../models/category.model';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-shop',
@@ -28,13 +29,32 @@ export class Shop implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     public categoriesService: CategoriesService,
     public auth: AuthPocketbaseService,
-    public wishlistService: WishlistService
+    public wishlistService: WishlistService,
+    private title: Title,
+    private meta: Meta
   ) { }
 
   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
     this.listenRealtimeProducts();
+     this.title.setTitle('Camiseta Deportivo Cali | Fanaticada.cl');
+
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Compra la camiseta oficial del Deportivo Cali.'
+    });
+
+    this.meta.updateTag({
+      property: 'og:title',
+      content: 'Camiseta Deportivo Cali'
+    });
+
+    this.meta.updateTag({
+      property: 'og:image',
+      content: 'https://fanaticada.cl/assets/cali.jpg'
+    });
+
   }
 
   ngOnDestroy(): void {
