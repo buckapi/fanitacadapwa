@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiEmailUrl: 'http://localhost:5005'
+  apiEmailUrl: 'https://db.buckapi.site:5005'
 };

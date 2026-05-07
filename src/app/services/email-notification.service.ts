@@ -32,7 +32,7 @@ export interface PurchaseEmailDto {
 @Injectable({ providedIn: 'root' })
 export class EmailNotificationService {
   private http = inject(HttpClient);
-  private base = 'http://localhost:5005';
+  private base = 'https://db.buckapi.site:5005';
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json'
