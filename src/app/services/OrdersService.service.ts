@@ -7,22 +7,25 @@ import { Order } from '../models/order.model';
 })
 export class OrdersService {
   private pb = new PocketBase('https://db.buckapi.site:8010');
+  private apiUrl = 'https://db.buckapi.site:4242/payments';
 
-constructor() {
-  this.pb.autoCancellation(false);
-}
-confirmTransbankPayment(tokenWs: string): Promise<any> {
-  return fetch(`${this.pb}/transbank/commit`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ token_ws: tokenWs })
-  }).then(res => res.json());
-}
-    createOrder(orderData: any) {
+  constructor() {
+    this.pb.autoCancellation(false);
+  }
+
+  confirmTransbankPayment(tokenWs: string): Promise<any> {
+    return fetch(`${this.apiUrl}/commit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token_ws: tokenWs })
+    }).then(res => res.json());
+  }
+
+  createOrder(orderData: any) {
     return this.pb.collection('orders').create(orderData);
-    }
+  }
 
   async getOrders(): Promise<Order[]> {
     return await this.pb.collection('orders').getFullList<Order>({
@@ -54,24 +57,22 @@ confirmTransbankPayment(tokenWs: string): Promise<any> {
   unsubscribeOrders(): void {
     this.pb.collection('orders').unsubscribe('*');
   }
+
   async getOrdersByUser(userId: string): Promise<Order[]> {
+    const result = await this.pb.collection('orders').getList<Order>(1, 20, {
+      sort: '-created',
+      filter: `user = "${userId}"`,
+    });
 
-  const result = await this.pb.collection('orders').getList<Order>(1, 20, {
-    sort: '-created',
-    filter: `user = "${userId}"`,
-  });
+    return result.items;
+  }
 
-  return result.items;
-}
+  async getOrdersByCustomerEmail(email: string): Promise<Order[]> {
+    const result = await this.pb.collection('orders').getList<Order>(1, 20, {
+      sort: '-created',
+      filter: `customerEmail = "${email}"`,
+    });
 
-async getOrdersByCustomerEmail(email: string): Promise<Order[]> {
-
-  const result = await this.pb.collection('orders').getList<Order>(1, 20, {
-    sort: '-created',
-    filter: `customerEmail = "${email}"`,
-  });
-
-  return result.items;
-}
-
+    return result.items;
+  }
 }
