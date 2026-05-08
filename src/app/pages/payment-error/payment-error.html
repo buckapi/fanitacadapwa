@@ -1,11 +1,69 @@
-<main style="padding-top: 10rem;" class="container text-center">
-  <h1>Pago no completado</h1>
+<main style="padding-top: 10rem;" class="container">
 
-  <p>Tu pago no pudo ser confirmado.</p>
+  <div class="payment-error-card">
 
-  <p *ngIf="buyOrder">Orden: {{ buyOrder }}</p>
-  <p *ngIf="reason">Motivo: {{ reason }}</p>
-  <p *ngIf="responseCode">Código: {{ responseCode }}</p>
+    <div class="icon-error">
+      <i class="ph-fill ph-x-circle"></i>
+    </div>
 
-  <a routerLink="/checkout" class="btn-secondary">Intentar nuevamente</a>
+    <h1>Pago no completado</h1>
+
+    <p class="subtitle">
+      Tu transacción no pudo ser confirmada.
+    </p>
+
+    <div class="order-summary">
+
+      <div class="summary-row" *ngIf="buyOrder">
+        <span>Número de orden</span>
+        <strong>#{{ buyOrder }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Comercio</span>
+        <strong>Fanaticada.cl</strong>
+      </div>
+
+      <div class="summary-row" *ngIf="reason">
+        <span>Motivo</span>
+        <strong>{{ reason }}</strong>
+      </div>
+
+      <div class="summary-row" *ngIf="responseCode">
+        <span>Código respuesta</span>
+        <strong>{{ responseCode }}</strong>
+      </div>
+
+    </div>
+
+    <div class="payment-help">
+
+      <p>
+        Las posibles causas de este problema pueden ser:
+      </p>
+
+      <ul>
+        <li>La transacción fue cancelada.</li>
+        <li>Fondos insuficientes.</li>
+        <li>La tarjeta fue rechazada por el banco.</li>
+        <li>Error en los datos ingresados.</li>
+        <li>Tiempo de sesión expirado.</li>
+      </ul>
+
+    </div>
+
+    <div class="actions">
+
+      <a routerLink="/checkout" class="btn-secondary">
+        Intentar nuevamente
+      </a>
+
+      <a routerLink="/shop" class="btn-outline">
+        Volver a la tienda
+      </a>
+
+    </div>
+
+  </div>
+
 </main>

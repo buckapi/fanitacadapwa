@@ -6,6 +6,8 @@ export interface OrderCustomer {
   city?: string;
   region?: string;
   notes?: string;
+  apartment?: string;
+  country?: string;
   [key: string]: any;
 }
 
@@ -29,15 +31,26 @@ export interface Order {
   updated?: string;
 
   customer?: OrderCustomer;
-  items?: OrderItem[];
+  items?: OrderItem[] | string;
 
-  subtotal: number;
-  shipping: number;
-  total: number;
+  subtotal?: number;
+  shipping?: number;
+  total?: number;
 
-  status: string;
+  status?: string;
   user?: string;
 
   customerEmail?: string;
   customerName?: string;
+
+  paymentData?: any;
+  authorizationCode?: string;
+  paymentTypeCode?: string;
+  cardNumber?: string | number;
+  transactionDate?: string;
+  responseCode?: number;
+  installments?: number;
+
+  trackingNumber?: string;
+  shippingCompany?: string;
 }

@@ -1,81 +1,105 @@
 <main style="padding-top: 10rem;" class="container">
 
   <div class="payment-success-card">
-<div *ngIf="loading">
-  Cargando información del pago...
-</div>
 
-<div *ngIf="error" class="error-message">
-  {{ error }}
-</div>
-    <div class="icon-success">
-      <i class="ph-fill ph-check-circle"></i>
+    <div *ngIf="loading">
+      Cargando información del pago...
     </div>
 
-    <h1>Pago aprobado</h1>
-
-    <p class="subtitle">
-      Tu pedido fue pagado correctamente.
-    </p>
-
-    <div class="order-summary">
-
-      <div class="summary-row" *ngIf="orderId">
-        <span>Número de orden</span>
-        <strong>#{{ orderId }}</strong>
-      </div>
-
-      <div class="summary-row" *ngIf="amount">
-        <span>Monto</span>
-        <strong>${{ amount | number:'1.0-0' }}</strong>
-      </div>
-
-      <div class="summary-row" *ngIf="status">
-        <span>Estado</span>
-        <strong class="status approved">
-          {{ status }}
-        </strong>
-      </div>
-
-      <div class="summary-row" *ngIf="transactionDate">
-        <span>Fecha</span>
-        <strong>
-          {{ transactionDate | date:'dd/MM/yyyy HH:mm' }}
-        </strong>
-      </div>
-
-      <div class="summary-row" *ngIf="paymentType">
-        <span>Método de pago</span>
-        <strong>{{ paymentType }}</strong>
-      </div>
-
-      <div class="summary-row" *ngIf="cardDetail">
-        <span>Tarjeta</span>
-        <strong>**** {{ cardDetail }}</strong>
-      </div>
-
-      <div class="summary-row" *ngIf="customerEmail">
-        <span>Correo cliente</span>
-        <strong>{{ customerEmail }}</strong>
-      </div>
-      <div class="summary-row" *ngIf="order?.authorizationCode">
-  <span>Código autorización</span>
-  <strong>{{ order.authorizationCode }}</strong>
-</div>
-
+    <div *ngIf="error" class="error-message">
+      {{ error }}
     </div>
 
-    <div class="actions">
+    <ng-container *ngIf="!loading && !error">
 
-      <a routerLink="/dashboard/orders-client" class="btn-secondary">
-        Ver órdenes
-      </a>
+      <div class="icon-success">
+        <i class="ph-fill ph-check-circle"></i>
+      </div>
 
-      <a routerLink="/shop" class="btn-outline">
-        Seguir comprando
-      </a>
+      <h1>Pago aprobado</h1>
 
-    </div>
+      <p class="subtitle">
+        Tu pedido fue pagado correctamente.
+      </p>
+
+      <div class="order-summary">
+
+        <div class="summary-row" *ngIf="orderId">
+          <span>Número de orden</span>
+          <strong>#{{ orderId }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Comercio</span>
+          <strong>Fanaticada.cl</strong>
+        </div>
+
+        <div class="summary-row" *ngIf="amount">
+          <span>Monto</span>
+          <strong>CLP {{ amount | number:'1.0-0' }}</strong>
+        </div>
+
+        <div class="summary-row" *ngIf="status">
+          <span>Estado</span>
+          <strong class="status approved">
+            {{ status }}
+          </strong>
+        </div>
+
+        <div class="summary-row" *ngIf="order?.authorizationCode">
+          <span>Código autorización</span>
+          <strong>{{ order.authorizationCode }}</strong>
+        </div>
+
+        <div class="summary-row" *ngIf="transactionDate">
+          <span>Fecha transacción</span>
+          <strong>
+            {{ transactionDate | date:'dd/MM/yyyy HH:mm' }}
+          </strong>
+        </div>
+
+        <div class="summary-row" *ngIf="paymentType">
+          <span>Tipo de pago</span>
+          <strong>{{ paymentType }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Cantidad de cuotas</span>
+          <strong>
+            {{ installments || 0 }}
+          </strong>
+        </div>
+
+        <div class="summary-row" *ngIf="cardDetail">
+          <span>Tarjeta bancaria</span>
+          <strong>**** {{ cardDetail }}</strong>
+        </div>
+
+        <div class="summary-row" *ngIf="customerEmail">
+          <span>Correo cliente</span>
+          <strong>{{ customerEmail }}</strong>
+        </div>
+
+        <div class="summary-row" *ngIf="order?.items">
+          <span>Descripción bienes/servicios</span>
+          <strong>{{ getItemsDescription(order.items) }}</strong>
+        </div>
+
+      </div>
+
+      <div class="actions">
+
+        <a routerLink="/dashboard/orders-client" class="btn-secondary">
+          Ver órdenes
+        </a>
+
+        <a routerLink="/shop" class="btn-outline">
+          Seguir comprando
+        </a>
+
+      </div>
+
+    </ng-container>
 
   </div>
 

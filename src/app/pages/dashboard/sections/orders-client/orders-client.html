@@ -23,8 +23,12 @@
 
     <div class="orders-list">
 
-      <div class="client-order-card" *ngFor="let order of orders" [class.active]="selectedOrder?.id === order.id"
-        (click)="viewOrder(order)">
+      <div
+        class="client-order-card"
+        *ngFor="let order of orders"
+        [class.active]="selectedOrder?.id === order.id"
+        (click)="viewOrder(order)"
+      >
 
         <div class="order-card-top">
           <div>
@@ -43,7 +47,7 @@
           </p>
 
           <strong>
-            ${{ order.total | number:'1.0-0' }}
+            CLP {{ order.total | number:'1.0-0' }}
           </strong>
         </div>
 
@@ -63,7 +67,12 @@
           <h2>#{{ selectedOrder.id }}</h2>
         </div>
 
-        <button type="button" (click)="closeDetail(); $event.stopPropagation()">×</button>
+        <button
+          type="button"
+          (click)="closeDetail(); $event.stopPropagation()"
+        >
+          ×
+        </button>
       </div>
 
       <div class="detail-section">
@@ -75,49 +84,126 @@
       </div>
 
       <div class="detail-section">
+        <h3>Pago</h3>
+
+        <p>
+          <strong>Método:</strong>
+          {{ getPaymentTypeLabel(selectedOrder.paymentTypeCode) }}
+        </p>
+
+        <p *ngIf="selectedOrder.cardNumber">
+          <strong>Tarjeta:</strong>
+          **** {{ selectedOrder.cardNumber }}
+        </p>
+
+        <p *ngIf="selectedOrder.authorizationCode">
+          <strong>Código autorización:</strong>
+          {{ selectedOrder.authorizationCode }}
+        </p>
+
+        <p *ngIf="selectedOrder.transactionDate">
+          <strong>Fecha transacción:</strong>
+          {{ formatDate(selectedOrder.transactionDate) }}
+        </p>
+
+        <p>
+          <strong>Cuotas:</strong>
+          {{ getInstallments(selectedOrder) }}
+        </p>
+
+        <a
+          *ngIf="selectedOrder.status === 'pagado'"
+          [routerLink]="['/payment/success']"
+          [queryParams]="{ orderId: selectedOrder.id }"
+          class="btn-outline"
+        >
+          Ver comprobante
+        </a>
+      </div>
+
+      <div class="detail-section">
         <h3>Productos</h3>
 
-        <div class="order-item" *ngFor="let item of selectedOrder.items">
-          <div>
-            <strong>{{ item.name }}</strong>
+        <div
+          class="order-item"
+          *ngFor="let item of getNormalizedItems(selectedOrder)"
+        >
 
-            <span>
-              Cantidad: {{ item.quantity }}
-              <ng-container *ngIf="item.size"> · Talla: {{ item.size }}</ng-container>
-              <ng-container *ngIf="item.color"> · Color: {{ item.color }}</ng-container>
-            </span>
+          <div class="item-left">
+
+            <img
+              *ngIf="item.image"
+              [src]="item.image"
+              alt=""
+              class="order-item-image"
+            />
+
+            <div>
+              <strong>{{ item.name }}</strong>
+
+              <span>
+                Cantidad: {{ item.quantity }}
+
+                <ng-container *ngIf="item.size">
+                  · Talla: {{ item.size }}
+                </ng-container>
+
+                <ng-container *ngIf="item.color">
+                  · Color: {{ item.color }}
+                </ng-container>
+              </span>
+            </div>
+
           </div>
 
           <strong>
-            ${{ item.price * item.quantity | number:'1.0-0' }}
+            CLP {{ item.price * item.quantity | number:'1.0-0' }}
           </strong>
+
         </div>
       </div>
 
       <div class="detail-section">
         <h3>Datos de entrega</h3>
 
-        <p><strong>Nombre:</strong> {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}</p>
-        <p><strong>Email:</strong> {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}</p>
-        <p><strong>Teléfono:</strong> {{ getCustomerPhone(selectedOrder) }}</p>
-        <p><strong>Dirección:</strong> {{ getCustomerAddress(selectedOrder) }}</p>
+        <p>
+          <strong>Nombre:</strong>
+          {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Teléfono:</strong>
+          {{ getCustomerPhone(selectedOrder) }}
+        </p>
+
+        <p>
+          <strong>Dirección:</strong>
+          {{ getCustomerAddress(selectedOrder) }}
+        </p>
       </div>
 
       <div class="detail-section totals">
+
         <div>
           <span>Subtotal</span>
-          <strong>${{ selectedOrder.subtotal | number:'1.0-0' }}</strong>
+          <strong>CLP {{ selectedOrder.subtotal | number:'1.0-0' }}</strong>
         </div>
 
         <div>
           <span>Envío</span>
-          <strong>${{ selectedOrder.shipping | number:'1.0-0' }}</strong>
+          <strong>CLP {{ selectedOrder.shipping | number:'1.0-0' }}</strong>
         </div>
 
         <div class="total-final">
           <span>Total</span>
-          <strong>${{ selectedOrder.total | number:'1.0-0' }}</strong>
+          <strong>CLP {{ selectedOrder.total | number:'1.0-0' }}</strong>
         </div>
+
       </div>
 
     </aside>

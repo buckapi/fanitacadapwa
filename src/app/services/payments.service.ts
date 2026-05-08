@@ -7,8 +7,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class PaymentsService {
 
-  /* private apiUrl = 'https://db.buckapi.site:4242/payments'; */
-private apiUrl = 'http://localhost:4242/payments';
+  private apiUrl = 'https://db.buckapi.site:4242/payments';
   constructor(private http: HttpClient) {}
 
   createPayment(payload: {

@@ -7,16 +7,23 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-orders-client',
-   standalone: true,
+  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './orders-client.html',
   styleUrl: './orders-client.css',
 })
 export class OrdersClient implements OnInit {
+
   orders: Order[] = [];
   loading = false;
   selectedOrder: Order | null = null;
-
+  cardNumber: string = '';
+  authorizationCode: string = '';
+  transactionDate: string = '';
+  paymentTypeCode: string = '';
+  installmentsNumber: number = 0;
+  installments: number = 0;
+  
   statusOptions = [
     { value: 'pendiente_pago', label: 'Pendiente de pago' },
     { value: 'pagado', label: 'Pagada' },
@@ -45,12 +52,16 @@ export class OrdersClient implements OnInit {
     try {
       const user = this.auth.getCurrentUser?.();
 
-      if (!user?.email) {
+      if (!user?.id) {
         return;
       }
 
-      /* this.orders = await this.ordersService.getOrdersByCustomerEmail(user.email); */
       this.orders = await this.ordersService.getOrdersByUser(user.id);
+
+      this.orders.sort((a, b) =>
+        new Date(b.created || '').getTime() -
+        new Date(a.created || '').getTime()
+      );
 
       if (this.orders.length > 0) {
         this.selectedOrder = this.orders[0];
@@ -76,11 +87,30 @@ export class OrdersClient implements OnInit {
   }
 
   getItemsCount(order: Order): number {
-    if (!Array.isArray(order.items)) return 0;
+    const items = this.normalizeItems(order.items);
 
-    return order.items.reduce((total, item) => {
+    return items.reduce((total, item) => {
       return total + Number(item.quantity || 0);
     }, 0);
+  }
+
+  getNormalizedItems(order: Order): any[] {
+    return this.normalizeItems(order.items);
+  }
+
+  normalizeItems(items: any): any[] {
+    if (!items) return [];
+
+    if (Array.isArray(items)) {
+      return items;
+    }
+
+    try {
+      const parsedItems = JSON.parse(items);
+      return Array.isArray(parsedItems) ? parsedItems : [];
+    } catch {
+      return [];
+    }
   }
 
   getStatusLabel(status?: string): string {
@@ -88,7 +118,38 @@ export class OrdersClient implements OnInit {
   }
 
   getStatusClass(status?: string): string {
-    return `status-${status || 'pending'}`;
+    const classes: Record<string, string> = {
+      pendiente_pago: 'badge-warning',
+      pagado: 'badge-success',
+      rechazado: 'badge-danger',
+      processing: 'badge-info',
+      shipped: 'badge-primary',
+      completed: 'badge-dark',
+      cancelled: 'badge-secondary',
+    };
+
+    return classes[status || ''] || 'badge-default';
+  }
+
+  getPaymentTypeLabel(code?: string): string {
+    const methods: Record<string, string> = {
+      VD: 'Tarjeta Débito',
+      VN: 'Tarjeta Crédito',
+      VC: 'Tarjeta Crédito en cuotas',
+      SI: 'Cuotas sin interés',
+      S2: '2 cuotas sin interés',
+      NC: 'N cuotas sin interés',
+    };
+
+    return methods[code || ''] || 'Webpay';
+  }
+
+  getInstallments(order: Order): number {
+    return (
+      order.paymentData?.installments_number ||
+      order.installments ||
+      0
+    );
   }
 
   getCustomerPhone(order: Order): string {
@@ -103,7 +164,7 @@ export class OrdersClient implements OnInit {
     return [
       customer.address,
       customer['apartment'],
-      customer['country']
+      customer['country'],
     ].filter(Boolean).join(', ') || 'N/A';
   }
 

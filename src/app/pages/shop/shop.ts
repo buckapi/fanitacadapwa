@@ -25,6 +25,8 @@ export class Shop implements OnInit, OnDestroy {
   parentCategories: Category[] = [];
   selectedSubcategory: string = '';
   subcategories: Category[] = [];
+  currentPage = 1;
+itemsPerPage = 50;
   constructor(
     public router: Router,
     private route: ActivatedRoute,
@@ -37,28 +39,7 @@ export class Shop implements OnInit, OnDestroy {
     private meta: Meta
   ) { }
 
-/*   ngOnInit(): void {
-    this.loadCategories();
-    this.loadProducts();
-    this.listenRealtimeProducts();
-    this.title.setTitle('Camiseta Deportivo Cali | Fanaticada.cl');
 
-    this.meta.updateTag({
-      name: 'description',
-      content: 'Compra la camiseta oficial del Deportivo Cali.'
-    });
-
-    this.meta.updateTag({
-      property: 'og:title',
-      content: 'Camiseta Deportivo Cali'
-    });
-
-    this.meta.updateTag({
-      property: 'og:image',
-      content: 'https://fanaticada.cl/assets/cali.jpg'
-    });
-
-  } */
   ngOnInit(): void {
   this.loadCategories();
   this.loadProducts();
@@ -82,24 +63,31 @@ export class Shop implements OnInit, OnDestroy {
     content: 'Compra camisetas, ropa deportiva y accesorios originales en Fanaticada.cl.'
   });
 }
+get paginatedProducts(): Product[] {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  const end = start + this.itemsPerPage;
 
+  return this.filteredProducts.slice(start, end);
+}
+
+get totalPages(): number {
+  return Math.ceil(this.filteredProducts.length / this.itemsPerPage) || 1;
+}
+
+get pages(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
+goToPage(page: number): void {
+  if (page < 1 || page > this.totalPages) return;
+
+  this.currentPage = page;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
   ngOnDestroy(): void {
     this.productsService.unsubscribeProducts();
   }
-  /* async loadCategories(): Promise<void> {
-    try {
-      const records = await this.categoriesService.getCategories();
-
-      this.categories = records;
-      this.parentCategories = records.filter((cat: any) => !cat.parent);
-      this.cd.detectChanges();
-    } catch (error) {
-      console.error('Error cargando categorías:', error);
-      this.categories = [];
-      this.parentCategories = [];
-    }
-  } */
-  async loadCategories(): Promise<void> {
+ async loadCategories(): Promise<void> {
   try {
     const records = await this.categoriesService.getCategories();
 
@@ -180,7 +168,8 @@ filterBySubcategory(parentId: string, subcategoryId: string): void {
   });
 }
 
-applyFilters(): void {
+/* applyFilters(): void {
+  
   if (!this.products || this.products.length === 0) {
     this.filteredProducts = [];
     return;
@@ -203,6 +192,34 @@ applyFilters(): void {
 
     return matchesCategory && matchesSubcategory;
   });
+} */
+applyFilters(): void {
+  if (!this.products || this.products.length === 0) {
+    this.filteredProducts = [];
+    this.currentPage = 1;
+    return;
+  }
+
+  if (this.selectedCategory === 'all') {
+    this.filteredProducts = this.products;
+    this.currentPage = 1;
+    return;
+  }
+
+  this.filteredProducts = this.products.filter((product: any) => {
+    const productCategories = this.getProductCategoryIds(product);
+    const productSubcategories = this.getProductSubcategoryIds(product);
+
+    const matchesCategory = productCategories.includes(this.selectedCategory);
+
+    const matchesSubcategory = this.selectedSubcategory
+      ? productSubcategories.includes(this.selectedSubcategory)
+      : true;
+
+    return matchesCategory && matchesSubcategory;
+  });
+
+  this.currentPage = 1;
 }
 
 getProductSubcategoryIds(product: any): string[] {
@@ -295,6 +312,7 @@ getProductSubcategoryIds(product: any): string[] {
 
     if (categoryId === 'all') {
       this.filteredProducts = this.products;
+        this.currentPage = 1;
       return;
     }
 

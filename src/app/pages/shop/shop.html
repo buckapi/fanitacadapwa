@@ -1,132 +1,192 @@
 <main class="pt-12">
-    <!-- hero section start -->
-    <!--  <section class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
-        style="background-image: url(assets/images/inner-page-banner.png);">
 
-    </section> -->
-    <!-- hero section end -->
+  <section class="product-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
+    <div class="container-fluid">
 
-    <!-- product section start -->
-    <section class="product-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
-        <div class="container-fluid">
-            <div class="row g-6 mb-lg-8 mb-6">
-                <div class="col-12">
-                    <ul class="tab-btn-area d-flex align-items-center gap-2 flex-wrap">
-                        <li>
-                            <button type="button"
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                [class.active]="selectedCategory === 'all'" (click)="filterByCategory('all')">
-                                Todos
-                            </button>
-                        </li>
+      <div class="row g-6 mb-lg-8 mb-6">
+        <div class="col-12">
 
-                        <li *ngFor="let category of parentCategories">
-                            <button type="button"
-                                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                                [class.active]="selectedCategory === category.id"
-                                (click)="filterByCategory(category.id!)">
-                                {{ category.name }}
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="subcategory-filter mt-4"
-                        *ngIf="selectedCategory !== 'all' && getSubcategories(selectedCategory).length > 0">
-                        <button type="button"
-                            class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                            [class.active]="!selectedSubcategory" (click)="filterByCategory(selectedCategory)">
-                            Todas
-                        </button>
+          <ul class="tab-btn-area d-flex align-items-center gap-2 flex-wrap">
+            <li>
+              <button
+                type="button"
+                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+                [class.active]="selectedCategory === 'all'"
+                (click)="filterByCategory('all')"
+              >
+                Todos
+              </button>
+            </li>
 
-                        <button type="button" *ngFor="let sub of getSubcategories(selectedCategory)"
-                            class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
-                            [class.active]="selectedSubcategory === sub.id"
-                            (click)="filterBySubcategory(selectedCategory, sub.id!)">
-                            {{ sub.name }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- tab content 1 -->
-            <div class="tab-content active" data-tab="all">
+            <li *ngFor="let category of parentCategories">
+              <button
+                type="button"
+                class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+                [class.active]="selectedCategory === category.id"
+                (click)="filterByCategory(category.id!)"
+              >
+                {{ category.name }}
+              </button>
+            </li>
+          </ul>
 
-                <div class="row g-0 mb-1">
+          <div
+            class="subcategory-filter mt-4"
+            *ngIf="selectedCategory !== 'all' && getSubcategories(selectedCategory).length > 0"
+          >
+            <button
+              type="button"
+              class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+              [class.active]="!selectedSubcategory"
+              (click)="filterByCategory(selectedCategory)"
+            >
+              Todas
+            </button>
 
-                    <div *ngIf="loadingProducts" class="col-12 p-5">
-                        Cargando productos...
-                    </div>
-
-                    <div *ngIf="!loadingProducts && filteredProducts.length === 0" class="col-12 p-5">
-                        No hay productos disponibles para esta categoría.
-                    </div>
-
-                    <div class="col-6 col-lg-4" *ngFor="let product of filteredProducts">
-                        <div
-                            class="product-card2 position-relative p-xl-10 p-lg-8 p-6 bg-n0 border border-n100-5 box-style box-n20 card-tilt animate-box">
-
-                            <div *ngIf="product.isRecent"
-                                class="product-type py-lg-3 py-2 ps-lg-4 ps-2 pe-lg-6 pe-4 bg-secondary2 position-absolute top-0 start-0 parallelogram-path z-2">
-                                <span class="text-sm fw-medium text-n0">New</span>
-                            </div>
-
-                            <div class="product-thumb-wrapper position-relative">
-                                <button type="button"
-                                    class="single-wishlist-btn text-secondary2 text-xl icon-52px bg-n0 position-absolute top-0 right-0 z-3 tooltip-btn tooltip-left"
-                                    [attr.data-tooltip]="isFavorite(product.id!) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-                                    (click)="toggleWishlist(product); $event.stopPropagation()">
-                                    <i [class]="isFavorite(product.id!) ? 'ph-fill ph-heart text-danger'
-                                        : 'ph ph-heart'"></i>
-                                </button>
-
-                                <div class="product-thumb product-thumb-fixed hover-cursor"
-                                    data-hover-text="View Product">
-                                    <button type="button" class="product-thumb-link border-0 bg-transparent p-0"
-                                        (click)="goToProduct(product)">
-                                        <img class="product-home-img" [src]="getFirstProductImage(product)"
-                                            [alt]="product.name" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <span class="d-block h-1px w-100 bg-n100-1 mb-lg-6 mb-4 mt-lg-10 mt-6"></span>
-
-                            <div class="product-info-wrapper">
-                                <div class="mb-xxl-7 mb-md-5 mb-3">
-                                    <button type="button" class="border-0 bg-transparent p-0 text-start"
-                                        (click)="goToProduct(product)">
-                                        <h4 class="text-animation-line text-n100 mb-2 hover-text-secondary2">
-                                            {{ product.name }}
-                                        </h4>
-                                    </button>
-
-                                    <span class="text-sm fw-normal text-n50">
-                                        {{ product.editor || product.unit || 'Producto' }}
-                                    </span>
-                                </div>
-
-                                <div class="d-between flex-wrap gap-4">
-                                    <div class="d-grid">
-                                        <span class="text-xl fw-semibold text-secondary2">
-                                            $ {{ product.price | number:'1.0-0' }}
-                                        </span>
-                                    </div>
-
-                                    <button class="outline-btn text-n100 fw-medium box-style box-secondary2"
-                                        style="cursor: pointer; color:#000;" (click)="goToProduct(product)">
-                                        Ver producto
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            <button
+              type="button"
+              *ngFor="let sub of getSubcategories(selectedCategory)"
+              class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+              [class.active]="selectedSubcategory === sub.id"
+              (click)="filterBySubcategory(selectedCategory, sub.id!)"
+            >
+              {{ sub.name }}
+            </button>
+          </div>
 
         </div>
-    </section>
-    <!-- product section end -->
+      </div>
 
+      <div class="tab-content active" data-tab="all">
 
+        <div class="row g-0 mb-1">
+
+          <div *ngIf="loadingProducts" class="col-12 p-5">
+            Cargando productos...
+          </div>
+
+          <div *ngIf="!loadingProducts && filteredProducts.length === 0" class="col-12 p-5">
+            No hay productos disponibles para esta categoría.
+          </div>
+
+          <div class="col-6 col-lg-4" *ngFor="let product of paginatedProducts">
+            <div class="product-card2 position-relative p-xl-10 p-lg-8 p-6 bg-n0 border border-n100-5 box-style box-n20 card-tilt animate-box">
+
+              <div
+                *ngIf="product.isRecent"
+                class="product-type py-lg-3 py-2 ps-lg-4 ps-2 pe-lg-6 pe-4 bg-secondary2 position-absolute top-0 start-0 parallelogram-path z-2"
+              >
+                <span class="text-sm fw-medium text-n0">New</span>
+              </div>
+
+              <div class="product-thumb-wrapper position-relative">
+
+                <button
+                  type="button"
+                  class="single-wishlist-btn text-secondary2 text-xl icon-52px bg-n0 position-absolute top-0 right-0 z-3 tooltip-btn tooltip-left"
+                  [attr.data-tooltip]="isFavorite(product.id!) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                  (click)="toggleWishlist(product); $event.stopPropagation()"
+                >
+                  <i
+                    [class]="isFavorite(product.id!) ? 'ph-fill ph-heart text-danger' : 'ph ph-heart'"
+                  ></i>
+                </button>
+
+                <div class="product-thumb product-thumb-fixed hover-cursor" data-hover-text="View Product">
+                  <button
+                    type="button"
+                    class="product-thumb-link border-0 bg-transparent p-0"
+                    (click)="goToProduct(product)"
+                  >
+                    <img
+                      class="product-home-img"
+                      [src]="getFirstProductImage(product)"
+                      [alt]="product.name"
+                    />
+                  </button>
+                </div>
+
+              </div>
+
+              <span class="d-block h-1px w-100 bg-n100-1 mb-lg-6 mb-4 mt-lg-10 mt-6"></span>
+
+              <div class="product-info-wrapper">
+
+                <div class="mb-xxl-7 mb-md-5 mb-3">
+                  <button
+                    type="button"
+                    class="border-0 bg-transparent p-0 text-start"
+                    (click)="goToProduct(product)"
+                  >
+                    <h4 class="text-animation-line text-n100 mb-2 hover-text-secondary2">
+                      {{ product.name }}
+                    </h4>
+                  </button>
+
+                  <span class="text-sm fw-normal text-n50">
+                    {{ product.editor || product.unit || 'Producto' }}
+                  </span>
+                </div>
+
+                <div class="d-between flex-wrap gap-4">
+                  <div class="d-grid">
+                    <span class="text-xl fw-semibold text-secondary2">
+                      $ {{ product.price | number:'1.0-0' }}
+                    </span>
+                  </div>
+
+                  <button
+                    class="outline-btn text-n100 fw-medium box-style box-secondary2"
+                    style="cursor: pointer; color:#000;"
+                    (click)="goToProduct(product)"
+                  >
+                    Ver producto
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div
+          class="pagination-area d-flex justify-content-center align-items-center gap-2 mt-8 flex-wrap"
+          *ngIf="!loadingProducts && filteredProducts.length > itemsPerPage"
+        >
+          <button
+            type="button"
+            class="pagination-btn"
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)"
+          >
+            Anterior
+          </button>
+
+          <button
+            type="button"
+            class="pagination-btn"
+            *ngFor="let page of pages"
+            [class.active]="currentPage === page"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+
+          <button
+            type="button"
+            class="pagination-btn"
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)"
+          >
+            Siguiente
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
 
 </main>

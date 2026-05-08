@@ -172,3 +172,21 @@
     font-size: 12.5px;
   }
 }
+.pagination-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pagination-btn.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -32,6 +32,8 @@ export class PaymentSuccess implements OnInit {
 
   customerEmail: string = '';
 
+  installments: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private ordersService: OrdersService,
@@ -67,6 +69,15 @@ export class PaymentSuccess implements OnInit {
 
         this.customerEmail =
           this.order.customerEmail || '';
+
+        /**
+ * Cuotas
+ */
+
+this.installments =
+  this.order.paymentData?.installments_number ||
+  this.order.installments ||
+  0;
 
         /**
          * Estado
@@ -127,7 +138,22 @@ export class PaymentSuccess implements OnInit {
     }
 
   }
+  getItemsDescription(items: any): string {
+  try {
+    const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
 
+    if (!Array.isArray(parsedItems)) {
+      return 'Productos comprados en Fanaticada.cl';
+    }
+
+    return parsedItems
+      .map((item: any) => item.name || item.title || 'Producto')
+      .join(', ');
+
+  } catch {
+    return 'Productos comprados en Fanaticada.cl';
+  }
+}
   /**
    * Traducción métodos Transbank
    */
