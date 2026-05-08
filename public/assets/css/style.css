@@ -51757,7 +51757,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 }
 .btn-primary:hover, .btn-secondary:hover {
-  background: #F1E3B3;
+  background: #f6d358;
 }
 
 .btn-secondary {
@@ -51873,7 +51873,7 @@ input[type=number]::-webkit-outer-spin-button {
   background: #7D8877;
 }
 .box-style.box-secondary::before {
-  background: #F1E3B3;
+  background: #f6d358;
 }
 .box-style.box-secondary2::before {
   background: #a91f2f;
@@ -52006,7 +52006,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .focus-secondary:focus, .focus-secondary:focus-within, .focus-secondary:focus-visible {
-  border-color: #F1E3B3 !important;
+  border-color: #f6d358 !important;
 }
 
 .focus-secondary2:focus, .focus-secondary2:focus-within, .focus-secondary2:focus-visible {
@@ -52196,7 +52196,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .text-secondary {
-  color: #F1E3B3 !important;
+  color: #f6d358 !important;
 }
 
 .text-secondary2 {
@@ -52236,7 +52236,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .bg-secondary {
-  background: #F1E3B3 !important;
+  background: #f6d358 !important;
 }
 
 .bg-secondary2 {
@@ -52293,7 +52293,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.3s ease-in-out;
 }
 .hover-text-secondary:hover {
-  color: #F1E3B3 !important;
+  color: #f6d358 !important;
 }
 
 .hover-text-secondary2 {
@@ -52335,7 +52335,7 @@ input[type=number]::-webkit-outer-spin-button {
   transition: all 0.3s ease-in-out;
 }
 .hover-bg-secondary:hover {
-  background: #F1E3B3 !important;
+  background: #f6d358 !important;
 }
 
 .hover-bg-secondary2 {
@@ -52546,7 +52546,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .border-secondary-1 {
-  border-color: #F1E3B3 !important;
+  border-color: #f6d358 !important;
 }
 
 .border-secondary-2 {

@@ -8,7 +8,7 @@ type CategoryRealtimeAction = 'create' | 'update' | 'delete';
   providedIn: 'root'
 })
 export class CategoriesService {
-  private pb = new PocketBase('https://db.buckapi.site:8010');
+  public pb = new PocketBase('https://db.buckapi.site:8010');
   private collection = 'categories';
 
   constructor(private ngZone: NgZone) {}

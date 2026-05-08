@@ -7,7 +7,7 @@ export interface Product {
   timeToDeliver?: number;
   rating?: number;
   stock: number;
-  size?: string;
+  sizes?: string[];
   color?: string;
 
   isEssential?: boolean;

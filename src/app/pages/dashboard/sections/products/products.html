@@ -44,8 +44,15 @@
             </div>
 
             <div class="form-group">
-                <label>Editor / Marca</label>
-                <input type="text" formControlName="editor" placeholder="Marca o editor">
+                <label>Marca</label>
+
+                <select formControlName="editor">
+                    <option value="">Selecciona una marca</option>
+
+                    <option *ngFor="let brand of brands" [value]="brand">
+                        {{ brand }}
+                    </option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Categoría</label>
@@ -77,15 +84,15 @@
             </div>
 
             <div class="form-group">
-                <label>Talla</label>
+                <label>Tallas disponibles</label>
 
-                <select formControlName="size">
-                    <option value="">Selecciona una talla</option>
-
-                    <option *ngFor="let size of availableSizes" [value]="size.label">
-    {{ size.label }}
-</option>
-                </select>
+                <div class="categories-grid" *ngIf="availableSizes.length > 0">
+                    <label *ngFor="let size of availableSizes">
+                        <input type="checkbox" [value]="size.label" [checked]="isSizeSelected(size.label)"
+                            (change)="onSizeToggle($event)">
+                        {{ size.label }}
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
@@ -98,25 +105,59 @@
 
                 <input type="file" accept="image/*" multiple (change)="onImagesSelected($event)">
 
+                <!-- NUEVAS IMÁGENES -->
                 <div class="image-preview-grid" *ngIf="previewImages.length > 0">
+
                     <div class="image-preview" *ngFor="let image of previewImages; let i = index">
+
+                        <!-- BADGE PORTADA -->
+                        <span class="cover-badge" *ngIf="i === 0 && existingImageRecords.length === 0">
+                            Portada
+                        </span>
+
                         <img [src]="image" alt="Preview">
+
+                        <!-- BOTÓN PORTADA -->
+                        <button type="button" class="btn-cover" *ngIf="i !== 0 || existingImageRecords.length > 0"
+                            (click)="setNewImageAsCover(i)">
+                            Portada
+                        </button>
+
+                        <!-- ELIMINAR -->
                         <button type="button" (click)="removeNewImage(i)">
                             ×
                         </button>
+
                     </div>
+
                 </div>
+
+                <!-- IMÁGENES EXISTENTES -->
                 <div class="image-preview-grid" *ngIf="existingImageRecords.length > 0">
+
                     <div class="image-preview" *ngFor="let imageRecord of existingImageRecords; let i = index">
+
+                        <!-- BADGE PORTADA -->
+                        <span class="cover-badge" *ngIf="i === 0">
+                            Portada
+                        </span>
 
                         <img *ngIf="getImageRecordUrl(imageRecord) as img" [src]="img" alt="Imagen existente">
 
+                        <!-- BOTÓN PORTADA -->
+                        <button type="button" class="btn-cover" *ngIf="i !== 0" (click)="setExistingImageAsCover(i)">
+                            Portada
+                        </button>
+
+                        <!-- ELIMINAR -->
                         <button type="button" (click)="removeExistingImage(i)">
                             ×
                         </button>
 
                     </div>
+
                 </div>
+
             </div>
 
             <div class="checks-grid">

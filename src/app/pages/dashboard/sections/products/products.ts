@@ -31,38 +31,61 @@ export class Products implements OnInit, OnDestroy {
   selectedCategories: string[] = [];
   existingImageRecords: any[] = [];
   availableSizes: { value: string; label: string }[] = [];
+  brands: string[] = [
+    'CAFU',
+    'TRAINING',
+    'ADIDAS',
+    'MACRON',
+    'KS7',
+    'SIKER',
+    'KAPPA',
+    'HUMMEL',
+    'CHARLY',
+    'NIKE',
+    'PUMA',
+    'LYON',
+    'JOMA',
+    'UNDER ARMOUR',
+    'ONEFIT',
+    'LOTTO',
+    'MITRE',
+    'CAPELLI',
+    'WARRIOR',
+    'NEW BALANCE',
+    'UMBRO',
+    'PLAYMAKER'
+  ];
+  sizeOptions = {
+    ropaSuperior: [
+      { value: 'XS', label: 'XS - 34/36' },
+      { value: 'S', label: 'S - 38/40' },
+      { value: 'M', label: 'M - 42/44' },
+      { value: 'L', label: 'L - 44/46' },
+      { value: 'XL', label: 'XL - 48/50' },
+    ],
 
-sizeOptions = {
-  ropaSuperior: [
-    { value: 'XS', label: 'XS - 34/36' },
-    { value: 'S', label: 'S - 38/40' },
-    { value: 'M', label: 'M - 42/44' },
-    { value: 'L', label: 'L - 44/46' },
-    { value: 'XL', label: 'XL - 48/50' },
-  ],
+    pantalones: [
+      { value: '34-36', label: '34/36 - XS' },
+      { value: '38-40', label: '38/40 - S' },
+      { value: '42-44', label: '42/44 - M' },
+      { value: '46-48', label: '46/48 - L' },
+      { value: '50+', label: '50+ - XL' },
+    ],
 
-  pantalones: [
-    { value: '34-36', label: '34/36 - XS' },
-    { value: '38-40', label: '38/40 - S' },
-    { value: '42-44', label: '42/44 - M' },
-    { value: '46-48', label: '46/48 - L' },
-    { value: '50+', label: '50+ - XL' },
-  ],
+    medias: [
+      { value: 'S/M', label: 'S/M - 35/39 CL' },
+      { value: 'L/XL', label: 'L/XL - 40/45 CL' },
+    ],
 
-  medias: [
-    { value: 'S/M', label: 'S/M - 35/39 CL' },
-    { value: 'L/XL', label: 'L/XL - 40/45 CL' },
-  ],
-
-  general: [
-    { value: 'XS', label: 'XS' },
-    { value: 'S', label: 'S' },
-    { value: 'M', label: 'M' },
-    { value: 'L', label: 'L' },
-    { value: 'XL', label: 'XL' },
-    { value: 'Única', label: 'Única' },
-  ]
-};
+    general: [
+      { value: 'XS', label: 'XS' },
+      { value: 'S', label: 'S' },
+      { value: 'M', label: 'M' },
+      { value: 'L', label: 'L' },
+      { value: 'XL', label: 'XL' },
+      { value: 'Única', label: 'Única' },
+    ]
+  };
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
@@ -88,13 +111,13 @@ sizeOptions = {
       timeToDeliver: [0],
       rating: [0],
       stock: [0, [Validators.required, Validators.min(0)]],
-  category: ['', Validators.required],
-  subcategories: [[]],
+      category: ['', Validators.required],
+      subcategories: [[]],
       isEssential: [false],
       isPopular: [false],
       isBestSelling: [false],
       isRecent: [false],
-      size: [''],
+      sizes: [[]],
       color: [''],
       urlImages: [''],
       description: [''],
@@ -102,15 +125,28 @@ sizeOptions = {
       featured: [false]
     });
   }
- 
+  onSizeToggle(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    const currentSizes: string[] = this.productForm.get('sizes')?.value || [];
+
+    const updatedSizes = input.checked
+      ? [...currentSizes, value]
+      : currentSizes.filter(size => size !== value);
+
+    this.productForm.patchValue({
+      sizes: updatedSizes
+    });
+  }
   async loadCategories(): Promise<void> {
-  const records = await this.categoriesService.getCategories();
+    const records = await this.categoriesService.getCategories();
 
-  this.categories = records;
+    this.categories = records;
 
-  this.parentCategories = records.filter((cat: any) => !cat.parent);
-  this.subcategories = records.filter((cat: any) => cat.parent);
-}
+    this.parentCategories = records.filter((cat: any) => !cat.parent);
+    this.subcategories = records.filter((cat: any) => cat.parent);
+  }
   async loadProducts(): Promise<void> {
     this.loading = true;
     this.cd.detectChanges();
@@ -157,156 +193,221 @@ sizeOptions = {
     }
   }
   onParentCategoryChange(event: Event): void {
-  const input = event.target as HTMLSelectElement;
-  const parentId = input.value;
+    const input = event.target as HTMLSelectElement;
+    const parentId = input.value;
 
-  this.filteredSubcategories = this.subcategories.filter((sub: any) => sub.parent === parentId);
+    this.filteredSubcategories = this.subcategories.filter((sub: any) => sub.parent === parentId);
 
-  this.selectedSubcategories = [];
+    this.selectedSubcategories = [];
 
-  this.productForm.patchValue({
-    subcategories: [],
-    size: ''
-  });
-
-  this.updateAvailableSizes(parentId);
-}
-updateAvailableSizes(categoryId: string): void {
-  const category = this.parentCategories.find((cat: any) => cat.id === categoryId);
-  const name = category?.name?.toLowerCase() || '';
-
-  if (name.includes('camiseta') || name.includes('chaqueta')) {
-    this.availableSizes = this.sizeOptions.ropaSuperior;
-    return;
-  }
-
-  if (name.includes('pantalon') || name.includes('pantalón') || name.includes('short')) {
-    this.availableSizes = this.sizeOptions.pantalones;
-    return;
-  }
-
-  if (name.includes('media') || name.includes('calcetin') || name.includes('calcetín')) {
-    this.availableSizes = this.sizeOptions.medias;
-    return;
-  }
-
-  this.availableSizes = this.sizeOptions.general;
-}
-onSubcategoryToggle(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const id = input.value;
-
-  if (input.checked) {
-    this.selectedSubcategories.push(id);
-  } else {
-    this.selectedSubcategories = this.selectedSubcategories.filter(subId => subId !== id);
-  }
-
-  this.productForm.patchValue({
-    subcategories: this.selectedSubcategories
-  });
-}
-  async saveProduct(): Promise<void> {
-  if (this.productForm.invalid) {
-    this.productForm.markAllAsTouched();
-    return;
-  }
-
-  this.saving = true;
-
-  try {
-    const formValue = this.productForm.value;
-
-    const formData = new FormData();
-
-    formData.append('name', formValue.name);
-    formData.append('price', String(Number(formValue.price)));
-    formData.append('editor', formValue.editor || '');
-    formData.append('unit', formValue.unit || 'unidad');
-    formData.append('timeToDeliver', String(Number(formValue.timeToDeliver || 0)));
-    formData.append('rating', String(Number(formValue.rating || 0)));
-    formData.append('stock', String(Number(formValue.stock || 0)));
-    formData.append('size', formValue.size || '');
-    formData.append('color', formValue.color || '');
-
-    formData.append('isEssential', String(!!formValue.isEssential));
-    formData.append('isPopular', String(!!formValue.isPopular));
-    formData.append('isBestSelling', String(!!formValue.isBestSelling));
-    formData.append('isRecent', String(!!formValue.isRecent));
-    formData.append('featured', String(!!formValue.featured));
-
-    formData.append('description', formValue.description || '');
-    formData.append('status', formValue.status || 'active');
-    formData.append('slug', this.productsService.generateSlug(formValue.name));
-
-    // Categoría padre
-    if (formValue.category) {
-      formData.append('categories', formValue.category);
-    }
-
-    // Subcategorías múltiples
-    this.selectedSubcategories.forEach(subcategoryId => {
-      formData.append('subcategories', subcategoryId);
+    this.productForm.patchValue({
+      subcategories: [],
+      size: ''
     });
 
-    const imageIds: string[] = [...this.existingImages];
+    this.updateAvailableSizes(parentId);
+  }
+  setExistingImageAsCover(index: number): void {
+    if (index < 0 || index >= this.existingImageRecords.length) return;
 
-    for (const file of this.selectedFiles) {
-      const imageRecord = await this.productsService.createImage(file);
-      imageIds.push(imageRecord.id);
-    }
+    const [record] = this.existingImageRecords.splice(index, 1);
+    this.existingImageRecords.unshift(record);
 
-    imageIds.forEach(imageId => {
-      formData.append('images', imageId);
-    });
-
-    let savedProduct: Product;
-
-    if (this.editing && this.selectedProductId) {
-      savedProduct = await this.productsService.updateProduct(this.selectedProductId, formData);
-    } else {
-      savedProduct = await this.productsService.createProduct(formData);
-    }
-
-    const expandedProduct = await this.productsService.getProductById(savedProduct.id!);
-
-    const exists = this.products.some(product => product.id === expandedProduct.id);
-
-    if (exists) {
-      this.products = this.products.map(product =>
-        product.id === expandedProduct.id ? expandedProduct : product
-      );
-    } else {
-      this.products = [expandedProduct, ...this.products];
+    if (record?.id) {
+      this.existingImages = this.existingImages.filter(id => id !== record.id);
+      this.existingImages.unshift(record.id);
     }
 
     this.cd.detectChanges();
-
-    this.resetForm();
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Producto guardado',
-      text: 'El producto se guardó correctamente.',
-    });
-
-  } catch (error) {
-    console.error('Error guardando producto:', error);
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Error al guardar el producto',
-      text: 'No se pudo guardar el producto. Revisa la consola.',
-    });
-
-  } finally {
-    this.saving = false;
   }
-}
+
+  setNewImageAsCover(index: number): void {
+    if (index < 0 || index >= this.selectedFiles.length) return;
+
+    const [file] = this.selectedFiles.splice(index, 1);
+    const [preview] = this.previewImages.splice(index, 1);
+
+    this.selectedFiles.unshift(file);
+    this.previewImages.unshift(preview);
+
+    this.cd.detectChanges();
+  }
+  isSizeSelected(size: string): boolean {
+    const selectedSizes = this.productForm.get('sizes')?.value;
+
+    return Array.isArray(selectedSizes) && selectedSizes.includes(size);
+  }
+  updateAvailableSizes(categoryId: string): void {
+    const category = this.parentCategories.find((cat: any) => cat.id === categoryId);
+    const name = category?.name?.toLowerCase() || '';
+
+    if (name.includes('camiseta') || name.includes('chaqueta')) {
+      this.availableSizes = this.sizeOptions.ropaSuperior;
+      return;
+    }
+
+    if (name.includes('pantalon') || name.includes('pantalón') || name.includes('short')) {
+      this.availableSizes = this.sizeOptions.pantalones;
+      return;
+    }
+
+    if (name.includes('media') || name.includes('calcetin') || name.includes('calcetín')) {
+      this.availableSizes = this.sizeOptions.medias;
+      return;
+    }
+
+    this.availableSizes = this.sizeOptions.general;
+  }
+  onSubcategoryToggle(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const id = input.value;
+
+    if (input.checked) {
+      this.selectedSubcategories.push(id);
+    } else {
+      this.selectedSubcategories = this.selectedSubcategories.filter(subId => subId !== id);
+    }
+
+    this.productForm.patchValue({
+      subcategories: this.selectedSubcategories
+    });
+  }
+  async saveProduct(): Promise<void> {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    this.saving = true;
+
+    try {
+      const formValue = this.productForm.value;
+
+      const formData = new FormData();
+
+      formData.append('name', formValue.name);
+      formData.append('price', String(Number(formValue.price)));
+      formData.append('editor', formValue.editor || '');
+      formData.append('unit', formValue.unit || 'unidad');
+      formData.append('timeToDeliver', String(Number(formValue.timeToDeliver || 0)));
+      formData.append('rating', String(Number(formValue.rating || 0)));
+      formData.append('stock', String(Number(formValue.stock || 0)));
+      const sizes = Array.isArray(formValue.sizes) ? formValue.sizes : [];
+      formData.append('sizes', JSON.stringify(sizes));
+      formData.append('color', formValue.color || '');
+
+      formData.append('isEssential', String(!!formValue.isEssential));
+      formData.append('isPopular', String(!!formValue.isPopular));
+      formData.append('isBestSelling', String(!!formValue.isBestSelling));
+      formData.append('isRecent', String(!!formValue.isRecent));
+      formData.append('featured', String(!!formValue.featured));
+
+      formData.append('description', formValue.description || '');
+      formData.append('status', formValue.status || 'active');
+      formData.append('slug', this.productsService.generateSlug(formValue.name));
+
+      // Categoría padre
+      if (formValue.category) {
+        formData.append('categories', formValue.category);
+      }
+
+      // Subcategorías múltiples
+      this.selectedSubcategories.forEach(subcategoryId => {
+        formData.append('subcategories', subcategoryId);
+      });
+
+      const imageIds: string[] = [...this.existingImages];
+
+      for (const file of this.selectedFiles) {
+        const imageRecord = await this.productsService.createImage(file);
+        imageIds.push(imageRecord.id);
+      }
+
+      imageIds.forEach(imageId => {
+        formData.append('images', imageId);
+      });
+
+      let savedProduct: Product;
+
+      if (this.editing && this.selectedProductId) {
+        savedProduct = await this.productsService.updateProduct(this.selectedProductId, formData);
+      } else {
+        savedProduct = await this.productsService.createProduct(formData);
+      }
+
+      const expandedProduct = await this.productsService.getProductById(savedProduct.id!);
+
+      const exists = this.products.some(product => product.id === expandedProduct.id);
+
+      if (exists) {
+        this.products = this.products.map(product =>
+          product.id === expandedProduct.id ? expandedProduct : product
+        );
+      } else {
+        this.products = [expandedProduct, ...this.products];
+      }
+
+      this.cd.detectChanges();
+
+      this.resetForm();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Producto guardado',
+        text: 'El producto se guardó correctamente.',
+      });
+
+    } catch (error) {
+      console.error('Error guardando producto:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar el producto',
+        text: 'No se pudo guardar el producto. Revisa la consola.',
+      });
+
+    } finally {
+      this.saving = false;
+    }
+  }
+  normalizeSizes(product: any): string[] {
+    if (Array.isArray(product.sizes)) {
+      return product.sizes;
+    }
+
+    if (typeof product.sizes === 'string') {
+      try {
+        const parsed = JSON.parse(product.sizes);
+        return Array.isArray(parsed) ? parsed : [product.sizes];
+      } catch {
+        return [product.sizes];
+      }
+    }
+
+    if (product.size) {
+      return [product.size];
+    }
+
+    return [];
+  }
 
   editProduct(product: Product): void {
     this.editing = true;
     this.selectedProductId = product.id || null;
+
+    const mainCategory = Array.isArray(product.categories)
+      ? product.categories[0] || ''
+      : '';
+
+    this.filteredSubcategories = this.subcategories.filter(
+      (sub: any) => sub.parent === mainCategory
+    );
+
+    this.selectedSubcategories = Array.isArray((product as any).subcategories)
+      ? (product as any).subcategories
+      : [];
+
+    this.updateAvailableSizes(mainCategory);
 
     this.productForm.patchValue({
       name: product.name || '',
@@ -316,7 +417,14 @@ onSubcategoryToggle(event: Event): void {
       timeToDeliver: product.timeToDeliver || 0,
       rating: product.rating || 0,
       stock: product.stock || 0,
-      categories: Array.isArray(product.categories) ? product.categories : [],
+
+      category: mainCategory,
+      subcategories: this.selectedSubcategories,
+
+      sizes: this.normalizeSizes(product),
+
+      color: product.color || '',
+
       isEssential: product.isEssential || false,
       isPopular: product.isPopular || false,
       isBestSelling: product.isBestSelling || false,
@@ -327,13 +435,11 @@ onSubcategoryToggle(event: Event): void {
       featured: product.featured || false
     });
 
-    this.existingImages = Array.isArray(product.images)
-      ? product.images
-      : [];
-
     this.existingImageRecords = Array.isArray((product as any).expand?.images)
       ? (product as any).expand.images
       : [];
+
+    this.existingImages = this.existingImageRecords.map((img: any) => img.id);
 
     this.selectedFiles = [];
     this.previewImages = [];
@@ -414,7 +520,8 @@ onSubcategoryToggle(event: Event): void {
     }
 
     this.productForm.patchValue({
-      categories: this.selectedCategories
+      subcategories: [],
+      sizes: []
     });
   }
   resetForm(): void {

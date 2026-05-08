@@ -19,6 +19,9 @@ import { Wishlist } from './pages/dashboard/sections/wishlist/wishlist';
 import { OrdersClient } from './pages/dashboard/sections/orders-client/orders-client';
 import { PaymentSuccess } from './pages/payment-success/payment-success';
 import { PaymentError } from './pages/payment-error/payment-error';
+import { Privacy } from './pages/privacy/privacy';
+import { Terms } from './pages/terms/terms';
+import { Faqs } from './pages/faqs/faqs';
 
 export const routes: Routes = [
   {
@@ -64,6 +67,18 @@ export const routes: Routes = [
   {
     path: 'payment-error',
     component: PaymentError
+  },
+  {
+    path: 'privacy',
+    component: Privacy,
+  },
+  {
+    path: 'terms',
+    component: Terms,
+  },
+  {
+    path: 'faqs',
+    component: Faqs,
   },
   {
     path: 'dashboard',

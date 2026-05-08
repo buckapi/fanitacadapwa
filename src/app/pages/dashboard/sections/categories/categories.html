@@ -96,33 +96,40 @@
             </div>
 
             <div class="product-card" *ngFor="let cat of parentCategories">
-                <div>
-  <h3>{{ cat.name }}</h3>
+                <div class="category-card-content">
 
-  <div class="product-meta">
-    <span>Categoría principal</span>
-    <span>Orden: {{ cat.order || 0 }}</span>
+                    <div class="category-thumb" *ngIf="getCategoryImage(cat)">
+                        <img [src]="getCategoryImage(cat)" [alt]="cat.name">
+                    </div>
+                    <div>
+                        <h3>{{ cat.name }}</h3>
 
-    <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
-      {{ cat.active ? 'Activa' : 'Inactiva' }}
-    </span>
-  </div>
+                        <div class="product-meta">
+                            <span>Categoría principal</span>
+                            <span>Orden: {{ cat.order || 0 }}</span>
 
-  <div class="product-meta mt-2" *ngIf="getSubcategories(cat.id!).length > 0">
-    <span *ngFor="let sub of getSubcategories(cat.id!)">
-      {{ sub.name }}
-    </span>
-  </div>
-</div>
+                            <span [class.badge-active]="cat.active" [class.badge-inactive]="!cat.active">
+                                {{ cat.active ? 'Activa' : 'Inactiva' }}
+                            </span>
+                        </div>
 
-                <div class="card-actions">
-                    <button type="button" (click)="editCategory(cat)">
-                        Editar
-                    </button>
+                        <div class="product-meta mt-2" *ngIf="getSubcategories(cat.id!).length > 0">
+                            <span *ngFor="let sub of getSubcategories(cat.id!)">
+                                {{ sub.name }}
+                            </span>
+                        </div>
+                    </div>
 
-                    <button type="button" class="danger" (click)="deleteCategory(cat)">
-                        Eliminar
-                    </button>
+                    <div class="card-actions">
+                        <button type="button" (click)="editCategory(cat)">
+                            Editar
+                        </button>
+
+                        <button type="button" class="danger" (click)="deleteCategory(cat)">
+                            Eliminar
+                        </button>
+                    </div>
+
                 </div>
 
             </div>

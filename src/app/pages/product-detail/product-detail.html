@@ -112,10 +112,10 @@
                                 {{ product.stock > 0 ? product.stock + ' disponibles' : 'Sin stock' }}
                             </span>
                         </div>
-                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.size || product.size">
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.sizes || product.sizes">
                             <span class="text-h6">TALLA:</span>
                             <span class="text-n50 text-base">
-                                {{ product.size || product.size }}
+                                {{ product.sizes || product.sizes }}
                             </span>
                         </div>
 

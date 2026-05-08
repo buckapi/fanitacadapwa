@@ -245,3 +245,29 @@ select:focus {
   height: 100%;
   object-fit: cover;
 }
+.image-preview {
+  position: relative;
+}
+
+.cover-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  z-index: 2;
+}
+
+.btn-cover {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}

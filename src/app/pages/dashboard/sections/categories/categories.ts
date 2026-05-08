@@ -178,6 +178,22 @@ export class Categories implements OnInit, OnDestroy {
 
   }
 }
+getCategoryImage(cat: any): string {
+  const fallback = 'assets/images/category-accessories.png';
+
+  const imageRecord = cat.expand?.image;
+
+  if (imageRecord?.id && imageRecord?.image) {
+    return `https://db.buckapi.site:8010/api/files/images/${imageRecord.id}/${imageRecord.image}`;
+  }
+
+  if (cat.id && cat.image && typeof cat.image === 'string' && cat.image.includes('.')) {
+    return `https://db.buckapi.site:8010/api/files/categories/${cat.id}/${cat.image}`;
+  }
+
+  return fallback;
+}
+
 getSubcategories(parentId: string): Category[] {
   return this.categories.filter(cat => cat.parent === parentId);
 }

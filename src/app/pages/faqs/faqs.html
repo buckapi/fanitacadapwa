@@ -1,0 +1,319 @@
+<main class="pt-12">
+
+    <section class="faqs-section pt-120 pb-120 px-xl-20 px-lg-10 px-sm-7">
+        <div class="container-fluid">
+
+            <div class="row g-6 justify-content-center">
+
+                <div class="col-lg-8 col-md-10">
+
+                    <div class="mb-lg-15 mb-md-10 mb-8">
+                        <h2 class="text-animation-word text-h2 text-n100 mb-4 ch-20 mx-auto text-center">
+                            Preguntas Frecuentes
+                        </h2>
+                    </div>
+
+                    <div class="faq-area d-grid gap-lg-5 gap-3">
+
+                        <!-- FAQ 1 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 0">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(0)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Cómo puedo realizar una compra?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 0">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Solo debes seleccionar el producto que deseas,
+                                        agregarlo al carrito, completar tus datos de envío
+                                        y realizar el pago online.
+                                        Recibirás una confirmación de tu pedido
+                                        por correo electrónico.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 2 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 1">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(1)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Realizan envíos a todo Chile?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 1">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Sí. Realizamos envíos a todas las regiones de Chile.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 3 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 2">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(2)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿El envío está incluido en el precio?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 2">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        No. El valor del envío se calcula
+                                        y cobra por separado.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 4 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 3">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(3)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Los productos publicados están disponibles?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 3">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Sí. Todos los productos publicados
+                                        se encuentran disponibles salvo
+                                        actualización de inventario.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 5 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 4">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(4)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Qué métodos de pago aceptan?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 4">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Aceptamos pagos online mediante
+                                        plataformas de pago seguras.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 6 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 5">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(5)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Puedo cambiar o devolver un producto?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 5">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Fanaticada.cl no realiza devoluciones
+                                        ni cambios, salvo productos defectuosos
+                                        o errores en el despacho.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 7 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 6">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(6)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Cuánto demora el envío?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 6">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Los tiempos de entrega pueden variar
+                                        según la ciudad o región de destino.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 8 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 7">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(7)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Tienen tienda física?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 7">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        No. Fanaticada.cl opera únicamente
+                                        como tienda virtual.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 9 -->
+                        <div class="faq-item p-lg-6 p-4 border border-n100-1"
+                             [class.active]="activeIndex === 8">
+
+                            <div class="faq-header d-between gap-2 text-n100 text-2xl fw-semibold"
+                                 (click)="toggleAccordion(8)">
+
+                                <button type="button" class="faq-button text-n100">
+                                    ¿Cómo puedo contactarlos?
+                                </button>
+
+                                <span class="faq-icon d-center">
+                                    +
+                                </span>
+
+                            </div>
+
+                            <div class="faq-content" *ngIf="activeIndex === 8">
+
+                                <div class="pt-lg-6 pt-4">
+
+                                    <p class="text-n50 text-base">
+                                        Puedes contactarnos mediante nuestros
+                                        canales oficiales y redes sociales.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
