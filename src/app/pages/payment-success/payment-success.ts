@@ -42,21 +42,36 @@ export class PaymentSuccess implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    this.orderId =
-      this.route.snapshot.queryParamMap.get('orderId') || '';
+    const tokenWs =
+  this.route.snapshot.queryParamMap.get('token_ws');
 
-    if (!this.orderId) {
+const orderIdParam =
+  this.route.snapshot.queryParamMap.get('orderId');
 
-      this.error = 'No se encontró el número de orden.';
-      this.loading = false;
+if (!tokenWs && !orderIdParam) {
+  this.error = 'No se encontró información del pago.';
+  this.loading = false;
+  return;
+}
 
-      return;
-    }
+try {
 
-    try {
+  if (tokenWs) {
+    const result =
+      await this.ordersService.confirmTransbankPayment(tokenWs);
 
-      this.order =
-        await this.ordersService.getOrderById(this.orderId);
+    this.orderId = result.orderId;
+
+    this.order =
+      await this.ordersService.getOrderById(this.orderId);
+  }
+
+  if (!tokenWs && orderIdParam) {
+    this.orderId = orderIdParam;
+
+    this.order =
+      await this.ordersService.getOrderById(this.orderId);
+  }
 
       if (this.order) {
 

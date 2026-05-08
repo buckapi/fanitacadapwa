@@ -11,7 +11,15 @@ export class OrdersService {
 constructor() {
   this.pb.autoCancellation(false);
 }
-
+confirmTransbankPayment(tokenWs: string): Promise<any> {
+  return fetch(`${this.pb}/transbank/commit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token_ws: tokenWs })
+  }).then(res => res.json());
+}
     createOrder(orderData: any) {
     return this.pb.collection('orders').create(orderData);
     }
