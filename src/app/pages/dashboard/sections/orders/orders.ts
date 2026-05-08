@@ -159,20 +159,35 @@ export class Orders implements OnInit, OnDestroy {
   }
 
   getItemsCount(order: Order): number {
-    if (!Array.isArray(order.items)) return 0;
+  const items = this.getNormalizedItems(order);
 
-    return order.items.reduce((total, item) => {
-      return total + Number(item.quantity || 0);
-    }, 0);
+  return items.reduce((total, item) => {
+    return total + Number(item.quantity || 0);
+  }, 0);
+}
+
+getNormalizedItems(order: Order | null): any[] {
+  if (!order?.items) return [];
+
+  if (Array.isArray(order.items)) {
+    return order.items;
   }
 
-  getStatusLabel(status: string): string {
-    return this.statusOptions.find(item => item.value === status)?.label || status;
+  try {
+    const parsedItems = JSON.parse(order.items);
+    return Array.isArray(parsedItems) ? parsedItems : [];
+  } catch {
+    return [];
   }
+}
 
-  getStatusClass(status: string): string {
-    return `status-${status || 'pending'}`;
-  }
+getStatusLabel(status?: string): string {
+  return this.statusOptions.find(item => item.value === status)?.label || status || 'Pendiente';
+}
+
+getStatusClass(status?: string): string {
+  return `status-${status || 'pending'}`;
+}
 
   formatDate(date?: string): string {
     if (!date) return 'Sin fecha';

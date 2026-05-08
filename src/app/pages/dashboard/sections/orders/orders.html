@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="order-actions">
+        <!-- <div class="order-actions">
           <strong>${{ order.total | number:'1.0-0' }}</strong>
 
           <select [value]="order.status" (change)="changeStatus(order, $event)">
@@ -62,7 +62,7 @@
           <button type="button" class="danger" (click)="deleteOrder(order)">
             Eliminar
           </button>
-        </div>
+        </div> -->
 
       </div>
 
@@ -92,8 +92,8 @@
       <div class="detail-section">
         <h3>Productos</h3>
 
-        <div class="order-item" *ngFor="let item of selectedOrder.items">
-          <div>
+<div class="order-item" *ngFor="let item of getNormalizedItems(selectedOrder)">
+            <div>
             <strong>{{ item.name }}</strong>
             <span>
               Cantidad: {{ item.quantity }}

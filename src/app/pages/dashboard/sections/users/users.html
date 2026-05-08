@@ -35,13 +35,13 @@
         </div>
 
         <div class="user-main" (click)="viewUser(user)">
-          <div class="user-top">
+         <!--  <div class="user-top">
             <h3>{{ user.name || user.username || 'Usuario sin nombre' }}</h3>
 
             <span class="status-badge" [class.active-status]="user.status" [class.inactive-status]="!user.status">
               {{ user.status ? 'Activo' : 'Inactivo' }}
             </span>
-          </div>
+          </div> -->
 
           <p>{{ user.email || 'Sin correo' }}</p>
 
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="user-actions">
+        <!-- <div class="user-actions">
           <select [value]="user.status ? 'true' : 'false'" (change)="changeStatus(user, $event)">
             <option value="true">Activo</option>
             <option value="false">Inactivo</option>
@@ -67,7 +67,7 @@
           <button type="button" class="danger" (click)="deleteUser(user)">
             Eliminar
           </button>
-        </div>
+        </div> -->
 
       </div>
 
