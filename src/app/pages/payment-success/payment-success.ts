@@ -12,24 +12,31 @@ import { CartService } from '../../services/cart.service';
   styleUrl: './payment-success.css',
 })
 export class PaymentSuccess implements OnInit {
+
   order: any = null;
+
   loading = true;
   error = '';
-  orderId: string = '';
-  amount: number = 0;
-  status: string = 'Aprobado';
-  transactionDate: string = '';
-  paymentType: string = '';
-  cardDetail: string = '';
-  customerEmail: string = '';
 
-  authorizationCode: string = '';
+  orderId: string = '';
+
+  amount: number = 0;
+
+  status: string = '';
+
+  transactionDate: string = '';
+
+  paymentType: string = '';
+
+  cardDetail: string = '';
+
+  customerEmail: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private ordersService: OrdersService,
     private cartService: CartService
-  ) { }
+  ) {}
 
   async ngOnInit(): Promise<void> {
 
@@ -146,6 +153,5 @@ export class PaymentSuccess implements OnInit {
     return methods[code] || 'Webpay';
 
   }
-
 
 }
