@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../models/product.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../services/ProductsService.service';
 import { CommonModule } from '@angular/common';
 import { CategoriesService } from '../../services/CategoriesService.service';
@@ -23,8 +23,11 @@ export class Shop implements OnInit, OnDestroy {
   selectedCategory: string = 'all';
   filteredProducts: Product[] = [];
   parentCategories: Category[] = [];
+  selectedSubcategory: string = '';
+  subcategories: Category[] = [];
   constructor(
     public router: Router,
+    private route: ActivatedRoute,
     public productsService: ProductsService,
     private cd: ChangeDetectorRef,
     public categoriesService: CategoriesService,
@@ -34,11 +37,11 @@ export class Shop implements OnInit, OnDestroy {
     private meta: Meta
   ) { }
 
-  ngOnInit(): void {
+/*   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
     this.listenRealtimeProducts();
-     this.title.setTitle('Camiseta Deportivo Cali | Fanaticada.cl');
+    this.title.setTitle('Camiseta Deportivo Cali | Fanaticada.cl');
 
     this.meta.updateTag({
       name: 'description',
@@ -55,12 +58,35 @@ export class Shop implements OnInit, OnDestroy {
       content: 'https://fanaticada.cl/assets/cali.jpg'
     });
 
-  }
+  } */
+  ngOnInit(): void {
+  this.loadCategories();
+  this.loadProducts();
+  this.listenRealtimeProducts();
+
+  this.route.queryParams.subscribe(params => {
+    const category = params['category'] || 'all';
+    const subcategory = params['subcategory'] || '';
+
+    this.selectedCategory = category;
+    this.selectedSubcategory = subcategory;
+
+    this.applyFilters();
+    this.cd.detectChanges();
+  });
+
+  this.title.setTitle('Camisetas y productos deportivos | Fanaticada.cl');
+
+  this.meta.updateTag({
+    name: 'description',
+    content: 'Compra camisetas, ropa deportiva y accesorios originales en Fanaticada.cl.'
+  });
+}
 
   ngOnDestroy(): void {
     this.productsService.unsubscribeProducts();
   }
-  async loadCategories(): Promise<void> {
+  /* async loadCategories(): Promise<void> {
     try {
       const records = await this.categoriesService.getCategories();
 
@@ -72,7 +98,31 @@ export class Shop implements OnInit, OnDestroy {
       this.categories = [];
       this.parentCategories = [];
     }
+  } */
+  async loadCategories(): Promise<void> {
+  try {
+    const records = await this.categoriesService.getCategories();
+
+    this.categories = records;
+
+    this.parentCategories = records
+      .filter((cat: any) => !cat.parent)
+      .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+    this.subcategories = records
+      .filter((cat: any) => cat.parent)
+      .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+    this.applyFilters();
+
+    this.cd.detectChanges();
+  } catch (error) {
+    console.error('Error cargando categorías:', error);
+    this.categories = [];
+    this.parentCategories = [];
+    this.subcategories = [];
   }
+}
 
   async loadProducts(): Promise<void> {
     this.loadingProducts = true;
@@ -88,7 +138,7 @@ export class Shop implements OnInit, OnDestroy {
       );
 
       this.filteredProducts = this.products;
-
+      this.applyFilters();
     } catch (error) {
 
       console.error('Error cargando productos en home:', error);
@@ -103,6 +153,81 @@ export class Shop implements OnInit, OnDestroy {
 
     }
   }
+  getSubcategories(parentId: string): Category[] {
+  return this.subcategories.filter((cat: any) => cat.parent === parentId);
+}
+
+/* filterByCategory(categoryId: string): void {
+  this.selectedCategory = categoryId;
+  this.selectedSubcategory = '';
+
+  this.router.navigate(['/shop'], {
+    queryParams: {
+      category: categoryId
+    }
+  });
+} */
+
+filterBySubcategory(parentId: string, subcategoryId: string): void {
+  this.selectedCategory = parentId;
+  this.selectedSubcategory = subcategoryId;
+
+  this.router.navigate(['/shop'], {
+    queryParams: {
+      category: parentId,
+      subcategory: subcategoryId
+    }
+  });
+}
+
+applyFilters(): void {
+  if (!this.products || this.products.length === 0) {
+    this.filteredProducts = [];
+    return;
+  }
+
+  if (this.selectedCategory === 'all') {
+    this.filteredProducts = this.products;
+    return;
+  }
+
+  this.filteredProducts = this.products.filter((product: any) => {
+    const productCategories = this.getProductCategoryIds(product);
+    const productSubcategories = this.getProductSubcategoryIds(product);
+
+    const matchesCategory = productCategories.includes(this.selectedCategory);
+
+    const matchesSubcategory = this.selectedSubcategory
+      ? productSubcategories.includes(this.selectedSubcategory)
+      : true;
+
+    return matchesCategory && matchesSubcategory;
+  });
+}
+
+getProductSubcategoryIds(product: any): string[] {
+  if (!product) return [];
+
+  if (Array.isArray(product.subcategories)) {
+    return product.subcategories.filter(Boolean);
+  }
+
+  if (typeof product.subcategories === 'string') {
+    return [product.subcategories];
+  }
+
+  const expandedSubcategories = product.expand?.subcategories;
+
+  if (Array.isArray(expandedSubcategories)) {
+    return expandedSubcategories.map((cat: any) => cat.id).filter(Boolean);
+  }
+
+  if (expandedSubcategories?.id) {
+    return [expandedSubcategories.id];
+  }
+
+  return [];
+}
   async listenRealtimeProducts(): Promise<void> {
     try {
       await this.productsService.subscribeProducts(async (action, record) => {

@@ -19,6 +19,7 @@ import { ProductsService } from '../../services/ProductsService.service';
   styleUrl: './header.css',
 })
 export class Header implements OnInit, OnDestroy {
+  activeMegaCategoryId: string | null = null;
   user: StoreUser | null = null;
   showUserMenu = false;
 
@@ -234,8 +235,18 @@ export class Header implements OnInit, OnDestroy {
     }
   }
 
+
   closeCategoriesMenu(): void {
-    this.cancelCloseCategoriesMenu();
-    this.showCategoriesMenu = false;
-  }
+  this.cancelCloseCategoriesMenu();
+  this.showCategoriesMenu = false;
+  this.activeMegaCategoryId = null;
+}
+  toggleMegaCategory(categoryId: string): void {
+  this.activeMegaCategoryId =
+    this.activeMegaCategoryId === categoryId ? null : categoryId;
+}
+
+isMegaCategoryOpen(categoryId: string): boolean {
+  return this.activeMegaCategoryId === categoryId;
+}
 }

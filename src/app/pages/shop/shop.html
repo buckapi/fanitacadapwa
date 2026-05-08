@@ -1,6 +1,6 @@
 <main class="pt-12">
     <!-- hero section start -->
-   <!--  <section class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
+    <!--  <section class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
         style="background-image: url(assets/images/inner-page-banner.png);">
 
     </section> -->
@@ -29,6 +29,21 @@
                             </button>
                         </li>
                     </ul>
+                    <div class="subcategory-filter mt-4"
+                        *ngIf="selectedCategory !== 'all' && getSubcategories(selectedCategory).length > 0">
+                        <button type="button"
+                            class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+                            [class.active]="!selectedSubcategory" (click)="filterByCategory(selectedCategory)">
+                            Todas
+                        </button>
+
+                        <button type="button" *ngFor="let sub of getSubcategories(selectedCategory)"
+                            class="tab-btn filter-btn text-base text-n100 py-lg-2 py-1 px-lg-5 px-sm-3 px-2 radius-pill border border-n100-1"
+                            [class.active]="selectedSubcategory === sub.id"
+                            (click)="filterBySubcategory(selectedCategory, sub.id!)">
+                            {{ sub.name }}
+                        </button>
+                    </div>
                 </div>
             </div>
             <!-- tab content 1 -->
