@@ -1,0 +1,12 @@
+.feature-card {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card > div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
