@@ -40,7 +40,7 @@ export class PaymentSuccess implements OnInit {
     private cartService: CartService
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  /* async ngOnInit(): Promise<void> {
 
     const tokenWs =
   this.route.snapshot.queryParamMap.get('token_ws');
@@ -75,9 +75,7 @@ try {
 
       if (this.order) {
 
-        /**
-         * Datos básicos
-         */
+     
 
         this.amount =
           this.order.total || 0;
@@ -85,27 +83,20 @@ try {
         this.customerEmail =
           this.order.customerEmail || '';
 
-        /**
- * Cuotas
- */
+
 
 this.installments =
   this.order.paymentData?.installments_number ||
   this.order.installments ||
   0;
 
-        /**
-         * Estado
-         */
 
         this.status =
           this.order.status === 'pagado'
             ? 'Pago aprobado'
             : 'Pago rechazado';
 
-        /**
-         * Fecha transacción
-         */
+      
 
         this.transactionDate =
           this.order.transactionDate ||
@@ -113,25 +104,19 @@ this.installments =
           this.order.created ||
           '';
 
-        /**
-         * Método pago
-         */
+       
 
         this.paymentType =
           this.getPaymentTypeLabel(
             this.order.paymentTypeCode
           );
 
-        /**
-         * Últimos dígitos tarjeta
-         */
+     
 
         this.cardDetail =
           this.order.cardNumber || '';
 
-        /**
-         * Limpiar carrito
-         */
+      
 
         if (this.order.status === 'pagado') {
           this.cartService.clear();
@@ -152,7 +137,79 @@ this.installments =
 
     }
 
+  } */
+ async ngOnInit(): Promise<void> {
+
+  const orderIdParam =
+    this.route.snapshot.queryParamMap.get('orderId');
+
+  if (!orderIdParam) {
+
+    this.error = 'No se encontró la orden.';
+    this.loading = false;
+
+    return;
   }
+
+  try {
+
+    this.orderId = orderIdParam;
+
+    this.order =
+      await this.ordersService.getOrderById(this.orderId);
+
+    if (this.order) {
+
+      this.amount =
+        this.order.total || 0;
+
+      this.customerEmail =
+        this.order.customerEmail || '';
+
+      this.installments =
+        this.order.paymentData?.installments_number ||
+        this.order.installments ||
+        0;
+
+      this.status =
+        this.order.status === 'pagado'
+          ? 'Pago aprobado'
+          : 'Pago rechazado';
+
+      this.transactionDate =
+        this.order.transactionDate ||
+        this.order.updated ||
+        this.order.created ||
+        '';
+
+      this.paymentType =
+        this.getPaymentTypeLabel(
+          this.order.paymentTypeCode
+        );
+
+      this.cardDetail =
+        this.order.cardNumber || '';
+
+      if (this.order.status === 'pagado') {
+        this.cartService.clear();
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    this.error =
+      'No fue posible cargar la información del pedido.';
+
+  } finally {
+
+    this.loading = false;
+
+  }
+
+}
   getItemsDescription(items: any): string {
   try {
     const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
