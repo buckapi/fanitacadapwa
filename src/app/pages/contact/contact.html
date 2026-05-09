@@ -1,7 +1,7 @@
 <main class="pt-12">
 
     <!-- hero section start -->
-  <!--   <section class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
+    <!--   <section class="inner-hero-section px-xl-20 px-lg-10 px-sm-7"
         style="background-image: url(assets/images/inner-page-banner.png);">
 
     </section> -->
@@ -72,8 +72,9 @@
         <div class="container-fluid">
             <div class="row g-6 justify-content-between align-items-lg-center">
                 <div class="col-xl-6 d-none d-xl-block">
-                    <div class="reveal-left">
-                        <img class="w-100" src="assets/images/contact-banner1.png" alt="banner">
+                    <div class="">
+                        <img class="w-100 contact-banner-img" [src]="'assets/images/contact-banner1.png'" alt="banner"
+                            loading="eager" fetchpriority="high">
                     </div>
                 </div>
                 <div class="col-xxl-5 col-xl-6">
@@ -146,7 +147,7 @@
 
                                 <span class="text-base text-n50">
                                     He leído y acepto los
-                                    <a  class="text-decoration-underline">
+                                    <a class="text-decoration-underline">
                                         Términos y Condiciones
                                     </a>
                                 </span>
@@ -169,220 +170,67 @@
 
     <!-- feature list section start -->
     <div class="px-xl-20 px-lg-10 px-sm-7 px-3 pt-100 pb-100 bg-n20 overflow-hidden">
-    <div class="row g-6">
+        <div class="row g-6">
 
-        <div class="col-lg-4 col-md-6">
-            <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
-                <span class="icon display-three text-n100">
-                    <i class="ph ph-seal-percent"></i>
-                </span>
+            <div class="col-lg-4 col-md-6">
+                <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
+                    <span class="icon display-three text-n100">
+                        <i class="ph ph-seal-percent"></i>
+                    </span>
 
-                <div>
-                    <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
-                        Tienda 100% en línea
-                    </h4>
+                    <div>
+                        <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
+                            Tienda 100% en línea
+                        </h4>
 
-                    <p class="text-animation-line text-n50 fw-normal ch-50">
-                        Compra desde cualquier lugar de Chile de forma rápida, cómoda y segura.
-                    </p>
+                        <p class="text-animation-line text-n50 fw-normal ch-50">
+                            Compra desde cualquier lugar de Chile de forma rápida, cómoda y segura.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4 col-md-6">
-            <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
-                <span class="icon display-three text-n100">
-                    <i class="ph ph-truck"></i>
-                </span>
+            <div class="col-lg-4 col-md-6">
+                <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
+                    <span class="icon display-three text-n100">
+                        <i class="ph ph-truck"></i>
+                    </span>
 
-                <div>
-                    <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
-                        Envío por pagar a todo el país
-                    </h4>
+                    <div>
+                        <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
+                            Envío por pagar a todo el país
+                        </h4>
 
-                    <p class="text-animation-line text-n50 fw-normal ch-50">
-                        Realizamos envíos a todo Chile. El costo de despacho se paga al momento de recibir o gestionar el envío.
-                    </p>
+                        <p class="text-animation-line text-n50 fw-normal ch-50">
+                            Realizamos envíos a todo Chile. El costo de despacho se paga al momento de recibir o
+                            gestionar el envío.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4 col-md-6">
-            <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
-                <span class="icon display-three text-n100">
-                    <i class="ph ph-percent"></i>
-                </span>
+            <div class="col-lg-4 col-md-6">
+                <div class="d-xs-flex d-grid align-items-xxl-center gap-lg-6 gap-xs-4 gap-2">
+                    <span class="icon display-three text-n100">
+                        <i class="ph ph-percent"></i>
+                    </span>
 
-                <div>
-                    <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
-                        Todos los productos incluyen IVA
-                    </h4>
+                    <div>
+                        <h4 class="text-animation-word text-n100 mb-lg-3 mb-2">
+                            Todos los productos incluyen IVA
+                        </h4>
 
-                    <p class="text-animation-line text-n50 fw-normal ch-50">
-                        Los precios publicados ya incluyen IVA, para que compres con total claridad y confianza.
-                    </p>
+                        <p class="text-animation-line text-n50 fw-normal ch-50">
+                            Los precios publicados ya incluyen IVA, para que compres con total claridad y confianza.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
     <!-- feature list section end -->
 
-    <!-- Faqs section start -->
-    <!-- <section class="faqs-section pt-120 pb-120 px-xl-20 px-lg-10 px-sm-7">
-        <div class="container-fluid">
-            <div class="row g-6 justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="mb-lg-15 mb-md-10 mb-8">
-                        <h2 class="text-animation-word text-h2 text-n100 mb-4 ch-20 mx-auto text-center">
-                            FREQUENTLY ASKED QUESTIONS
-                        </h2>
-                    </div>
-                    <div class="accordion-area d-grid gap-lg-5 gap-3">
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1 show">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: What types of bicycles do you offer?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: We offer a wide range of bicycles to suit every rider's needs, including
-                                        mountain bikes for rugged trails, road bikes for speed enthusiasts, city
-                                        bikes for urban commuting, electric bikes for effortless rides, and kids'
-                                        bikes for the young cyclists.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Do you provide bike fitting services?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Can I test ride a bike before purchasing?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Do you offer repair and maintenance services?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: How do I choose the right size bike?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Do you sell bike parts and accessories?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Are there any warranties on the bikes?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item p-lg-6 p-4 border border-n100-1">
-                            <div class="accordion-header d-between gap-2 text-n100 text-2xl fw-semibold">
-                                <button class="accordion-button text-n100">
-                                    Q: Can I order a bike online and pick it up in-store?
-                                </button>
-                                <span class="accordion-icon d-center"></span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="pt-lg-6 pt-4">
-                                    <p class="text-n50 text-base">
-                                        A: The custom bike build process can take anywhere from a few weeks
-                                        to a couple of months, depending on the complexity and availability
-                                        of components.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- Faqs section end -->
 
 
 </main>

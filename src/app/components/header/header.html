@@ -253,11 +253,25 @@
                         </a>
 
                         <!-- cart btn -->
-                        <button type="button"
+                        <!-- <button type="button"
                             class="cart-btn icon-36px position-relative text-n100 hover-text-secondary2"
                             (click)="openCart()">
                             <span
                                 class="badge radius-pill text-n0 text-sm fw-medium bg-secondary2 position-absolute top-50 start-100 translate-middle z-1 mt-n3">
+                                {{ cartCount }}
+                            </span>
+
+                            <span class="text-2xl">
+                                <i class="ph ph-shopping-cart"></i>
+                            </span>
+                        </button> -->
+                        <button type="button"
+                            class="cart-btn icon-36px position-relative text-n100 hover-text-secondary2"
+                            [class.cart-bounce]="cartAnimated" (click)="openCart()">
+
+                            <span
+                                class="badge radius-pill text-n0 text-sm fw-medium bg-secondary2 position-absolute top-50 start-100 translate-middle z-1 mt-n3"
+                                [class.badge-pop]="cartAnimated">
                                 {{ cartCount }}
                             </span>
 

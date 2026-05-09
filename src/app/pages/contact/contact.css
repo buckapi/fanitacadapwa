@@ -1,0 +1,7 @@
+.contact-banner-img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}

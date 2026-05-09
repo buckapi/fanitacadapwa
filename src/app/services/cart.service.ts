@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface CartItem {
   id: string;
@@ -19,25 +19,40 @@ export class CartService {
   private itemsSubject = new BehaviorSubject<CartItem[]>(this.getStoredCart());
   items$ = this.itemsSubject.asObservable();
 
+  private itemAddedSubject = new Subject<CartItem>();
+  itemAdded$ = this.itemAddedSubject.asObservable();
+
   addItem(product: any, quantity = 1, image?: string): void {
     const items = [...this.itemsSubject.value];
 
     const index = items.findIndex(item => item.id === product.id);
 
     if (index >= 0) {
-      items[index].quantity += quantity;
-    } else {
-      items.push({
-        id: product.id,
-        name: product.name,
-        price: Number(product.price || 0),
-        image,
-        quantity,
-        stock: product.stock,
-      });
+      items[index] = {
+        ...items[index],
+        quantity: items[index].quantity + quantity,
+      };
+
+      this.save(items);
+      this.itemAddedSubject.next(items[index]);
+      return;
     }
 
+    const newItem: CartItem = {
+      id: product.id,
+      name: product.name,
+      price: Number(product.price || 0),
+      image,
+      quantity,
+      stock: product.stock,
+      size: product.size,
+      color: product.color,
+    };
+
+    items.push(newItem);
+
     this.save(items);
+    this.itemAddedSubject.next(newItem);
   }
 
   increment(id: string): void {

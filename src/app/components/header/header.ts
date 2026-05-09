@@ -44,6 +44,8 @@ export class Header implements OnInit, OnDestroy {
   parentCategories: Category[] = [];
 
   loadingCategories = false;
+  cartAnimated = false;
+
   constructor(
     public router: Router,
     public auth: AuthPocketbaseService,
@@ -53,7 +55,7 @@ export class Header implements OnInit, OnDestroy {
     private productsService: ProductsService
   ) { }
 
-  ngOnInit(): void {
+/*   ngOnInit(): void {
     this.userSub = this.auth.currentUser$.subscribe(user => {
       this.user = user;
     });
@@ -68,9 +70,36 @@ export class Header implements OnInit, OnDestroy {
       this.wishlistItems = items;
       this.wishlistCount = items.length;
     });
+     this.cartService.itemAdded$.subscribe(() => {
+    this.triggerCartAnimation();
+  });
 
     this.loadCategories();
-  }
+  } */
+  ngOnInit(): void {
+  this.userSub = this.auth.currentUser$.subscribe(user => {
+    this.user = user;
+  });
+
+  this.cartService.items$.subscribe(items => {
+    this.cartItems = items;
+    this.cartCount = items.reduce((total, item) => total + item.quantity, 0);
+    this.cartSubtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+  });
+
+  this.wishlistService.items$.subscribe(items => {
+    this.wishlistItems = items;
+    this.wishlistCount = items.length;
+  });
+
+  this.cartService.itemAdded$.subscribe(() => {
+    console.log('animando carrito');
+    this.triggerCartAnimation();
+  });
+
+  this.loadCategories();
+}
+
 
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
@@ -248,5 +277,17 @@ export class Header implements OnInit, OnDestroy {
 
 isMegaCategoryOpen(categoryId: string): boolean {
   return this.activeMegaCategoryId === categoryId;
+}
+
+triggerCartAnimation(): void {
+  this.cartAnimated = false;
+
+  requestAnimationFrame(() => {
+    this.cartAnimated = true;
+
+    setTimeout(() => {
+      this.cartAnimated = false;
+    }, 800);
+  });
 }
 }

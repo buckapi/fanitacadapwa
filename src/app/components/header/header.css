@@ -462,3 +462,79 @@
     display: none;
   }
 }
+.cart-btn.cart-bounce {
+  animation: cartShakeZoom 0.75s ease-in-out !important;
+  transform-origin: center !important;
+}
+
+.cart-btn.cart-bounce i {
+  animation: cartIconShake 0.75s ease-in-out !important;
+  display: inline-block;
+}
+
+.cart-btn .badge.badge-pop {
+  animation: cartBadgePop 0.75s ease-in-out !important;
+}
+
+@keyframes cartShakeZoom {
+  0% { transform: scale(1) rotate(0deg); }
+  15% { transform: scale(1.25) rotate(-8deg); }
+  30% { transform: scale(1.15) rotate(8deg); }
+  45% { transform: scale(1.3) rotate(-6deg); }
+  60% { transform: scale(1.1) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes cartIconShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes cartBadgePop {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  30% { transform: translate(-50%, -50%) scale(1.8); }
+  60% { transform: translate(-50%, -50%) scale(0.9); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+.cart-btn.cart-bounce {
+  animation: cartShakeZoom 0.75s ease-in-out !important;
+  transform-origin: center !important;
+}
+
+.cart-btn.cart-bounce i {
+  animation: cartIconShake 0.75s ease-in-out !important;
+  display: inline-block;
+}
+
+.cart-btn .badge.badge-pop {
+  animation: cartBadgePop 0.75s ease-in-out !important;
+}
+
+@keyframes cartShakeZoom {
+  0% { transform: scale(1) rotate(0deg); }
+  15% { transform: scale(1.25) rotate(-8deg); }
+  30% { transform: scale(1.15) rotate(8deg); }
+  45% { transform: scale(1.3) rotate(-6deg); }
+  60% { transform: scale(1.1) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes cartIconShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes cartBadgePop {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  30% { transform: translate(-50%, -50%) scale(1.8); }
+  60% { transform: translate(-50%, -50%) scale(0.9); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
