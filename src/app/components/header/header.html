@@ -253,18 +253,7 @@
                         </a>
 
                         <!-- cart btn -->
-                        <!-- <button type="button"
-                            class="cart-btn icon-36px position-relative text-n100 hover-text-secondary2"
-                            (click)="openCart()">
-                            <span
-                                class="badge radius-pill text-n0 text-sm fw-medium bg-secondary2 position-absolute top-50 start-100 translate-middle z-1 mt-n3">
-                                {{ cartCount }}
-                            </span>
 
-                            <span class="text-2xl">
-                                <i class="ph ph-shopping-cart"></i>
-                            </span>
-                        </button> -->
                         <button type="button"
                             class="cart-btn icon-36px position-relative text-n100 hover-text-secondary2"
                             [class.cart-bounce]="cartAnimated" (click)="openCart()">
@@ -349,10 +338,26 @@
                                     <span class="d-block text-n100 text-base fw-medium">
                                         {{ item.name }}
                                     </span>
-
                                     <span class="d-block text-secondary2 text-base my-lg-2 my-1">
                                         ${{ item.price | number:'1.0-0' }}
                                     </span>
+
+                                    <small class="d-block text-n50" *ngIf="item.size || item.color">
+                                        <span *ngIf="item.size">Talla: {{ item.size }}</span>
+
+                                        <span *ngIf="item.color">
+                                            - Color:
+                                            <span
+                                                style="width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin: 0 4px;"
+                                                [style.background]="item.colorHex">
+                                            </span>
+                                            {{ item.color }}
+                                        </span>
+                                    </small>
+
+                                    <small class="d-block text-n50" *ngIf="item.stock">
+                                        Disponible: {{ item.stock }}
+                                    </small>
 
                                     <div
                                         class="quantity d-inline-flex align-items-center py-1 px-2 border border-n100-1 bg-n20 radius-4">

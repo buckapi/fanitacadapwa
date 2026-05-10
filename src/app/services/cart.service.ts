@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-export interface CartItem {
+/* export interface CartItem {
   id: string;
   name: string;
   price: number;
@@ -10,8 +10,23 @@ export interface CartItem {
   stock?: number;
   size?: string;
   color?: string;
-}
+} */
+export interface CartItem {
+  id: string;
+  productId: string;
+  variantKey?: string;
 
+  name: string;
+  price: number;
+  image?: string;
+
+  quantity: number;
+  stock?: number;
+
+  size?: string;
+  color?: string;
+  colorHex?: string;
+}
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private storageKey = 'fanaticada_cart';
@@ -22,7 +37,7 @@ export class CartService {
   private itemAddedSubject = new Subject<CartItem>();
   itemAdded$ = this.itemAddedSubject.asObservable();
 
-  addItem(product: any, quantity = 1, image?: string): void {
+ /*  addItem(product: any, quantity = 1, image?: string): void {
     const items = [...this.itemsSubject.value];
 
     const index = items.findIndex(item => item.id === product.id);
@@ -53,25 +68,93 @@ export class CartService {
 
     this.save(items);
     this.itemAddedSubject.next(newItem);
+  } */
+  addItem(product: any, quantity = 1, image?: string): void {
+  const items = [...this.itemsSubject.value];
+
+  const variant = product.selectedVariant;
+
+  if (!variant && product.variants?.length > 0) {
+    console.warn('Producto con variantes sin variante seleccionada');
+    return;
   }
 
-  increment(id: string): void {
+  const variantKey = variant
+    ? `${variant.size}-${variant.colorName}-${variant.colorHex}`
+    : 'default';
+
+  const cartId = `${product.id}-${variantKey}`;
+
+  const stock = Number(variant?.stock ?? product.stock ?? 0);
+
+  const index = items.findIndex(item => item.id === cartId);
+
+  if (index >= 0) {
+    const newQuantity = items[index].quantity + quantity;
+    items[index].quantity = Math.min(newQuantity, stock);
+
+    this.save(items);
+    this.itemAddedSubject.next(items[index]);
+    return;
+  }
+
+  const newItem: CartItem = {
+    id: cartId,
+    productId: product.id,
+    variantKey,
+
+    name: product.name,
+    price: Number(product.price || 0),
+    image,
+
+    quantity: Math.min(quantity, stock),
+    stock,
+
+    size: variant?.size,
+    color: variant?.colorName,
+    colorHex: variant?.colorHex
+  };
+
+  items.push(newItem);
+
+  this.save(items);
+  this.itemAddedSubject.next(newItem);
+}
+
+/*   increment(id: string): void {
     const items = this.itemsSubject.value.map(item =>
       item.id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
 
     this.save(items);
-  }
+  } */
 
-  decrement(id: string): void {
-    const items = this.itemsSubject.value
-      .map(item =>
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-      )
-      .filter(item => item.quantity > 0);
+  increment(id: string): void {
+  const items = [...this.itemsSubject.value];
 
+  const index = items.findIndex(item => item.id === id);
+  if (index === -1) return;
+
+  const stock = Number(items[index].stock || 0);
+
+  if (items[index].quantity < stock) {
+    items[index].quantity++;
     this.save(items);
   }
+}
+
+  decrement(id: string): void {
+  const items = [...this.itemsSubject.value];
+
+  const index = items.findIndex(item => item.id === id);
+  if (index === -1) return;
+
+  items[index].quantity--;
+
+  const updatedItems = items.filter(item => item.quantity > 0);
+
+  this.save(updatedItems);
+}
 
   removeItem(id: string): void {
     this.save(this.itemsSubject.value.filter(item => item.id !== id));

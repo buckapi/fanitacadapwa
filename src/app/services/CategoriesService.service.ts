@@ -13,11 +13,6 @@ export class CategoriesService {
 
   constructor(private ngZone: NgZone) {}
 
- /*  async getCategories(): Promise<Category[]> {
-    return await this.pb.collection(this.collection).getFullList<Category>({
-      sort: 'order'
-    });
-  } */
 async getCategories(): Promise<Category[]> {
   return await this.pb.collection(this.collection).getFullList<Category>({
     sort: 'order',

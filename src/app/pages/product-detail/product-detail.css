@@ -225,3 +225,52 @@ button:disabled {
   background: #f2f2f2;
   border-radius: 50%;
 }
+
+.variant-size-grid,
+.variant-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variant-size-btn {
+  min-width: 54px;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.variant-size-btn.active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.variant-color-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.variant-color-btn.active {
+  border-color: #111;
+  background: #f4f4f4;
+}
+
+.variant-color-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}

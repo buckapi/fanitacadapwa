@@ -37,7 +37,10 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   showSharePopup = false;
   showQuestionPopup = false;
   fallbackImage = 'assets/images/product-1.png';
-
+  selectedVariant: any = null;
+  quantity = 1;
+  selectedSize: string | null = null;
+  selectedColorKey: string | null = null;
   private productSwiper?: Swiper;
   private thumbSwiper?: Swiper;
 
@@ -67,7 +70,67 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
     this.productSwiper?.destroy(true, true);
     this.thumbSwiper?.destroy(true, true);
   }
+  get variants(): any[] {
+    const variants = (this.product as any)?.variants;
 
+    if (Array.isArray(variants)) return variants;
+
+    if (typeof variants === 'string') {
+      try {
+        const parsed = JSON.parse(variants);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  }
+
+  selectVariant(variant: any): void {
+    this.selectedVariant = variant;
+    this.quantity = 1;
+  }
+
+  get selectedStock(): number {
+    return Number(this.selectedVariant?.stock || 0);
+  }
+
+  increaseQuantity(): void {
+    if (!this.selectedVariant) return;
+
+    if (this.quantity < this.selectedStock) {
+      this.quantity++;
+    }
+  }
+
+  decreaseQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+  get availableSizesFromVariants(): string[] {
+  return [...new Set(this.variants.map(v => v.size))];
+}
+
+get availableColorsForSelectedSize(): any[] {
+  if (!this.selectedSize) return [];
+
+  return this.variants.filter(v => v.size === this.selectedSize);
+}
+
+selectSize(size: string): void {
+  this.selectedSize = size;
+  this.selectedColorKey = null;
+  this.selectedVariant = null;
+  this.quantity = 1;
+}
+
+selectColor(variant: any): void {
+  this.selectedColorKey = `${variant.colorName}-${variant.colorHex}`;
+  this.selectedVariant = variant;
+  this.quantity = 1;
+}
   async loadProduct(id: string) {
     this.loadingProduct = true;
     this.cd.detectChanges();
@@ -227,11 +290,19 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addToCart(product: Product, quantity: number = 1): void {
-    const image = product.images?.length
-      ? this.getProductImages(product)[0]
-      : 'assets/images/no-image.png';
+    if (this.variants.length > 0 && !this.selectedVariant) {
+      alert('Selecciona talla y color antes de continuar.');
+      return;
+    }
 
-    this.cartService.addItem(product, quantity, image);
+    const image = this.getProductImages(product)[0] || 'assets/images/no-image.png';
+
+    const productWithVariant = {
+      ...product,
+      selectedVariant: this.selectedVariant
+    };
+
+    this.cartService.addItem(productWithVariant, quantity, image);
   }
   zoomEnabled = false;
 
@@ -345,20 +416,6 @@ ${this.questionForm.message}
     };
   }
 
-quantity = 1;
 
-increaseQuantity(): void {
-  if (!this.product) return;
-
-  if (this.quantity < this.product.stock) {
-    this.quantity++;
-  }
-}
-
-decreaseQuantity(): void {
-  if (this.quantity > 1) {
-    this.quantity--;
-  }
-}
 
 }

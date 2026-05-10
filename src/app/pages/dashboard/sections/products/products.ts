@@ -84,7 +84,16 @@ export class Products implements OnInit, OnDestroy {
       { value: 'L', label: 'L' },
       { value: 'XL', label: 'XL' },
       { value: 'Única', label: 'Única' },
-    ]
+    ],
+    ropaNiños: [
+      { value: '4', label: '4' },
+      { value: '6', label: '6' },
+      { value: '8', label: '8' },
+      { value: '10', label: '10' },
+      { value: '12', label: '12' },
+      { value: '14', label: '14' },
+      { value: '16', label: '16' },
+    ],
   };
   constructor(
     private fb: FormBuilder,
@@ -118,7 +127,14 @@ export class Products implements OnInit, OnDestroy {
       isBestSelling: [false],
       isRecent: [false],
       sizes: [[]],
-      color: [''],
+      colors: [[]],
+      variants: [[]],
+      variantSize: [''],
+      variantColorName: [''],
+      variantColorHex: ['#000000'],
+      variantStock: [0],
+      colorName: [''],
+      colorHex: ['#000000'],
       urlImages: [''],
       description: [''],
       status: ['active'],
@@ -139,6 +155,97 @@ export class Products implements OnInit, OnDestroy {
       sizes: updatedSizes
     });
   }
+  addColor(): void {
+    const name = this.productForm.get('colorName')?.value;
+    const hex = this.productForm.get('colorHex')?.value;
+
+    if (!name || !hex) return;
+
+    const colors = this.productForm.get('colors')?.value || [];
+
+    this.productForm.patchValue({
+      colors: [...colors, { name, hex }],
+      colorName: '',
+      colorHex: '#000000'
+    });
+  }
+
+  removeColor(index: number): void {
+    const colors = [...(this.productForm.get('colors')?.value || [])];
+    colors.splice(index, 1);
+
+    this.productForm.patchValue({ colors });
+  }
+
+  normalizeColors(colors: any): any[] {
+    if (Array.isArray(colors)) return colors;
+
+    if (typeof colors === 'string') {
+      try {
+        const parsed = JSON.parse(colors);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return colors ? [{ name: colors, hex: '#000000' }] : [];
+      }
+    }
+
+    return [];
+  }
+  addVariant(): void {
+  const size = this.productForm.get('variantSize')?.value;
+  const colorName = this.productForm.get('variantColorName')?.value;
+  const colorHex = this.productForm.get('variantColorHex')?.value;
+  const stock = Number(this.productForm.get('variantStock')?.value || 0);
+
+  if (!size || !colorName || stock <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Datos incompletos',
+      text: 'Selecciona talla, color y cantidad mayor a 0.',
+    });
+    return;
+  }
+
+  const variants = this.productForm.get('variants')?.value || [];
+
+  this.productForm.patchValue({
+    variants: [
+      ...variants,
+      {
+        size,
+        colorName,
+        colorHex,
+        stock
+      }
+    ],
+    variantSize: '',
+    variantColorName: '',
+    variantColorHex: '#000000',
+    variantStock: 0
+  });
+}
+
+removeVariant(index: number): void {
+  const variants = [...(this.productForm.get('variants')?.value || [])];
+  variants.splice(index, 1);
+
+  this.productForm.patchValue({ variants });
+}
+
+normalizeVariants(variants: any): any[] {
+  if (Array.isArray(variants)) return variants;
+
+  if (typeof variants === 'string') {
+    try {
+      const parsed = JSON.parse(variants);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
   async loadCategories(): Promise<void> {
     const records = await this.categoriesService.getCategories();
 
@@ -258,7 +365,7 @@ export class Products implements OnInit, OnDestroy {
 
     this.availableSizes = this.sizeOptions.general;
   }
-  onSubcategoryToggle(event: Event): void {
+  /* onSubcategoryToggle(event: Event): void {
     const input = event.target as HTMLInputElement;
     const id = input.value;
 
@@ -271,8 +378,47 @@ export class Products implements OnInit, OnDestroy {
     this.productForm.patchValue({
       subcategories: this.selectedSubcategories
     });
+  } */
+  onSubcategoryToggle(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const id = input.value;
+
+    if (input.checked) {
+      this.selectedSubcategories.push(id);
+    } else {
+      this.selectedSubcategories = this.selectedSubcategories.filter(subId => subId !== id);
+    }
+
+    this.productForm.patchValue({
+      subcategories: this.selectedSubcategories,
+      sizes: []
+    });
+
+    this.updateAvailableSizesBySubcategories();
   }
-  async saveProduct(): Promise<void> {
+  updateAvailableSizesBySubcategories(): void {
+    const selectedSubs = this.subcategories.filter((sub: any) =>
+      this.selectedSubcategories.includes(sub.id)
+    );
+
+    const names = selectedSubs
+      .map((sub: any) => sub.name?.toLowerCase() || '')
+      .join(' ');
+
+    if (
+      names.includes('niño') ||
+      names.includes('niños') ||
+      names.includes('infantil') ||
+      names.includes('junior')
+    ) {
+      this.availableSizes = this.sizeOptions.ropaNiños;
+      return;
+    }
+
+    const parentId = this.productForm.get('category')?.value;
+    this.updateAvailableSizes(parentId);
+  }
+  /* async saveProduct(): Promise<void> {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       return;
@@ -369,6 +515,104 @@ export class Products implements OnInit, OnDestroy {
     } finally {
       this.saving = false;
     }
+  } */
+  async saveProduct(): Promise<void> {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    this.saving = true;
+
+    try {
+      const formValue = this.productForm.value;
+      const formData = new FormData();
+
+      formData.append('name', formValue.name);
+      formData.append('price', String(Number(formValue.price)));
+      formData.append('editor', formValue.editor || '');
+      formData.append('unit', formValue.unit || 'unidad');
+      formData.append('timeToDeliver', String(Number(formValue.timeToDeliver || 0)));
+      formData.append('rating', String(Number(formValue.rating || 0)));
+      formData.append('stock', String(Number(formValue.stock || 0)));
+
+      const sizes = Array.isArray(formValue.sizes) ? formValue.sizes : [];
+      formData.append('sizes', JSON.stringify(sizes));
+
+      const colors = Array.isArray(formValue.colors) ? formValue.colors : [];
+      formData.append('colors', JSON.stringify(colors));
+      const variants = Array.isArray(formValue.variants) ? formValue.variants : [];
+      formData.append('variants', JSON.stringify(variants));
+      formData.append('isEssential', String(!!formValue.isEssential));
+      formData.append('isPopular', String(!!formValue.isPopular));
+      formData.append('isBestSelling', String(!!formValue.isBestSelling));
+      formData.append('isRecent', String(!!formValue.isRecent));
+      formData.append('featured', String(!!formValue.featured));
+
+      formData.append('description', formValue.description || '');
+      formData.append('status', formValue.status || 'active');
+      formData.append('slug', this.productsService.generateSlug(formValue.name));
+
+      if (formValue.category) {
+        formData.append('categories', formValue.category);
+      }
+
+      this.selectedSubcategories.forEach(subcategoryId => {
+        formData.append('subcategories', subcategoryId);
+      });
+
+      const imageIds: string[] = [...this.existingImages];
+
+      for (const file of this.selectedFiles) {
+        const imageRecord = await this.productsService.createImage(file);
+        imageIds.push(imageRecord.id);
+      }
+
+      imageIds.forEach(imageId => {
+        formData.append('images', imageId);
+      });
+
+      let savedProduct: Product;
+
+      if (this.editing && this.selectedProductId) {
+        savedProduct = await this.productsService.updateProduct(this.selectedProductId, formData);
+      } else {
+        savedProduct = await this.productsService.createProduct(formData);
+      }
+
+      const expandedProduct = await this.productsService.getProductById(savedProduct.id!);
+
+      const exists = this.products.some(product => product.id === expandedProduct.id);
+
+      if (exists) {
+        this.products = this.products.map(product =>
+          product.id === expandedProduct.id ? expandedProduct : product
+        );
+      } else {
+        this.products = [expandedProduct, ...this.products];
+      }
+
+      this.cd.detectChanges();
+      this.resetForm();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Producto guardado',
+        text: 'El producto se guardó correctamente.',
+      });
+
+    } catch (error) {
+      console.error('Error guardando producto:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar el producto',
+        text: 'No se pudo guardar el producto. Revisa la consola.',
+      });
+
+    } finally {
+      this.saving = false;
+    }
   }
   normalizeSizes(product: any): string[] {
     if (Array.isArray(product.sizes)) {
@@ -423,7 +667,8 @@ export class Products implements OnInit, OnDestroy {
 
       sizes: this.normalizeSizes(product),
 
-      color: product.color || '',
+      colors: this.normalizeColors((product as any).colors || (product as any).color),
+variants: this.normalizeVariants((product as any).variants),
 
       isEssential: product.isEssential || false,
       isPopular: product.isPopular || false,

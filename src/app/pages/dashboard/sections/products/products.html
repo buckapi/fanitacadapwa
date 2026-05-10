@@ -83,7 +83,7 @@
                 <textarea formControlName="description" rows="4"></textarea>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label>Tallas disponibles</label>
 
                 <div class="categories-grid" *ngIf="availableSizes.length > 0">
@@ -96,10 +96,63 @@
             </div>
 
             <div class="form-group">
-                <label>Color</label>
-                <input type="text" formControlName="color">
-            </div>
+                <label>Colores disponibles</label>
 
+                <div class="form-row">
+                    <input type="text" formControlName="colorName" placeholder="Ej: Rojo, Azul, Blanco">
+                    <input type="color" formControlName="colorHex">
+                    <button type="button" (click)="addColor()">Agregar</button>
+                </div>
+
+                <div class="categories-grid mt-3">
+                    <label *ngFor="let color of productForm.get('colors')?.value; let i = index">
+                        <span
+                            style="width: 16px; height: 16px; border-radius: 50%; display: inline-block; margin-right: 6px;"
+                            [style.background]="color.hex">
+                        </span>
+
+                        {{ color.name }}
+
+                        <button type="button" (click)="removeColor(i)">×</button>
+                    </label>
+                </div>
+            </div> -->
+            <div class="form-group">
+                <label>Inventario por talla y color</label>
+
+                <div class="form-row">
+                    <select formControlName="variantSize">
+                        <option value="">Selecciona talla</option>
+                        <option *ngFor="let size of availableSizes" [value]="size.label">
+                            {{ size.label }}
+                        </option>
+                    </select>
+
+                    <input type="text" formControlName="variantColorName" placeholder="Color. Ej: Rojo">
+
+                    <input type="color" formControlName="variantColorHex">
+
+                    <input type="number" formControlName="variantStock" placeholder="Cantidad">
+
+                    <button type="button" (click)="addVariant()">
+                        Agregar
+                    </button>
+                </div>
+
+                <div class="categories-grid mt-3">
+                    <label *ngFor="let variant of productForm.get('variants')?.value; let i = index">
+                        Talla {{ variant.size }} -
+                        <span
+                            style="width: 16px; height: 16px; border-radius: 50%; display: inline-block; margin: 0 6px;"
+                            [style.background]="variant.colorHex">
+                        </span>
+                        {{ variant.colorName }} -
+                        Cantidad: {{ variant.stock }}
+
+                        <button type="button" (click)="removeVariant(i)">×</button>
+                    </label>
+                </div>
+            </div>
             <div class="form-group">
                 <label>Imágenes del producto</label>
 

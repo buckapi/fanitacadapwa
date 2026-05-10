@@ -73,7 +73,7 @@
                             {{ product.name }}
                         </h1>
 
-                       <!--  <div
+                        <!--  <div
                             class="d-flex align-items-center gap-4xl-20 gap-3xl-15 gap-xl-10 gap-lg-8 gap-md-6 gap-4 mb-lg-8 mb-md-6 mb-4">
                             <div class="product-rating d-flex align-items-center gap-1">
                                 <ul class="d-flex align-items-center">
@@ -112,17 +112,40 @@
                                 {{ product.stock > 0 ? product.stock + ' disponibles' : 'Sin stock' }}
                             </span>
                         </div>
-                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.sizes || product.sizes">
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="variants.length > 0">
                             <span class="text-h6">TALLA:</span>
-                            <span class="text-n50 text-base">
-                                {{ product.sizes || product.sizes }}
-                            </span>
+
+                            <div class="variant-size-grid">
+                                <button type="button" class="variant-size-btn"
+                                    *ngFor="let size of availableSizesFromVariants"
+                                    [class.active]="selectedSize === size" (click)="selectSize(size)">
+                                    {{ size }}
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="product.color">
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="selectedSize">
                             <span class="text-h6">COLOR:</span>
+
+                            <div class="variant-color-grid">
+                                <button type="button" class="variant-color-btn"
+                                    *ngFor="let variant of availableColorsForSelectedSize"
+                                    [class.active]="selectedVariant === variant" [disabled]="variant.stock <= 0"
+                                    (click)="selectColor(variant)">
+
+                                    <span class="color-dot" [style.background]="variant.colorHex">
+                                    </span>
+
+                                    <span>{{ variant.colorName }}</span>
+                                    <small>{{ variant.stock }} disponibles</small>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="selectedVariant">
+                            <span class="text-h6">STOCK SELECCIONADO:</span>
                             <span class="text-n50 text-base">
-                                {{ product.color }}
+                                {{ selectedStock }} disponibles
                             </span>
                         </div>
                         <div>
@@ -148,7 +171,8 @@
 
                                     <button
                                         class="text-sm fw-bold text-n100 bg-n20 hover-text-n0 hover-bg-n100 py-3 px-lg-5 px-3 border border-n100 w-100"
-                                        [disabled]="product.stock <= 0" (click)="addToCart(product, quantity)">
+                                        [disabled]="variants.length > 0 && (!selectedVariant || selectedStock <= 0)"
+                                        (click)="addToCart(product, quantity)">
                                         AÑADIR AL CARRITO
                                     </button>
 
@@ -163,13 +187,13 @@
                         </div>
                         <div class="d-flex gap-3 mt-4">
 
-                            <button type="button" class="outline-btn text-n100 fw-medium box-style box-secondary2" style="cursor: pointer; color:#000;"
-                                (click)="openSharePopup()">
+                            <button type="button" class="outline-btn text-n100 fw-medium box-style box-secondary2"
+                                style="cursor: pointer; color:#000;" (click)="openSharePopup()">
                                 <i class="ph ph-share-network"></i> Compartir
                             </button>
 
-                            <button type="button" class="outline-btn text-n100 fw-medium box-style box-secondary2" style="cursor: pointer; color:#000;"
-                                (click)="openQuestionPopup()">
+                            <button type="button" class="outline-btn text-n100 fw-medium box-style box-secondary2"
+                                style="cursor: pointer; color:#000;" (click)="openQuestionPopup()">
                                 <i class="ph ph-chat-circle"></i> Preguntar
                             </button>
 

@@ -32,4 +32,5 @@ cartItems: CartItem[] = [];
   remove(id: string): void {
     this.cartService.removeItem(id);
   }
+  
 }

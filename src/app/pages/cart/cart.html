@@ -1,5 +1,5 @@
 <main class="pt-12">
-  
+
 
   <section class="cart-section px-xl-20 px-lg-10 px-sm-7 pt-120 pb-120">
     <div class="container-fluid">
@@ -10,10 +10,7 @@
           Agrega productos para continuar con tu compra.
         </p>
 
-        <a
-          routerLink="/shop"
-          class="btn-secondary d-inline-flex align-items-center gap-2"
-        >
+        <a routerLink="/shop" class="btn-secondary d-inline-flex align-items-center gap-2">
           Ver productos
           <span class="icon">
             <i class="ph ph-arrow-up-right"></i>
@@ -39,47 +36,48 @@
                   <td class="p-xxl-6 p-lg-4 p-2">
                     <div class="cart-card d-flex align-items-center gap-lg-6 gap-4">
                       <div class="product-thumb">
-                        <img
-                          [src]="item.image || 'assets/images/no-image.png'"
-                          [alt]="item.name"
-                          class="w-100"
-                        >
+                        <img [src]="item.image || 'assets/images/no-image.png'" [alt]="item.name" class="w-100">
                       </div>
 
                       <div class="product-info">
                         <span class="text-n100 text-base fw-medium d-block">
                           {{ item.name }}
                         </span>
-
                         <span class="d-block text-secondary2 text-base my-lg-2 my-1">
                           ${{ item.price | number:'1.0-0' }}
                         </span>
+
+                        <small class="d-block text-n50" *ngIf="item.size || item.color">
+                          <span *ngIf="item.size">Talla: {{ item.size }}</span>
+
+                          <span *ngIf="item.color">
+                            - Color:
+                            <span
+                              style="width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin: 0 4px;"
+                              [style.background]="item.colorHex">
+                            </span>
+                            {{ item.color }}
+                          </span>
+                        </small>
+
+                        <small class="d-block text-n50" *ngIf="item.stock">
+                          Disponible: {{ item.stock }}
+                        </small>
                       </div>
                     </div>
                   </td>
 
                   <td class="p-xxl-6 p-lg-4 p-2">
-                    <div class="quantity d-inline-flex gap-lg-5 gap-3 align-items-center py-1 px-2 border border-n100-1 bg-n20 radius-4">
-                      <button
-                        type="button"
-                        class="quantityDecrement text-n100"
-                        (click)="decrement(item.id)"
-                      >
+                    <div
+                      class="quantity d-inline-flex gap-lg-5 gap-3 align-items-center py-1 px-2 border border-n100-1 bg-n20 radius-4">
+                      <button type="button" class="quantityDecrement text-n100" (click)="decrement(item.id)">
                         <i class="ph ph-minus"></i>
                       </button>
 
-                      <input
-                        type="text"
-                        [value]="item.quantity"
-                        readonly
-                        class="quantityValue border-0 p-0 outline-0 bg-n20"
-                      >
+                      <input type="text" [value]="item.quantity" readonly
+                        class="quantityValue border-0 p-0 outline-0 bg-n20">
 
-                      <button
-                        type="button"
-                        class="quantityIncrement text-n100"
-                        (click)="increment(item.id)"
-                      >
+                      <button type="button" class="quantityIncrement text-n100" (click)="increment(item.id)">
                         <i class="ph ph-plus"></i>
                       </button>
                     </div>
@@ -133,11 +131,8 @@
                 Nota del pedido
               </span>
 
-              <textarea
-                class="note-form border-n100-1 p-4 w-100 focus-secondary2"
-                rows="3"
-                placeholder="Ej: talla, color, referencias o indicaciones para el despacho"
-              ></textarea>
+              <textarea class="note-form border-n100-1 p-4 w-100 focus-secondary2" rows="3"
+                placeholder="Ej: talla, color, referencias o indicaciones para el despacho"></textarea>
 
               <span class="border-bottom border-n100-1 w-100 d-block mb-lg-6 mb-4 mt-xl-9 mt-md-7 mt-5"></span>
 
@@ -166,17 +161,12 @@
               </label>
 
               <div class="d-grid gap-lg-4 gap-2">
-                <a
-                  routerLink="/checkout"
-                  class="d-block text-center text-base fw-medium py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0 text-n100 w-100 border border-n100 hover-bg-n100 hover-text-n0"
-                >
+                <a routerLink="/checkout"
+                  class="d-block text-center text-base fw-medium py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0 text-n100 w-100 border border-n100 hover-bg-n100 hover-text-n0">
                   Continuar compra
                 </a>
 
-                <a
-                  routerLink="/shop"
-                  class="btn-secondary radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-center"
-                >
+                <a routerLink="/shop" class="btn-secondary radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 text-center">
                   Seguir comprando
                 </a>
               </div>

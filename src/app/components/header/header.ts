@@ -55,27 +55,7 @@ export class Header implements OnInit, OnDestroy {
     private productsService: ProductsService
   ) { }
 
-/*   ngOnInit(): void {
-    this.userSub = this.auth.currentUser$.subscribe(user => {
-      this.user = user;
-    });
 
-    this.cartService.items$.subscribe(items => {
-      this.cartItems = items;
-      this.cartCount = items.reduce((total, item) => total + item.quantity, 0);
-      this.cartSubtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
-    });
-
-    this.wishlistService.items$.subscribe(items => {
-      this.wishlistItems = items;
-      this.wishlistCount = items.length;
-    });
-     this.cartService.itemAdded$.subscribe(() => {
-    this.triggerCartAnimation();
-  });
-
-    this.loadCategories();
-  } */
   ngOnInit(): void {
   this.userSub = this.auth.currentUser$.subscribe(user => {
     this.user = user;
