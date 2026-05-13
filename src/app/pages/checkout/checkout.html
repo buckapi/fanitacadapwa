@@ -40,11 +40,20 @@
                   placeholder="Apellido"
                 >
                 <input
-                  type="text"
-                  formControlName="rut"
-                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                  placeholder="RUT"
-                >
+  type="text"
+  formControlName="rut"
+  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+  placeholder="12.345.678-5"
+  maxlength="12"
+  (input)="formatRut($event)"
+>
+                <div class="text-danger small" *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('required')">
+  El RUT es obligatorio.
+</div>
+
+<div class="text-danger small" *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('rutInvalid')">
+  Ingresa un RUT chileno válido. Ej: 12.345.678-5
+</div>
               </div>
 
 
@@ -61,7 +70,9 @@
                 class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
                 placeholder="Dirección (Calle, número, departamento, etc.)"
               >
-
+              <div class="text-danger small" *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.hasError('required')">
+  La dirección es obligatoria.
+</div>
               <input
                 type="text"
                 formControlName="apartment"
@@ -83,7 +94,13 @@
                 placeholder="Teléfono"
               >
 
+  <div class="text-danger small" *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('required')">
+  El teléfono es obligatorio.
+</div>
 
+<div class="text-danger small" *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('pattern')">
+  Ingresa un teléfono chileno válido. Ej: +56 9 1234 5678
+</div>
               <label class="input-checkbox">
                 <input type="checkbox" formControlName="saveInfo" hidden>
                 <span class="checkbox"></span>
@@ -192,7 +209,7 @@
 
                     <div class="product-price">
                       <span class="text-secondary2 text-base fw-medium">
-                        ${{ item.price * item.quantity | number:'1.0-0' }}
+                        $ CLP {{ item.price * item.quantity | number:'1.0-0' }}
                       </span>
                     </div>
                   </div>
@@ -218,7 +235,7 @@
                     <div class="d-flex justify-content-between">
                       <span class="text-n50 text-base fw-normal">Subtotal</span>
                       <span class="text-n50 text-base fw-normal">
-                        ${{ subtotal | number:'1.0-0' }}
+                        $ CLP {{ subtotal | number:'1.0-0' }}
                       </span>
                     </div>
 
@@ -233,7 +250,7 @@
                   <div class="d-flex justify-content-between">
                     <span class="text-n100 text-xl fw-semibold">Total</span>
                     <span class="text-n100 text-xl fw-semibold">
-                      ${{ total | number:'1.0-0' }}
+                      $ CLP {{ total | number:'1.0-0' }}
                     </span>
                   </div>
                 </div>

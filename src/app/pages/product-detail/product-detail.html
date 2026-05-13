@@ -73,23 +73,10 @@
                             {{ product.name }}
                         </h1>
 
-                        <!--  <div
-                            class="d-flex align-items-center gap-4xl-20 gap-3xl-15 gap-xl-10 gap-lg-8 gap-md-6 gap-4 mb-lg-8 mb-md-6 mb-4">
-                            <div class="product-rating d-flex align-items-center gap-1">
-                                <ul class="d-flex align-items-center">
-                                    <li class="text-secondary2" *ngFor="let star of [1,2,3,4,5]">
-                                        <i class="ph-fill ph-star"></i>
-                                    </li>
-                                </ul>
-
-                                <span class="text-sm text-n50 text-nowrap">
-                                    {{ product.rating || 5 }} / 5
-                                </span>
-                            </div>
-                        </div> -->
+                     
 
                         <h3 class="text-n100 mb-lg-4 mb-2">
-                            $ {{ product.price | number:'1.0-0' }}
+                            $ CLP {{ product.price | number:'1.0-0' }}
                         </h3>
 
                         <p class="text-n50 text-base">
@@ -156,7 +143,7 @@
                                     <div
                                         class="quantity d-flex align-items-center py-3 px-lg-5 px-3 border border-n100-1">
                                         <button type="button" class="quantityDecrement text-n100"
-                                            (click)="decreaseQuantity()">
+                                            [disabled]="quantity <= 1" (click)="decreaseQuantity()">
                                             <i class="ph ph-minus"></i>
                                         </button>
 
@@ -164,6 +151,7 @@
                                             class="quantityValue border-0 p-0 outline-0">
 
                                         <button type="button" class="quantityIncrement text-n100"
+                                            [disabled]="quantity >= (variants.length > 0 ? selectedStock : product.stock)"
                                             (click)="increaseQuantity()">
                                             <i class="ph ph-plus"></i>
                                         </button>

@@ -9,7 +9,41 @@ import { OrdersService } from '../../services/OrdersService.service';
 import { PaymentsService } from '../../services/payments.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthPocketbaseService } from '../../services/auth-pocketbase.service';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+export const chileRutValidator: ValidatorFn = (
+  control: AbstractControl
+): ValidationErrors | null => {
+const value = (control.value || '')
+  .toString()
+  .replace(/\./g, '')
+  .replace(/-/g, '')
+  .toUpperCase();
+  if (!value) return null;
+
+  if (!/^\d{7,8}[0-9K]$/.test(value)) {
+    return { rutInvalid: true };
+  }
+
+  const body = value.slice(0, -1);
+  const dv = value.slice(-1);
+
+  let sum = 0;
+  let multiplier = 2;
+
+  for (let i = body.length - 1; i >= 0; i--) {
+    sum += parseInt(body[i], 10) * multiplier;
+    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+  }
+
+  const expectedDv = 11 - (sum % 11);
+  const finalDv =
+    expectedDv === 11 ? '0' :
+    expectedDv === 10 ? 'K' :
+    expectedDv.toString();
+
+  return dv === finalDv ? null : { rutInvalid: true };
+};
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -37,21 +71,27 @@ export class Checkout {
   ) {
 
     this.checkoutForm = this.fb.group({
-      rut: ['', [Validators.required]],
-      country: ['Chile', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      company: [''],
-      address: ['', Validators.required],
-      apartment: [''],
-      phone: ['', Validators.required],
-      saveInfo: [false],
-      email: ['', [Validators.required, Validators.email]],
-      shippingMethod: ['santiago', Validators.required],
-      billingAddress: ['same', Validators.required],
-      note: [''],
-      terms: [false, Validators.requiredTrue]
-    });
+  rut: ['', [Validators.required, chileRutValidator]],
+  country: ['Chile', Validators.required],
+  firstName: ['', Validators.required],
+  lastName: ['', Validators.required],
+  company: [''],
+  address: ['', Validators.required],
+  apartment: [''],
+  phone: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^(\+?56)?\s?9?\s?\d{8}$/)
+    ]
+  ],
+  saveInfo: [false],
+  email: ['', [Validators.required, Validators.email]],
+  shippingMethod: ['santiago', Validators.required],
+  billingAddress: ['same', Validators.required],
+  note: [''],
+  terms: [false, Validators.requiredTrue]
+});
 
     const currentUser = this.auth.getCurrentUser?.();
 
@@ -90,7 +130,29 @@ export class Checkout {
 
     this.total = this.subtotal + this.shipping;
   }
+formatRut(event: any): void {
+  let value = event.target.value || '';
 
+  // limpiar caracteres
+  value = value.replace(/[^0-9kK]/g, '').toUpperCase();
+
+  if (value.length <= 1) {
+    this.checkoutForm.get('rut')?.setValue(value, { emitEvent: false });
+    return;
+  }
+
+  const body = value.slice(0, -1);
+  const dv = value.slice(-1);
+
+  // agregar puntos
+  const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  const formattedRut = `${formattedBody}-${dv}`;
+
+  this.checkoutForm.get('rut')?.setValue(formattedRut, {
+    emitEvent: false
+  });
+}
   async completeOrder(): Promise<void> {
     const currentUser = this.auth.getCurrentUser?.();
 

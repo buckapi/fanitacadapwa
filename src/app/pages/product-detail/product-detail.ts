@@ -44,21 +44,42 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   private productSwiper?: Swiper;
   private thumbSwiper?: Swiper;
 
-  async ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+ async ngOnInit() {
+  this.route.paramMap.subscribe(async params => {
+    const id = params.get('id');
 
     if (!id) {
       this.router.navigate(['/shop']);
       return;
     }
 
+    this.resetProductState();
+
     await this.loadProduct(id);
     await this.loadRelatedProducts();
 
     setTimeout(() => {
       this.initProductSlider();
-    }, 100);
-  }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 150);
+  });
+}
+private resetProductState(): void {
+  this.productSwiper?.destroy(true, true);
+  this.thumbSwiper?.destroy(true, true);
+
+  this.product = undefined;
+  this.relatedProducts = [];
+
+  this.selectedVariant = null;
+  this.selectedSize = null;
+  this.selectedColorKey = null;
+  this.quantity = 1;
+
+  this.zoomEnabled = false;
+  this.showSharePopup = false;
+  this.showQuestionPopup = false;
+}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -97,18 +118,20 @@ export class ProductDetail implements OnInit, AfterViewInit, OnDestroy {
   }
 
   increaseQuantity(): void {
-    if (!this.selectedVariant) return;
+  const maxStock = this.variants.length > 0
+    ? this.selectedStock
+    : Number(this.product?.stock || 0);
 
-    if (this.quantity < this.selectedStock) {
-      this.quantity++;
-    }
+  if (this.quantity < maxStock) {
+    this.quantity++;
   }
+}
 
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
+  if (this.quantity > 1) {
+    this.quantity--;
   }
+}
   get availableSizesFromVariants(): string[] {
   return [...new Set(this.variants.map(v => v.size))];
 }
@@ -284,11 +307,12 @@ selectColor(variant: any): void {
     return product?.editor || product?.unit || 'Producto';
   }
 
-  goToProduct(product: Product): void {
-    if (!product.id) return;
-    this.router.navigateByUrl(`/product-detail/${product.id}`);
-  }
+  
+goToProduct(product: Product): void {
+  if (!product.id) return;
 
+  this.router.navigate(['/product-detail', product.id]);
+}
   addToCart(product: Product, quantity: number = 1): void {
     if (this.variants.length > 0 && !this.selectedVariant) {
       alert('Selecciona talla y color antes de continuar.');

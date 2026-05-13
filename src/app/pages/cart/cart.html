@@ -44,7 +44,7 @@
                           {{ item.name }}
                         </span>
                         <span class="d-block text-secondary2 text-base my-lg-2 my-1">
-                          ${{ item.price | number:'1.0-0' }}
+                          $ CLP {{ item.price | number:'1.0-0' }}
                         </span>
 
                         <small class="d-block text-n50" *ngIf="item.size || item.color">
@@ -85,7 +85,7 @@
 
                   <td class="p-xxl-6 p-lg-4 p-2">
                     <span class="text-n100 text-sm d-block text-nowrap">
-                      ${{ item.price * item.quantity | number:'1.0-0' }}
+                      $ CLP {{ item.price * item.quantity | number:'1.0-0' }}
                     </span>
                   </td>
 
@@ -140,7 +140,7 @@
                 <div class="d-between">
                   <span class="text-n100 text-base fw-medium">Subtotal</span>
                   <span class="text-n100 text-base fw-medium">
-                    ${{ subtotal | number:'1.0-0' }}
+                    $ CLP {{ subtotal | number:'1.0-0' }}
                   </span>
                 </div>
 
