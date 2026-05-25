@@ -164,16 +164,15 @@
                     <div class="image-preview" *ngFor="let image of previewImages; let i = index">
 
                         <!-- BADGE PORTADA -->
-                        <span class="cover-badge" *ngIf="i === 0 && existingImageRecords.length === 0">
-                            Portada
+                        <span class="cover-badge" *ngIf="i === 0">
+  <i class="ph-fill ph-check-circle"></i>
                         </span>
 
                         <img [src]="image" alt="Preview">
 
                         <!-- BOTÓN PORTADA -->
-                        <button type="button" class="btn-cover" *ngIf="i !== 0 || existingImageRecords.length > 0"
-                            (click)="setNewImageAsCover(i)">
-                            Portada
+                        <button type="button" class="btn-cover" *ngIf="i !== 0" (click)="setNewImageAsCover(i)">
+  <i class="ph-fill ph-check-circle"></i>
                         </button>
 
                         <!-- ELIMINAR -->
@@ -192,14 +191,15 @@
 
                         <!-- BADGE PORTADA -->
                         <span class="cover-badge" *ngIf="i === 0">
-                            Portada
+                            <i class="ph-fill ph-check-circle"></i>
+
                         </span>
 
                         <img *ngIf="getImageRecordUrl(imageRecord) as img" [src]="img" alt="Imagen existente">
 
                         <!-- BOTÓN PORTADA -->
                         <button type="button" class="btn-cover" *ngIf="i !== 0" (click)="setExistingImageAsCover(i)">
-                            Portada
+                            <i class="ph-fill ph-check-circle"></i>
                         </button>
 
                         <!-- ELIMINAR -->

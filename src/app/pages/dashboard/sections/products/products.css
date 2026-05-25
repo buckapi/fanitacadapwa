@@ -220,7 +220,7 @@ select:focus {
 
 .image-preview button {
   position: absolute;
-  top: 6px;
+  top: 10px;
   right: 6px;
   border: none;
   background: #dc3545;
@@ -229,6 +229,7 @@ select:focus {
   height: 24px;
   border-radius: 50%;
   cursor: pointer;
+  padding: 2px 4px;
 }
 
 .product-thumb {
@@ -253,12 +254,31 @@ select:focus {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: #111;
+  background: #f4c202;
   color: #fff;
-  font-size: 11px;
-  padding: 4px 8px;
+  font-size: 10px;
+  padding: 2px 4px;
   border-radius: 999px;
   z-index: 2;
+}
+
+
+.image-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  background: #f4c202;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 9px;
+  border-radius: 999px;
+  z-index: 3;
 }
 
 .btn-cover {
@@ -266,8 +286,39 @@ select:focus {
   left: 8px;
   bottom: 8px;
   border: 0;
-  border-radius: 999px;
-  padding: 5px 10px;
+  background: #ffffff;
+  color: #f4c202;
   font-size: 11px;
+  font-weight: 700;
+  padding: 6px 9px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
   cursor: pointer;
+  z-index: 3;
+}
+
+.btn-cover:hover {
+  background: #f4c202;
+  color: #ffffff;
+}
+
+.btn-remove-image {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: #dc2626;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 4;
+}
+
+.btn-remove-image:hover {
+  background: #991b1b;
 }

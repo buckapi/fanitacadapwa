@@ -33,7 +33,16 @@
       </span>
       <div>
         <p>Pedidos pendientes</p>
-        <h3>0</h3>
+        <h3>{{ pendingOrdersCount }}</h3>
+      </div>
+    </div>
+    <div class="stat-card" routerLink="/dashboard/orders">
+      <span class="stat-icon">
+        <i class="ph ph-receipt"></i>
+      </span>
+      <div>
+        <p>Total pedidos</p>
+        <h3>{{ ordersCount }}</h3>
       </div>
     </div>
 
@@ -53,8 +62,17 @@
       </span>
       <div>
         <p>Ventas del mes</p>
-        <h3>$0</h3>
+        <h3>$ {{ monthlySales | number:'1.0-0' }}</h3>
       </div>
+    </div>
+  </div>
+  <div class="stat-card" routerLink="/dashboard/orders">
+    <span class="stat-icon">
+      <i class="ph ph-chart-line-up"></i>
+    </span>
+    <div>
+      <p>Ventas totales</p>
+      <h3>$ {{ totalSales | number:'1.0-0' }}</h3>
     </div>
   </div>
 
