@@ -5,10 +5,12 @@ export interface OrderCustomer {
   address?: string;
   city?: string;
   region?: string;
+  comuna?:string;
   notes?: string;
   apartment?: string;
   country?: string;
   [key: string]: any;
+  rut?: string;
 }
 
 export interface OrderItem {
@@ -42,6 +44,11 @@ export interface Order {
 
   customerEmail?: string;
   customerName?: string;
+  customerRut?: string;
+  customerPhone?:string;
+  customerAddress?:string;
+   customerRegion?:string;
+   customerComuna?:string;
 
   paymentData?: any;
   authorizationCode?: string;

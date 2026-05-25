@@ -73,7 +73,7 @@
                             {{ product.name }}
                         </h1>
 
-                     
+
 
                         <h3 class="text-n100 mb-lg-4 mb-2">
                             $ CLP {{ product.price | number:'1.0-0' }}
@@ -99,7 +99,7 @@
                                 {{ product.stock > 0 ? product.stock + ' disponibles' : 'Sin stock' }}
                             </span>
                         </div>
-                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="variants.length > 0">
+                        <!-- <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="variants.length > 0">
                             <span class="text-h6">TALLA:</span>
 
                             <div class="variant-size-grid">
@@ -127,8 +127,39 @@
                                     <small>{{ variant.stock }} disponibles</small>
                                 </button>
                             </div>
+                        </div> -->
+
+                        <!-- COLOR -->
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="variants.length > 0">
+                            <span class="text-h6">COLOR:</span>
+
+                            <div class="variant-color-grid">
+                                <button type="button" class="variant-color-btn" *ngFor="let color of availableColors"
+                                    [class.active]="selectedColorKey === color.key" (click)="selectColor(color)">
+
+                                    <span class="color-dot" [style.background]="color.colorHex">
+                                    </span>
+
+                                    <span>{{ color.colorName }}</span>
+                                </button>
+                            </div>
                         </div>
 
+                        <!-- TALLA -->
+                        <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="selectedColorKey">
+                            <span class="text-h6">TALLA:</span>
+
+                            <div class="variant-size-grid">
+                                <button type="button" class="variant-size-btn"
+                                    *ngFor="let variant of availableSizesForSelectedColor"
+                                    [class.active]="selectedVariant === variant" [disabled]="variant.stock <= 0"
+                                    (click)="selectSizeVariant(variant)">
+
+                                    {{ variant.size }}
+                                    <small>{{ variant.stock }} disponibles</small>
+                                </button>
+                            </div>
+                        </div>
                         <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="selectedVariant">
                             <span class="text-h6">STOCK SELECCIONADO:</span>
                             <span class="text-n50 text-base">

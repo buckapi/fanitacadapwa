@@ -7,18 +7,16 @@
 
           <div class="col-lg-6 bg-n0 pt-lg-15 pt-10 pe-lg-15 overflow-hidden order-lg-first order-last">
 
-            
+
 
             <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
               <span class="text-n100 text-xl fw-medium">Entrega</span>
 
               <div class="d-grid gap-2">
                 <label>País / Región</label>
-                <div class="country-select d-flex align-items-center border border-n100-1 focus-secondary2 bg-n0 position-relative">
-                  <select
-                    formControlName="country"
-                    class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0"
-                  >
+                <div
+                  class="country-select d-flex align-items-center border border-n100-1 focus-secondary2 bg-n0 position-relative">
+                  <select formControlName="country" class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0">
                     <option value="Chile">Chile</option>
                   </select>
                   <span class="select-arrow"></span>
@@ -26,81 +24,96 @@
               </div>
 
               <div class="d-lg-flex d-grid align-items-center gap-lg-4 gap-2">
-                <input
-                  type="text"
-                  formControlName="firstName"
-                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                  placeholder="Nombre"
-                >
+                <input type="text" formControlName="firstName"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100" placeholder="Nombre">
 
-                <input
-                  type="text"
-                  formControlName="lastName"
-                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                  placeholder="Apellido"
-                >
-                <input
-  type="text"
-  formControlName="rut"
-  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-  placeholder="12.345.678-5"
-  maxlength="12"
-  (input)="formatRut($event)"
->
-                <div class="text-danger small" *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('required')">
-  El RUT es obligatorio.
-</div>
+                <input type="text" formControlName="lastName"
+                  class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100" placeholder="Apellido">
+                <input type="text" formControlName="rut" class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                  placeholder="12.345.678-5" maxlength="12" (input)="formatRut($event)">
+                <div class="text-danger small"
+                  *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('required')">
+                  El RUT es obligatorio.
+                </div>
 
-<div class="text-danger small" *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('rutInvalid')">
-  Ingresa un RUT chileno válido. Ej: 12.345.678-5
-</div>
+                <div class="text-danger small"
+                  *ngIf="checkoutForm.get('rut')?.touched && checkoutForm.get('rut')?.hasError('rutInvalid')">
+                  Ingresa un RUT chileno válido. Ej: 12.345.678-5
+                </div>
               </div>
 
 
-              <input
-                type="text"
-                formControlName="company"
-                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Empresa, opcional"
-              >
+              <input type="text" formControlName="company" class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Empresa, opcional">
+              <div class="d-lg-flex d-grid align-items-center gap-lg-4 gap-2">
 
-              <input
-                type="text"
-                formControlName="address"
-                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Dirección (Calle, número, departamento, etc.)"
-              >
-              <div class="text-danger small" *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.hasError('required')">
-  La dirección es obligatoria.
-</div>
-              <input
-                type="text"
-                formControlName="apartment"
-                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Departamento, casa, referencia, opcional"
-              >
+                <!-- REGIÓN -->
+                <div class="w-100">
+                  <label>Región</label>
 
-             <input
-                type="email"
-                formControlName="email"
+                  <div
+                    class="country-select d-flex align-items-center border border-n100-1 focus-secondary2 bg-n0 position-relative">
+                    <select formControlName="region" class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0"
+                      (change)="onRegionChange()">
+
+                      <option value="">Selecciona región</option>
+
+                      <option *ngFor="let region of regiones" [value]="region.region">
+                        {{ region.region }}
+                      </option>
+
+                    </select>
+
+                    <span class="select-arrow"></span>
+                  </div>
+                </div>
+
+                <!-- COMUNA -->
+                <div class="w-100">
+                  <label>Comuna</label>
+
+                  <div
+                    class="country-select d-flex align-items-center border border-n100-1 focus-secondary2 bg-n0 position-relative">
+                    <select formControlName="comuna" class="w-100 border-0 py-lg-4 py-2 px-xl-8 px-md-6 px-4 bg-n0">
+
+                      <option value="">Selecciona comuna</option>
+
+                      <option *ngFor="let comuna of comunasDisponibles" [value]="comuna">
+                        {{ comuna }}
+                      </option>
+
+                    </select>
+
+                    <span class="select-arrow"></span>
+                  </div>
+                </div>
+
+              </div>
+              <input type="text" formControlName="address" class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Dirección (Calle, número, departamento, etc.)">
+              <div class="text-danger small"
+                *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.hasError('required')">
+                La dirección es obligatoria.
+              </div>
+              <input type="text" formControlName="apartment"
                 class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="correo electrónico"
-              >
+                placeholder="Departamento, casa, referencia, opcional">
 
-              <input
-                type="tel"
-                formControlName="phone"
-                class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
-                placeholder="Teléfono"
-              >
+              <input type="email" formControlName="email" class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="correo electrónico">
 
-  <div class="text-danger small" *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('required')">
-  El teléfono es obligatorio.
-</div>
+              <input type="tel" formControlName="phone" class="py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100"
+                placeholder="Teléfono">
 
-<div class="text-danger small" *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('pattern')">
-  Ingresa un teléfono chileno válido. Ej: +56 9 1234 5678
-</div>
+              <div class="text-danger small"
+                *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('required')">
+                El teléfono es obligatorio.
+              </div>
+
+              <div class="text-danger small"
+                *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.hasError('pattern')">
+                Ingresa un teléfono chileno válido. Ej: +56 9 1234 5678
+              </div>
               <label class="input-checkbox">
                 <input type="checkbox" formControlName="saveInfo" hidden>
                 <span class="checkbox"></span>
@@ -124,31 +137,29 @@
             </div>
 
 
-            <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
+           <!--  <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
               <span class="text-n100 text-xl fw-medium">Dirección de facturación</span>
 
-              <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+              <label
+                class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
                 <input type="radio" formControlName="billingAddress" value="same" hidden>
                 <span class="checkbox"></span>
                 <span class="text-base text-n50">Igual a la dirección de envío</span>
               </label>
 
-              <label class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
+              <label
+                class="input-radiobox d-flex align-items-center gap-lg-4 gap-2 py-lg-4 py-2 px-lg-6 px-4 border border-n100-1 w-100">
                 <input type="radio" formControlName="billingAddress" value="different" hidden>
                 <span class="checkbox"></span>
                 <span class="text-base text-n50">Usar una dirección diferente</span>
               </label>
-            </div>
+            </div> -->
 
             <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-6">
               <span class="text-n100 text-xl fw-medium">Nota del pedido</span>
 
-              <textarea
-                formControlName="note"
-                class="note-form border-n100-1 p-4 w-100 focus-secondary2"
-                rows="3"
-                placeholder="Ej: talla, color, referencias de entrega o comentarios adicionales"
-              ></textarea>
+              <textarea formControlName="note" class="note-form border-n100-1 p-4 w-100 focus-secondary2" rows="3"
+                placeholder="Ej: talla, color, referencias de entrega o comentarios adicionales"></textarea>
             </div>
 
             <label class="input-checkbox mb-lg-6 mb-4">
@@ -161,10 +172,8 @@
             </label>
 
             <div class="pb-120">
-              <button
-                type="submit"
-                class="btn-secondary text-base fw-medium radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 w-100"
-              >
+              <button type="submit"
+                class="btn-secondary text-base fw-medium radius-unset py-lg-4 py-2 px-xl-8 px-md-6 px-4 w-100">
                 Completar pedido
               </button>
             </div>
@@ -185,15 +194,12 @@
                   <div class="product-list d-between" *ngFor="let item of cartItems">
                     <div class="d-flex align-items-center gap-4">
                       <div class="product-image max-w-120px bg-n0 p-1 position-relative">
-                        <span class="badge bg-primary2 text-n0 text-sm fw-medium position-absolute top-0 right-n10 radius-pill translate-middle">
+                        <span
+                          class="badge bg-primary2 text-n0 text-sm fw-medium position-absolute top-0 right-n10 radius-pill translate-middle">
                           {{ item.quantity }}
                         </span>
 
-                        <img
-                          class="w-100"
-                          [src]="item.image || 'assets/images/no-image.png'"
-                          [alt]="item.name"
-                        >
+                        <img class="w-100" [src]="item.image || 'assets/images/no-image.png'" [alt]="item.name">
                       </div>
 
                       <div class="product-info d-flex flex-column">

@@ -25,10 +25,7 @@
         No hay órdenes registradas.
       </div>
 
-      <div
-        class="order-card"
-        *ngFor="let order of orders"
-        [class.active]="selectedOrder?.id === order.id">
+      <div class="order-card" *ngFor="let order of orders" [class.active]="selectedOrder?.id === order.id">
 
         <div class="order-main" (click)="viewOrder(order)">
           <div class="order-top">
@@ -50,20 +47,6 @@
           </div>
         </div>
 
-        <!-- <div class="order-actions">
-          <strong>${{ order.total | number:'1.0-0' }}</strong>
-
-          <select [value]="order.status" (change)="changeStatus(order, $event)">
-            <option *ngFor="let status of statusOptions" [value]="status.value">
-              {{ status.label }}
-            </option>
-          </select>
-
-          <button type="button" class="danger" (click)="deleteOrder(order)">
-            Eliminar
-          </button>
-        </div> -->
-
       </div>
 
     </div>
@@ -82,23 +65,59 @@
       <div class="detail-section">
         <h3>Cliente</h3>
 
-        <p><strong>Nombre:</strong> {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}</p>
-        <p><strong>Email:</strong> {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}</p>
-        <p><strong>Teléfono:</strong> {{ selectedOrder.customer?.phone || 'N/A' }}</p>
-        <p><strong>Dirección:</strong> {{ selectedOrder.customer?.address || 'N/A' }}</p>
-        <p><strong>Ciudad:</strong> {{ selectedOrder.customer?.city || 'N/A' }}</p>
+        <p>
+          <strong>Nombre:</strong>
+          {{ selectedOrder.customerName || selectedOrder.customer?.name || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>RUT:</strong>
+          {{ selectedOrder.customerRut || selectedOrder.customer?.rut || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          {{ selectedOrder.customerEmail || selectedOrder.customer?.email || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Teléfono:</strong>
+          {{ selectedOrder.customerPhone || selectedOrder.customer?.phone || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Dirección:</strong>
+          {{ selectedOrder.customerAddress || selectedOrder.customer?.address || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Ciudad / Región:</strong>
+          {{ selectedOrder.customerRegion || selectedOrder.customer?.city || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Comuna:</strong>
+          {{ selectedOrder.customerComuna || selectedOrder.customer?.comuna || 'N/A' }}
+        </p>
       </div>
 
       <div class="detail-section">
         <h3>Productos</h3>
 
-<div class="order-item" *ngFor="let item of getNormalizedItems(selectedOrder)">
-            <div>
+        <div class="order-item" *ngFor="let item of getNormalizedItems(selectedOrder)">
+          <div>
             <strong>{{ item.name }}</strong>
+
             <span>
               Cantidad: {{ item.quantity }}
-              <ng-container *ngIf="item.size"> · Talla: {{ item.size }}</ng-container>
-              <ng-container *ngIf="item.color"> · Color: {{ item.color }}</ng-container>
+
+              <ng-container *ngIf="item.size || item.selectedVariant?.size">
+                · Talla: {{ item.size || item.selectedVariant?.size }}
+              </ng-container>
+
+              <ng-container *ngIf="item.color || item.colorName || item.selectedVariant?.colorName">
+                · Color: {{ item.color || item.colorName || item.selectedVariant?.colorName }}
+              </ng-container>
             </span>
           </div>
 

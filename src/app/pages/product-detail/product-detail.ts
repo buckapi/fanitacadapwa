@@ -149,11 +149,7 @@ selectSize(size: string): void {
   this.quantity = 1;
 }
 
-selectColor(variant: any): void {
-  this.selectedColorKey = `${variant.colorName}-${variant.colorHex}`;
-  this.selectedVariant = variant;
-  this.quantity = 1;
-}
+
   async loadProduct(id: string) {
     this.loadingProduct = true;
     this.cd.detectChanges();
@@ -440,6 +436,41 @@ ${this.questionForm.message}
     };
   }
 
+get availableColors(): any[] {
+  const uniqueColors = new Map();
 
+  this.variants.forEach((v) => {
+    const key = `${v.colorName}-${v.colorHex}`;
+
+    if (!uniqueColors.has(key)) {
+      uniqueColors.set(key, {
+        key,
+        colorName: v.colorName,
+        colorHex: v.colorHex
+      });
+    }
+  });
+
+  return Array.from(uniqueColors.values());
+}
+
+get availableSizesForSelectedColor(): any[] {
+  if (!this.selectedColorKey) return [];
+
+  return this.variants.filter(v =>
+    `${v.colorName}-${v.colorHex}` === this.selectedColorKey
+  );
+}
+
+selectColor(color: any): void {
+  this.selectedColorKey = color.key;
+  this.selectedVariant = null;
+  this.quantity = 1;
+}
+
+selectSizeVariant(variant: any): void {
+  this.selectedVariant = variant;
+  this.quantity = 1;
+}
 
 }
