@@ -132,7 +132,7 @@ private resetProductState(): void {
     this.quantity--;
   }
 }
-  get availableSizesFromVariants(): string[] {
+/*   get availableSizesFromVariants(): string[] {
   return [...new Set(this.variants.map(v => v.size))];
 }
 
@@ -147,7 +147,7 @@ selectSize(size: string): void {
   this.selectedColorKey = null;
   this.selectedVariant = null;
   this.quantity = 1;
-}
+} */
 
 
   async loadProduct(id: string) {
@@ -469,6 +469,28 @@ selectColor(color: any): void {
 }
 
 selectSizeVariant(variant: any): void {
+  this.selectedVariant = variant;
+  this.quantity = 1;
+}
+
+
+get availableSizesFromVariants(): string[] {
+  return [...new Set(this.variants.map(v => v.size).filter(Boolean))];
+}
+
+get availableColorsForSelectedSize(): any[] {
+  if (!this.selectedSize) return [];
+
+  return this.variants.filter(v => v.size === this.selectedSize);
+}
+
+selectSize(size: string): void {
+  this.selectedSize = size;
+  this.selectedVariant = null;
+  this.quantity = 1;
+}
+
+selectVariantBySizeAndColor(variant: any): void {
   this.selectedVariant = variant;
   this.quantity = 1;
 }

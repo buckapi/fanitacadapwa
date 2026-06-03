@@ -100,7 +100,7 @@ export class Products implements OnInit, OnDestroy {
   };
   searchTerm = '';
 currentPage = 1;
-itemsPerPage = 6;
+itemsPerPage = 10;
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
