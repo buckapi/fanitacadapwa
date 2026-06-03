@@ -437,17 +437,26 @@ ${this.questionForm.message}
   }
 
 get availableColors(): any[] {
-  const uniqueColors = new Map();
+  const uniqueColors = new Map<string, any>();
 
-  this.variants.forEach((v) => {
-    const key = `${v.colorName}-${v.colorHex}`;
+  this.variants.forEach((variant) => {
+    const colorName = String(variant.colorName || '').trim();
+    const colorHex = String(variant.colorHex || '').trim();
+
+    if (!colorName) return;
+
+    const key = colorName.toLowerCase();
 
     if (!uniqueColors.has(key)) {
       uniqueColors.set(key, {
         key,
-        colorName: v.colorName,
-        colorHex: v.colorHex
+        colorName,
+        colorHex,
+        totalStock: Number(variant.stock || 0)
       });
+    } else {
+      const current = uniqueColors.get(key);
+      current.totalStock += Number(variant.stock || 0);
     }
   });
 

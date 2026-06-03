@@ -99,6 +99,17 @@
                                 {{ product.stock > 0 ? product.stock + ' disponibles' : 'Sin stock' }}
                             </span>
                         </div>
+                        <span class="text-h6">COLORES DISPONIBLES:</span>
+                        <div class="variant-color-grid">
+                            <button type="button" class="variant-color-btn info-only"
+                                *ngFor="let color of availableColors" disabled>
+
+                                <span class="color-dot" [style.background]="color.colorHex">
+                                </span>
+
+                                <span>{{ color.colorName }}</span>
+                            </button>
+                        </div>
                         <!-- <div class="d-grid gap-lg-4 gap-2 mb-lg-8 mb-md-6 mb-4" *ngIf="variants.length > 0">
                             <span class="text-h6">TALLA:</span>
 

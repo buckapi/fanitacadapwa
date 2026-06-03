@@ -274,3 +274,11 @@ button:disabled {
   border-radius: 50%;
   display: inline-block;
 }
+.variant-color-btn.info-only {
+  cursor: default;
+  opacity: 1;
+}
+
+.variant-color-btn.info-only:disabled {
+  opacity: 1;
+}
