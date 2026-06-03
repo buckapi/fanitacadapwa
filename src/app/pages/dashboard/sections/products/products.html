@@ -165,14 +165,14 @@
 
                         <!-- BADGE PORTADA -->
                         <span class="cover-badge" *ngIf="i === 0">
-  <i class="ph-fill ph-check-circle"></i>
+                            <i class="ph-fill ph-check-circle"></i>
                         </span>
 
                         <img [src]="image" alt="Preview">
 
                         <!-- BOTÓN PORTADA -->
                         <button type="button" class="btn-cover" *ngIf="i !== 0" (click)="setNewImageAsCover(i)">
-  <i class="ph-fill ph-check-circle"></i>
+                            <i class="ph-fill ph-check-circle"></i>
                         </button>
 
                         <!-- ELIMINAR -->
@@ -263,19 +263,29 @@
         <div class="products-list">
 
             <div class="list-header">
-                <h2>Productos</h2>
-                <span>{{ products.length }} registros</span>
+                <div>
+                    <h2>Productos:                 <span>{{ products.length }} registros</span>
+</h2>
+                    <span>
+                        {{ filteredProducts.length }} de {{ products.length }} registros
+                    </span>
+                </div>
+
+                <input type="text" class="product-search" placeholder="Buscar por nombre, marca, categoría, estado..."
+                    [value]="searchTerm" (input)="onSearchChange($event)">
             </div>
 
             <div *ngIf="loading" class="loading">
                 Cargando productos...
             </div>
 
-            <div *ngIf="!loading && products.length === 0" class="empty">
-                No hay productos registrados.
+            <div *ngIf="!loading && filteredProducts.length === 0" class="empty">
+                No se encontraron productos.
             </div>
 
-            <div class="product-card" *ngFor="let product of products">
+            <!--             <div class="product-card" *ngFor="let product of products">
+ -->
+            <div class="product-card" *ngFor="let product of paginatedProducts">
                 <div class="product-thumb" *ngIf="getFirstProductImage(product) as img">
                     <img [src]="img" [alt]="product.name">
                 </div>
@@ -301,8 +311,22 @@
                         Eliminar
                     </button>
                 </div>
+               
             </div>
+ <div class="pagination" *ngIf="!loading && filteredProducts.length > itemsPerPage">
+                    <button type="button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+                        Anterior
+                    </button>
 
+                    <button type="button" *ngFor="let page of pages" [class.active]="page === currentPage"
+                        (click)="changePage(page)">
+                        {{ page }}
+                    </button>
+
+                    <button type="button" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+                        Siguiente
+                    </button>
+                </div>
         </div>
 
     </div>

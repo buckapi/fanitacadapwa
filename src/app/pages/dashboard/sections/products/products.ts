@@ -98,6 +98,9 @@ export class Products implements OnInit, OnDestroy {
       { value: '16', label: '16' },
     ],
   };
+  searchTerm = '';
+currentPage = 1;
+itemsPerPage = 6;
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
@@ -144,6 +147,49 @@ export class Products implements OnInit, OnDestroy {
       featured: [false]
     });
   }
+  get filteredProducts(): Product[] {
+  const term = this.searchTerm.trim().toLowerCase();
+
+  if (!term) return this.products;
+
+  return this.products.filter((product: any) => {
+    const categoryNames = this.getCategoryNames(product).toLowerCase();
+
+    return (
+      product.name?.toLowerCase().includes(term) ||
+      product.description?.toLowerCase().includes(term) ||
+      product.editor?.toLowerCase().includes(term) ||
+      product.status?.toLowerCase().includes(term) ||
+      categoryNames.includes(term) ||
+      String(product.price).includes(term) ||
+      String(product.stock).includes(term)
+    );
+  });
+}
+
+get paginatedProducts(): Product[] {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  return this.filteredProducts.slice(start, start + this.itemsPerPage);
+}
+
+get totalPages(): number {
+  return Math.ceil(this.filteredProducts.length / this.itemsPerPage) || 1;
+}
+
+get pages(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
+onSearchChange(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  this.searchTerm = input.value;
+  this.currentPage = 1;
+}
+
+changePage(page: number): void {
+  if (page < 1 || page > this.totalPages) return;
+  this.currentPage = page;
+}
   onSizeToggle(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
