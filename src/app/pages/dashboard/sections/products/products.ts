@@ -75,7 +75,7 @@ export class Products implements OnInit, OnDestroy {
     ],
 
     medias: [
-            { value: 'ESTANDAR', label: 'ESTANDAR' },
+    { value: 'ESTANDAR', label: 'ESTANDAR' },
 
      /*  { value: 'S/M', label: 'S/M - 35/39 CL' },
       { value: 'L/XL', label: 'L/XL - 40/45 CL' }, */
