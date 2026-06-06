@@ -170,7 +170,9 @@ export class Header implements OnInit, OnDestroy {
         search: term
       }
     });
+    
   }
+  
 
   clearSearch(): void {
     this.searchTerm = '';

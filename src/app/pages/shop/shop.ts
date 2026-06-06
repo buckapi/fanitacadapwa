@@ -27,6 +27,7 @@ export class Shop implements OnInit, OnDestroy {
   subcategories: Category[] = [];
   currentPage = 1;
 itemsPerPage = 50;
+searchTerm: string = '';
   constructor(
     public router: Router,
     private route: ActivatedRoute,
@@ -40,7 +41,7 @@ itemsPerPage = 50;
   ) { }
 
 
-  ngOnInit(): void {
+ /*  ngOnInit(): void {
   this.loadCategories();
   this.loadProducts();
   this.listenRealtimeProducts();
@@ -53,6 +54,30 @@ itemsPerPage = 50;
     this.selectedSubcategory = subcategory;
 
     this.applyFilters();
+    this.cd.detectChanges();
+    
+  });
+
+  this.title.setTitle('Camisetas y productos deportivos | Fanaticada.cl');
+
+  this.meta.updateTag({
+    name: 'description',
+    content: 'Compra camisetas, ropa deportiva y accesorios originales en Fanaticada.cl.'
+  });
+} */
+ngOnInit(): void {
+  this.loadCategories();
+  this.loadProducts();
+  this.listenRealtimeProducts();
+
+  this.route.queryParams.subscribe(params => {
+
+    this.selectedCategory = params['category'] || 'all';
+    this.selectedSubcategory = params['subcategory'] || '';
+    this.searchTerm = params['search'] || '';
+
+    this.applyFilters();
+
     this.cd.detectChanges();
   });
 
@@ -169,31 +194,6 @@ filterBySubcategory(parentId: string, subcategoryId: string): void {
 }
 
 /* applyFilters(): void {
-  
-  if (!this.products || this.products.length === 0) {
-    this.filteredProducts = [];
-    return;
-  }
-
-  if (this.selectedCategory === 'all') {
-    this.filteredProducts = this.products;
-    return;
-  }
-
-  this.filteredProducts = this.products.filter((product: any) => {
-    const productCategories = this.getProductCategoryIds(product);
-    const productSubcategories = this.getProductSubcategoryIds(product);
-
-    const matchesCategory = productCategories.includes(this.selectedCategory);
-
-    const matchesSubcategory = this.selectedSubcategory
-      ? productSubcategories.includes(this.selectedSubcategory)
-      : true;
-
-    return matchesCategory && matchesSubcategory;
-  });
-} */
-applyFilters(): void {
   if (!this.products || this.products.length === 0) {
     this.filteredProducts = [];
     this.currentPage = 1;
@@ -220,8 +220,65 @@ applyFilters(): void {
   });
 
   this.currentPage = 1;
-}
+} */
+applyFilters(): void {
 
+  if (!this.products?.length) {
+    this.filteredProducts = [];
+    this.currentPage = 1;
+    return;
+  }
+
+  let filtered = [...this.products];
+
+  // Categoría
+  if (this.selectedCategory !== 'all') {
+
+    filtered = filtered.filter((product: any) => {
+
+      const productCategories =
+        this.getProductCategoryIds(product);
+
+      const productSubcategories =
+        this.getProductSubcategoryIds(product);
+
+      const matchesCategory =
+        productCategories.includes(this.selectedCategory);
+
+      const matchesSubcategory =
+        this.selectedSubcategory
+          ? productSubcategories.includes(this.selectedSubcategory)
+          : true;
+
+      return matchesCategory && matchesSubcategory;
+    });
+  }
+
+  // Búsqueda
+  if (this.searchTerm?.trim()) {
+
+    const term = this.searchTerm
+      .toLowerCase()
+      .trim();
+
+    filtered = filtered.filter((product: any) => {
+
+      const name =
+        product.name?.toLowerCase() || '';
+
+      const description =
+        product.description?.toLowerCase() || '';
+
+      return (
+        name.includes(term) ||
+        description.includes(term)
+      );
+    });
+  }
+
+  this.filteredProducts = filtered;
+  this.currentPage = 1;
+}
 getProductSubcategoryIds(product: any): string[] {
   if (!product) return [];
 
