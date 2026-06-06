@@ -170,16 +170,13 @@ goToPage(page: number): void {
   return this.subcategories.filter((cat: any) => cat.parent === parentId);
 }
 
-/* filterByCategory(categoryId: string): void {
-  this.selectedCategory = categoryId;
-  this.selectedSubcategory = '';
-
-  this.router.navigate(['/shop'], {
-    queryParams: {
-      category: categoryId
-    }
-  });
-} */
+private normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')               // separa letras y tildes
+    .replace(/[\u0300-\u036f]/g, '') // elimina diacríticos
+    .trim();
+}
 
 filterBySubcategory(parentId: string, subcategoryId: string): void {
   this.selectedCategory = parentId;
@@ -255,7 +252,7 @@ applyFilters(): void {
   }
 
   // Búsqueda
-  if (this.searchTerm?.trim()) {
+ /*  if (this.searchTerm?.trim()) {
 
     const term = this.searchTerm
       .toLowerCase()
@@ -274,8 +271,22 @@ applyFilters(): void {
         description.includes(term)
       );
     });
-  }
+  } */
+  if (this.searchTerm?.trim()) {
 
+  const term = this.normalizeText(this.searchTerm);
+
+  filtered = filtered.filter((product: any) => {
+
+    const name = this.normalizeText(product.name || '');
+    const description = this.normalizeText(product.description || '');
+
+    return (
+      name.includes(term) ||
+      description.includes(term)
+    );
+  });
+}
   this.filteredProducts = filtered;
   this.currentPage = 1;
 }
