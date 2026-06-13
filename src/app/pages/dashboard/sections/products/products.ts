@@ -75,10 +75,7 @@ export class Products implements OnInit, OnDestroy {
     ],
 
     medias: [
-    { value: 'ESTANDAR', label: 'ESTANDAR' },
-
-     /*  { value: 'S/M', label: 'S/M - 35/39 CL' },
-      { value: 'L/XL', label: 'L/XL - 40/45 CL' }, */
+      { value: 'TALLA_UNICA', label: 'Talla Única' },
     ],
 
     general: [
@@ -87,7 +84,9 @@ export class Products implements OnInit, OnDestroy {
       { value: 'M', label: 'M' },
       { value: 'L', label: 'L' },
       { value: 'XL', label: 'XL' },
-      { value: 'Única', label: 'Única' },
+      { value: 'XXL', label: 'XXL' },
+      { value: 'XXXL', label: 'XXXL' },
+      { value: 'TALLA_UNICA', label: 'Talla Única' },
     ],
     ropaNiños: [
       { value: '2', label: '2' },
@@ -98,11 +97,12 @@ export class Products implements OnInit, OnDestroy {
       { value: '12', label: '12' },
       { value: '14', label: '14' },
       { value: '16', label: '16' },
+      { value: 'TALLA_UNICA', label: 'Talla Única' },
     ],
   };
   searchTerm = '';
-currentPage = 1;
-itemsPerPage = 10;
+  currentPage = 1;
+  itemsPerPage = 10;
   constructor(
     private fb: FormBuilder,
     private productsService: ProductsService,
@@ -150,48 +150,48 @@ itemsPerPage = 10;
     });
   }
   get filteredProducts(): Product[] {
-  const term = this.searchTerm.trim().toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
 
-  if (!term) return this.products;
+    if (!term) return this.products;
 
-  return this.products.filter((product: any) => {
-    const categoryNames = this.getCategoryNames(product).toLowerCase();
+    return this.products.filter((product: any) => {
+      const categoryNames = this.getCategoryNames(product).toLowerCase();
 
-    return (
-      product.name?.toLowerCase().includes(term) ||
-      product.description?.toLowerCase().includes(term) ||
-      product.editor?.toLowerCase().includes(term) ||
-      product.status?.toLowerCase().includes(term) ||
-      categoryNames.includes(term) ||
-      String(product.price).includes(term) ||
-      String(product.stock).includes(term)
-    );
-  });
-}
+      return (
+        product.name?.toLowerCase().includes(term) ||
+        product.description?.toLowerCase().includes(term) ||
+        product.editor?.toLowerCase().includes(term) ||
+        product.status?.toLowerCase().includes(term) ||
+        categoryNames.includes(term) ||
+        String(product.price).includes(term) ||
+        String(product.stock).includes(term)
+      );
+    });
+  }
 
-get paginatedProducts(): Product[] {
-  const start = (this.currentPage - 1) * this.itemsPerPage;
-  return this.filteredProducts.slice(start, start + this.itemsPerPage);
-}
+  get paginatedProducts(): Product[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredProducts.slice(start, start + this.itemsPerPage);
+  }
 
-get totalPages(): number {
-  return Math.ceil(this.filteredProducts.length / this.itemsPerPage) || 1;
-}
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage) || 1;
+  }
 
-get pages(): number[] {
-  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-}
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
 
-onSearchChange(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  this.searchTerm = input.value;
-  this.currentPage = 1;
-}
+  onSearchChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm = input.value;
+    this.currentPage = 1;
+  }
 
-changePage(page: number): void {
-  if (page < 1 || page > this.totalPages) return;
-  this.currentPage = page;
-}
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
   onSizeToggle(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
@@ -242,7 +242,40 @@ changePage(page: number): void {
 
     return [];
   }
-/*   addVariant(): void {
+  /*   addVariant(): void {
+      const size = this.productForm.get('variantSize')?.value;
+      const colorName = this.productForm.get('variantColorName')?.value;
+      const colorHex = this.productForm.get('variantColorHex')?.value;
+      const stock = Number(this.productForm.get('variantStock')?.value || 0);
+  
+      if (!size || !colorName || stock <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Datos incompletos',
+          text: 'Selecciona talla, color y cantidad mayor a 0.',
+        });
+        return;
+      }
+  
+      const variants = this.productForm.get('variants')?.value || [];
+  
+      this.productForm.patchValue({
+        variants: [
+          ...variants,
+          {
+            size,
+            colorName,
+            colorHex,
+            stock
+          }
+        ],
+        variantSize: '',
+        variantColorName: '',
+        variantColorHex: '#000000',
+        variantStock: 0
+      });
+    } */
+  addVariant(): void {
     const size = this.productForm.get('variantSize')?.value;
     const colorName = this.productForm.get('variantColorName')?.value;
     const colorHex = this.productForm.get('variantColorHex')?.value;
@@ -257,64 +290,31 @@ changePage(page: number): void {
       return;
     }
 
-    const variants = this.productForm.get('variants')?.value || [];
+    const currentVariants = this.productForm.get('variants')?.value || [];
+
+    const newVariant = {
+      size,
+      colorName,
+      colorHex,
+      stock
+    };
+
+    this.productForm.get('variants')?.setValue([
+      ...currentVariants,
+      newVariant
+    ]);
+
+    this.productForm.get('variants')?.updateValueAndValidity();
 
     this.productForm.patchValue({
-      variants: [
-        ...variants,
-        {
-          size,
-          colorName,
-          colorHex,
-          stock
-        }
-      ],
       variantSize: '',
       variantColorName: '',
       variantColorHex: '#000000',
       variantStock: 0
     });
-  } */
-  addVariant(): void {
-  const size = this.productForm.get('variantSize')?.value;
-  const colorName = this.productForm.get('variantColorName')?.value;
-  const colorHex = this.productForm.get('variantColorHex')?.value;
-  const stock = Number(this.productForm.get('variantStock')?.value || 0);
 
-  if (!size || !colorName || stock <= 0) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Datos incompletos',
-      text: 'Selecciona talla, color y cantidad mayor a 0.',
-    });
-    return;
+    console.log('VARIANTS ACTUALES:', this.productForm.get('variants')?.value);
   }
-
-  const currentVariants = this.productForm.get('variants')?.value || [];
-
-  const newVariant = {
-    size,
-    colorName,
-    colorHex,
-    stock
-  };
-
-  this.productForm.get('variants')?.setValue([
-    ...currentVariants,
-    newVariant
-  ]);
-
-  this.productForm.get('variants')?.updateValueAndValidity();
-
-  this.productForm.patchValue({
-    variantSize: '',
-    variantColorName: '',
-    variantColorHex: '#000000',
-    variantStock: 0
-  });
-
-  console.log('VARIANTS ACTUALES:', this.productForm.get('variants')?.value);
-}
 
   removeVariant(index: number): void {
     const variants = [...(this.productForm.get('variants')?.value || [])];
@@ -476,27 +476,46 @@ changePage(page: number): void {
     this.updateAvailableSizesBySubcategories();
   }
   updateAvailableSizesBySubcategories(): void {
-    const selectedSubs = this.subcategories.filter((sub: any) =>
-      this.selectedSubcategories.includes(sub.id)
-    );
+  const selectedSubs = this.subcategories.filter((sub: any) =>
+    this.selectedSubcategories.includes(sub.id)
+  );
 
-    const names = selectedSubs
-      .map((sub: any) => sub.name?.toLowerCase() || '')
-      .join(' ');
+  const names = selectedSubs
+    .map((sub: any) => sub.name?.toLowerCase() || '')
+    .join(' ');
 
-    if (
-      names.includes('niño') ||
-      names.includes('niños') ||
-      names.includes('infantil') ||
-      names.includes('junior')
-    ) {
-      this.availableSizes = this.sizeOptions.ropaNiños;
-      return;
-    }
+  const parentId = this.productForm.get('category')?.value;
+  const parentCategory = this.parentCategories.find((cat: any) => cat.id === parentId);
+  const parentName = parentCategory?.name?.toLowerCase() || '';
 
-    const parentId = this.productForm.get('category')?.value;
-    this.updateAvailableSizes(parentId);
+  const isMedia =
+    parentName.includes('media') ||
+    parentName.includes('medias') ||
+    parentName.includes('calcetin') ||
+    parentName.includes('calcetín') ||
+    names.includes('media') ||
+    names.includes('medias') ||
+    names.includes('calcetin') ||
+    names.includes('calcetín');
+
+  if (isMedia) {
+    this.availableSizes = this.sizeOptions.medias;
+    return;
   }
+
+  if (
+    names.includes('niño') ||
+    names.includes('niños') ||
+    names.includes('infantil') ||
+    names.includes('junior')
+  ) {
+    this.availableSizes = this.sizeOptions.ropaNiños;
+    return;
+  }
+
+  this.updateAvailableSizes(parentId);
+}
+
   async saveProduct(): Promise<void> {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
@@ -506,7 +525,7 @@ changePage(page: number): void {
     this.saving = true;
 
     try {
-const formValue = this.productForm.getRawValue();
+      const formValue = this.productForm.getRawValue();
       const formData = new FormData();
 
       formData.append('name', formValue.name);
@@ -523,12 +542,12 @@ const formValue = this.productForm.getRawValue();
       const colors = Array.isArray(formValue.colors) ? formValue.colors : [];
       formData.append('colors', JSON.stringify(colors));
       const variants = Array.isArray(formValue.variants)
-  ? formValue.variants
-  : [];
+        ? formValue.variants
+        : [];
 
-console.log('VARIANTS A GUARDAR:', variants);
+      console.log('VARIANTS A GUARDAR:', variants);
 
-formData.set('variants', JSON.stringify(variants));
+      formData.set('variants', JSON.stringify(variants));
       formData.append('isEssential', String(!!formValue.isEssential));
       formData.append('isPopular', String(!!formValue.isPopular));
       formData.append('isBestSelling', String(!!formValue.isBestSelling));
@@ -622,9 +641,12 @@ formData.set('variants', JSON.stringify(variants));
   }
 
   editProduct(product: Product): void {
-    this.editing = true;
-    this.selectedProductId = product.id || null;
+     this.availableSizes = [];
+  this.filteredSubcategories = [];
+  this.selectedSubcategories = [];
 
+  this.editing = true;
+  this.selectedProductId = product.id || null;
     const mainCategory = Array.isArray(product.categories)
       ? product.categories[0] || ''
       : '';
@@ -639,11 +661,11 @@ formData.set('variants', JSON.stringify(variants));
 
     this.updateAvailableSizes(mainCategory);
 
-if (this.selectedSubcategories.length > 0) {
-  this.updateAvailableSizesBySubcategories();
-}
+    if (this.selectedSubcategories.length > 0) {
+      this.updateAvailableSizesBySubcategories();
+    }
 
-this.productForm.patchValue({
+    this.productForm.patchValue({
       name: product.name || '',
       price: product.price || 0,
       editor: product.editor || '',
@@ -760,42 +782,47 @@ this.productForm.patchValue({
     });
   }
   resetForm(): void {
-    this.editing = false;
-    this.selectedProductId = null;
-    this.selectedFiles = [];
-    this.previewImages = [];
-    this.existingImages = [];
-    this.selectedCategories = [];
-    this.existingImageRecords = [];
-    this.productForm.reset({
-      name: '',
-      price: 0,
-      editor: '',
-      unit: 'unidad',
-      timeToDeliver: 0,
-      rating: 0,
-      stock: 0,
-      category: '',
-      subcategories: [],
-      sizes: [],
-      colors: [],
-      variants: [],
-      variantSize: '',
-      variantColorName: '',
-      variantColorHex: '#000000',
-      variantStock: 0,
-      colorName: '',
-      colorHex: '#000000',
-      isEssential: false,
-      isPopular: false,
-      isBestSelling: false,
-      isRecent: false,
-      urlImages: '',
-      description: '',
-      status: 'active',
-      featured: false
-    });
-  }
+  this.editing = false;
+  this.selectedProductId = null;
+  this.selectedFiles = [];
+  this.previewImages = [];
+  this.existingImages = [];
+  this.selectedCategories = [];
+  this.existingImageRecords = [];
+
+  this.availableSizes = [];
+  this.filteredSubcategories = [];
+  this.selectedSubcategories = [];
+
+  this.productForm.reset({
+    name: '',
+    price: 0,
+    editor: '',
+    unit: 'unidad',
+    timeToDeliver: 0,
+    rating: 0,
+    stock: 0,
+    category: '',
+    subcategories: [],
+    sizes: [],
+    colors: [],
+    variants: [],
+    variantSize: '',
+    variantColorName: '',
+    variantColorHex: '#000000',
+    variantStock: 0,
+    colorName: '',
+    colorHex: '#000000',
+    isEssential: false,
+    isPopular: false,
+    isBestSelling: false,
+    isRecent: false,
+    urlImages: '',
+    description: '',
+    status: 'active',
+    featured: false
+  });
+}
   onImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
